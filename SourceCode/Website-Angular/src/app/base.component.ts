@@ -1,7 +1,7 @@
 import { Direction } from '@angular/cdk/bidi';
 import { Component, Directive, inject, OnDestroy } from '@angular/core';
 import { TranslationService } from '@core/services/translation.service';
-import { SubSink } from 'SubSink';
+import { SubSink } from 'subsink';
 
 @Component({
   selector: 'app-base',

@@ -4,7 +4,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { FormsModule } from '@angular/forms';
-import { SubSink } from 'SubSink';
+import { SubSink } from 'subsink';
 
 import { ToastrService } from '@core/services/toastr-service';
 import { DocumentStatusService } from '../document-status.service';
