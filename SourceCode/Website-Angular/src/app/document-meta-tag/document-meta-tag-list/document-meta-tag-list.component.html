@@ -1,0 +1,116 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized Page Header -->
+    <div class="page-header-row mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">local_offer</mat-icon>
+        <span class="mb-0 page-title">
+          {{ "DOCUMENT_META_TAGS" | translate }}
+        </span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button *hasClaim="'ADD_DOCUMENT_META_TAGS'" [routerLink]="['/document-meta-tag/manage']"
+          class="btn-primary-action">
+          <mat-icon class="btn-icon">add</mat-icon>
+          <span class="d-none d-sm-inline">{{ "ADD_META_TAG" | translate }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Table Card -->
+    <div class="doc-table-card">
+      <div class="table-responsive">
+        <table class="modern-doc-table w-100" mat-table [dataSource]="documentMetaTagStore.documentMetaTags()">
+          
+          <!-- 1. Action Column -->
+          <ng-container matColumnDef="action">
+            <th class="table-column-100" mat-header-cell *matHeaderCellDef>
+              {{ "ACTION" | translate }}
+            </th>
+            <td class="table-column-100" mat-cell *matCellDef="let documentMetaTag">
+              @if (documentMetaTag?.isEditable) {
+                <div class="d-flex align-items-center gap-2">
+                  <button *hasClaim="'EDIT_DOCUMENT_META_TAGS'" type="button" [routerLink]="[
+                      '/document-meta-tag/manage',
+                      documentMetaTag.id
+                    ]" class="btn-action-edit" matTooltip="{{ 'EDIT' | translate }}">
+                    <mat-icon class="action-icon">edit</mat-icon>
+                  </button>
+                  <button *hasClaim="'DELETE_DOCUMENT_META_TAGS'" type="button" class="btn-action-delete"
+                    (click)="deleteDocumentMetaTag(documentMetaTag)" matTooltip="{{ 'DELETE' | translate }}">
+                    <mat-icon class="action-icon">delete</mat-icon>
+                  </button>
+                </div>
+              } @else {
+                <span class="badge-system-locked" matTooltip="System Protected Default Tag">
+                  <mat-icon class="lock-icon">lock</mat-icon>
+                  <span>System</span>
+                </span>
+              }
+            </td>
+          </ng-container>
+
+          <!-- 2. Type Column -->
+          <ng-container matColumnDef="type">
+            <th class="table-column-180" mat-header-cell *matHeaderCellDef>
+              {{ "TYPE" | translate }}
+            </th>
+            <td class="table-column-180" mat-cell *matCellDef="let documentMetaTag">
+              <span class="badge-type-pill">
+                <mat-icon class="type-icon">{{ getTypeIcon(documentMetaTag.type) }}</mat-icon>
+                <span>{{ documentMetaTag.type | documentMetaTagFileType }}</span>
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- 3. Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ "NAME" | translate }}
+            </th>
+            <td mat-cell *matCellDef="let documentMetaTag">
+              <div class="d-flex align-items-center gap-2">
+                <div class="item-icon-circle">
+                  <mat-icon class="item-icon">tag</mat-icon>
+                </div>
+                <span class="font-weight-600 text-dark">{{ documentMetaTag.name }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- 4. Is Editable Column -->
+          <ng-container matColumnDef="isEditable">
+            <th class="table-column-140" mat-header-cell *matHeaderCellDef>
+              {{ "IS_EDITABLE" | translate }}
+            </th>
+            <td class="table-column-140" mat-cell *matCellDef="let documentMetaTag">
+              @if (documentMetaTag.isEditable) {
+                <span class="status-pill status-pill-success">
+                  <span class="status-dot"></span>
+                  <span>{{ "YES" | translate }}</span>
+                </span>
+              } @else {
+                <span class="status-pill status-pill-neutral">
+                  <span class="status-dot"></span>
+                  <span>{{ "NO" | translate }}</span>
+                </span>
+              }
+            </td>
+          </ng-container>
+
+          <tr *matNoDataRow>
+            <td colspan="4">
+              <div class="empty-state d-flex flex-column align-items-center justify-content-center p-5 text-muted">
+                <mat-icon class="fs-2 text-muted mb-2">label_off</mat-icon>
+                <span class="fs-7 font-weight-bold">{{ "NO_DATA_FOUND" | translate }}</span>
+              </div>
+            </td>
+          </tr>
+
+          <tr class="grid-header-row" mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr class="grid-body-row" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,487 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized Page Header -->
+    <div class="page-header-row mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">archive</mat-icon>
+        <span class="mb-0 page-title">
+          {{ "ARCHIVE_DOCUMENTS" | translate }}
+        </span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button type="button" class="btn-header-refresh" (click)="onRefresh()" matTooltip="{{ 'REFRESH' | translate }}">
+          <mat-icon class="refresh-icon">refresh</mat-icon>
+          <span class="d-none d-sm-inline">{{ "REFRESH" | translate }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Card Container -->
+    <div class="doc-table-card">
+      <!-- Filter Toolbar -->
+      <div class="table-filter-toolbar p-2 p-sm-3 border-bottom">
+        <div class="filter-bar-container d-flex align-items-center justify-content-between flex-wrap gap-2">
+          <!-- Toggle Filter Header -->
+          <div class="d-flex align-items-center gap-2 filter-header-title" (click)="toggleFilter()" role="button">
+            <mat-icon class="filter-header-icon">tune</mat-icon>
+            <span class="filter-title-text">{{ "FILTER" | translate }}</span>
+            <mat-icon class="toggle-icon">{{ step() === 0 ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </div>
+
+          <!-- Filter Reset Button -->
+          <div class="filter-action-group">
+            <button type="button" class="btn-filter-reset" (click)="resetFilters()" matTooltip="Clear all filters">
+              <mat-icon class="reset-icon">restart_alt</mat-icon>
+              <span>{{ "RESET" | translate }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Collapsible Filter Grid -->
+        @if (step() === 0) {
+        <div class="filter-grid-container mt-2 pt-2 border-top">
+          <div class="row g-2 align-items-center">
+            <!-- 1. Search Name or Description -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+              <div class="filter-field-box">
+                <mat-icon class="filter-icon">search</mat-icon>
+                <input class="form-control filter-control" [(ngModel)]="name"
+                  placeholder="{{ 'SEARCH_DOCUMENT_BY_NAME_OR_DESCRIPTION' | translate }}" type="text" #input />
+              </div>
+            </div>
+
+            <!-- 2. Folder / Category Select -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+              <div class="filter-field-box">
+                <mat-icon class="filter-icon">folder</mat-icon>
+                <mat-select panelClass="mat-select-control custom-select-panel" class="form-control filter-control filter-select"
+                  [(value)]="selectedCategory" placeholder="{{ 'SELECT_CATEGORY' | translate }}"
+                  (selectionChange)="onCategoryChange($event)">
+                  <mat-select-trigger>
+                    {{ selectedCategory?.displayName ?? ("NONE" | translate) }}
+                  </mat-select-trigger>
+                  <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
+                  @for(category of allCategories; track category.id) {
+                  <mat-option [value]="category">
+                    <div class="country-item d-flex align-items-center"
+                      [ngStyle]="{ 'margin-left.px': (category.deafLevel ?? 0) * 16 }">
+                      @if(category.deafLevel == 0) {
+                      <mat-icon class="text-warning me-1 fs-6">folder</mat-icon>
+                      <span class="font-weight-600">{{ category.name }}</span>
+                      } @else {
+                      <mat-icon class="text-warning me-1 fs-6">folder_open</mat-icon>
+                      <span>{{ category.name }}</span>
+                      }
+                    </div>
+                  </mat-option>
+                  }
+                </mat-select>
+              </div>
+            </div>
+
+            <!-- 3. Document Status -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+              <div class="filter-field-box">
+                <mat-icon class="filter-icon">flag</mat-icon>
+                <mat-select panelClass="mat-select-control custom-select-panel" class="form-control filter-control filter-select"
+                  [(value)]="selectedStatus" placeholder="{{ 'SELECT_DOCUMENT_STATUS' | translate }}"
+                  (selectionChange)="onStatusChange($event)">
+                  <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
+                  @for(status of documentStatuses; track status.id) {
+                  <mat-option [value]="status">
+                    <span [ngStyle]="{ color: status?.colorCode }">{{ status.name }}</span>
+                  </mat-option>
+                  }
+                </mat-select>
+              </div>
+            </div>
+
+            <!-- 4. Client Select -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+              <div class="filter-field-box">
+                <mat-icon class="filter-icon">apartment</mat-icon>
+                <mat-select panelClass="mat-select-control custom-select-panel" class="form-control filter-control filter-select"
+                  [(value)]="selectedClient" placeholder="{{ 'SELECT_CLIENT' | translate }}"
+                  (selectionChange)="onClientChange($event)">
+                  <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
+                  @for(client of clientStore.clients(); track client.id) {
+                  <mat-option [value]="client">
+                    <span>{{ client.companyName }}</span>
+                  </mat-option>
+                  }
+                </mat-select>
+              </div>
+            </div>
+
+            <!-- 5. Storage Setting -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+              <div class="filter-field-box">
+                <mat-icon class="filter-icon">cloud</mat-icon>
+                <mat-select panelClass="mat-select-control custom-select-panel" class="form-control filter-control filter-select"
+                  [(value)]="selectStorage" placeholder="{{ 'SELECT_STORAGE' | translate }}"
+                  (selectionChange)="onStorageChange($event)">
+                  <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
+                  @for(storage of storageSetting; track storage.id) {
+                  <mat-option [value]="storage">
+                    {{ storage.storageType | storageType : storage.name }}
+                  </mat-option>
+                  }
+                </mat-select>
+              </div>
+            </div>
+
+            <!-- 6. Created Date Picker -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+              <div class="filter-field-box date-field-box">
+                <mat-icon class="filter-icon">event</mat-icon>
+                <input #ref class="form-control filter-control" [(ngModel)]="selectedCreatedDate"
+                  [matDatepicker]="picker" placeholder="{{ 'CREATED_DATE' | translate }}"
+                  (dateInput)="onCreatedDateChange(ref.value)" />
+                <button class="btn-field-icon" type="button" (click)="picker.open()" matTooltip="Pick date">
+                  <mat-icon class="fs-6">calendar_month</mat-icon>
+                </button>
+                <mat-datepicker #picker></mat-datepicker>
+              </div>
+            </div>
+
+            <!-- 7. Meta Tag Select -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+              <div class="filter-field-box">
+                <mat-icon class="filter-icon">sell</mat-icon>
+                <mat-select panelClass="mat-select-control custom-select-panel" class="form-control filter-control filter-select"
+                  [(value)]="selectedMetaTag" placeholder="{{ 'SELECT_META_TAG' | translate }}"
+                  (selectionChange)="onMetaTagChange($event)">
+                  <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
+                  @for(documentMetaTag of documentMetaTagStore.documentMetaTags(); track documentMetaTag.id) {
+                  <mat-option [value]="documentMetaTag">
+                    <span>{{ documentMetaTag.name }}</span>
+                  </mat-option>
+                  }
+                </mat-select>
+              </div>
+            </div>
+
+            <!-- 8. Meta Tag Text Input (Type === 0) -->
+            @if (selectedType !== null && selectedType === 0) {
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+              <div class="filter-field-box">
+                <mat-icon class="filter-icon">label</mat-icon>
+                <input class="form-control filter-control" [(ngModel)]="metatagText"
+                  placeholder="{{ 'SEARCH_DOCUMENT_BY_META_TAGS' | translate }}" #metatag />
+              </div>
+            </div>
+            }
+
+            <!-- 9. Date Range Filter (Type === 1) -->
+            @if (selectedType !== null && selectedType === 1) {
+            <div class="col-12 col-md-6 col-lg-6">
+              <form [formGroup]="filterForm" class="d-flex flex-wrap gap-2">
+                <div class="filter-field-box date-field-box flex-fill">
+                  <mat-icon class="filter-icon">event</mat-icon>
+                  <input #startDateInput formControlName="startDate" class="form-control filter-control"
+                    [matDatepicker]="startPicker" placeholder="{{ 'START_DATE' | translate }}"
+                    (dateChange)="onStartDateChange()" />
+                  <button class="btn-field-icon" type="button" (click)="startPicker.open()">
+                    <mat-icon class="fs-6">calendar_month</mat-icon>
+                  </button>
+                  <mat-datepicker #startPicker></mat-datepicker>
+                </div>
+
+                <div class="filter-field-box date-field-box flex-fill">
+                  <mat-icon class="filter-icon">event</mat-icon>
+                  <input #endDateInput formControlName="endDate" class="form-control filter-control"
+                    [matDatepicker]="endPicker"
+                    (dateInput)="onDateFilterChange(startDateInput.value, endDateInput.value)"
+                    placeholder="{{ 'END_DATE' | translate }}" />
+                  <button class="btn-field-icon" type="button" (click)="endPicker.open()">
+                    <mat-icon class="fs-6">calendar_month</mat-icon>
+                  </button>
+                  <mat-datepicker #endPicker></mat-datepicker>
+                </div>
+              </form>
+              @if(filterForm.get('endDate')?.hasError('required') && filterForm.get('startDate')?.value){
+              <div class="text-danger small mt-1">
+                {{ "END_DATE_IS_REQUIRED_WHEN_START_DATE_IS_SELECTED" | translate }}
+              </div>
+              }
+            </div>
+            }
+          </div>
+        </div>
+        }
+      </div>
+
+      <!-- Table Area -->
+      <div class="table-responsive">
+        @let orderBy = (documentStore.documentResourceParameter().orderBy ?
+        documentStore.documentResourceParameter().orderBy.split(" ") :
+        ['','asc']);
+        <table [dir]="langDir" mat-table [dataSource]="documentStore.documents()" matSortDisableClear
+          class="modern-doc-table w-100" matSort [matSortActive]="orderBy[0]"
+          [matSortDirection]="orderBy[1] === 'asc' ? 'asc' : 'desc'">
+          
+          <!-- 1. Action Column -->
+          <ng-container matColumnDef="action">
+            <th class="table-column-60" mat-header-cell *matHeaderCellDef>
+              {{ "ACTION" | translate }}
+            </th>
+            <td class="table-column-60" mat-cell *matCellDef="let document">
+              <button type="button" class="btn-action-more"
+                *hasClaim="[
+                  'CREATE_SHAREABLE_LINK',
+                  'RESTORE_DOCUMENT',
+                  'DOWNLOAD_DOCUMENT',
+                  'VIEW_VERSION_HISTORY',
+                  'SEND_EMAIL',
+                  'DELETE_DOCUMENT'
+                ]"
+                [matMenuTriggerFor]="menu"
+                [attr.aria-label]="'Action'"
+                matTooltip="Actions">
+                <mat-icon class="action-icon">more_vert</mat-icon>
+              </button>
+
+              <mat-menu #menu="matMenu" class="custom-action-menu">
+                <button *hasClaim="'CREATE_SHAREABLE_LINK'" mat-menu-item (click)="onCreateShareableLink(document)" type="button">
+                  <mat-icon class="menu-item-icon text-primary">link</mat-icon>
+                  <span>{{ "GET_SHAREABLE_LINK" | translate }}</span>
+                </button>
+                <button mat-menu-item (click)="onDocumentView(document)" type="button">
+                  <mat-icon class="menu-item-icon text-info">visibility</mat-icon>
+                  <span>{{ "VIEW" | translate }}</span>
+                </button>
+                <button *hasClaim="'RESTORE_DOCUMENT'" mat-menu-item (click)="restoreDocument(document)" type="button">
+                  <mat-icon class="menu-item-icon text-success">restore_from_trash</mat-icon>
+                  <span>{{ "RESTORE" | translate }}</span>
+                </button>
+                <button *hasClaim="'DOWNLOAD_DOCUMENT'" mat-menu-item (click)="downloadDocument(document)" type="button">
+                  <mat-icon class="menu-item-icon text-primary">download</mat-icon>
+                  <span>{{ "DOWNLOAD" | translate }}</span>
+                </button>
+                <button *hasClaim="'VIEW_VERSION_HISTORY'" mat-menu-item (click)="onVersionHistoryClick(document)">
+                  <mat-icon class="menu-item-icon text-secondary">history</mat-icon>
+                  <span>{{ "VERSION_HISOTRY" | translate }}</span>
+                </button>
+                <button *hasClaim="'SEND_EMAIL'" mat-menu-item (click)="sendEmail(document)" type="button">
+                  <mat-icon class="menu-item-icon text-info">forward_to_inbox</mat-icon>
+                  <span>{{ "SEND_EMAIL" | translate }}</span>
+                </button>
+                <button *hasClaim="'DELETE_DOCUMENT'" mat-menu-item (click)="deleteDocument(document)" type="button" class="menu-item-delete">
+                  <mat-icon class="menu-item-icon text-danger">delete</mat-icon>
+                  <span class="text-danger">{{ "DELETE" | translate }}</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <!-- 2. Document Number -->
+          <ng-container matColumnDef="documentNumber">
+            <th class="table-column-140" mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "DOCUMENT_NO" | translate }}
+            </th>
+            <td class="table-column-140" mat-cell *matCellDef="let document">
+              <a class="doc-link" (click)="onDocumentView(document)" matTooltip="Click to view document">
+                {{ document.documentNumber }}
+              </a>
+            </td>
+          </ng-container>
+
+          <!-- 3. Document Name -->
+          <ng-container matColumnDef="name">
+            <th class="table-column-180" mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "NAME" | translate }}
+            </th>
+            <td class="table-column-180" mat-cell *matCellDef="let document">
+              <a class="doc-link d-inline-flex align-items-center gap-1" (click)="onDocumentView(document)" matTooltip="Click to view document">
+                <mat-icon class="doc-icon fs-6">description</mat-icon>
+                <span class="doc-title">{{ document.name }}</span>
+              </a>
+            </td>
+          </ng-container>
+
+          <!-- 4. Category -->
+          <ng-container matColumnDef="categoryName">
+            <th class="table-column-150" mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "CATEGORY" | translate }}
+            </th>
+            <td class="table-column-150" mat-cell *matCellDef="let document">
+              <div class="folder-cell d-inline-flex align-items-center gap-1">
+                <mat-icon class="text-warning fs-6">folder</mat-icon>
+                <span>{{ document.categoryName || '-' }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- 5. Created Date -->
+          <ng-container matColumnDef="createdDate">
+            <th class="table-column-130" mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "CREATED_DATE" | translate }}
+            </th>
+            <td class="table-column-130" mat-cell *matCellDef="let document">
+              <span class="cell-date">{{ document?.createdDate | utcToLocalTime : "shortDate" }}</span>
+            </td>
+          </ng-container>
+
+          <!-- 6. Created By -->
+          <ng-container matColumnDef="createdBy">
+            <th class="table-column-140" mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "CREATED_BY" | translate }}
+            </th>
+            <td class="table-column-140" mat-cell *matCellDef="let document">
+              <div class="user-cell d-flex align-items-center gap-1">
+                <mat-icon class="user-icon fs-6 text-muted">person_outline</mat-icon>
+                <span>{{ document?.createdBy || '-' }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- 7. Archive By -->
+          <ng-container matColumnDef="archiveName">
+            <th class="table-column-140" mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "ARCHIVE_BY" | translate }}
+            </th>
+            <td class="table-column-140" mat-cell *matCellDef="let document">
+              <div class="user-cell d-flex align-items-center gap-1">
+                <mat-icon class="user-icon fs-6 text-muted">archive</mat-icon>
+                <span>{{ document?.archiveName || '-' }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- 8. Client -->
+          <ng-container matColumnDef="client">
+            <th class="table-column-140" mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "CLIENT" | translate }}
+            </th>
+            <td class="table-column-140" mat-cell *matCellDef="let document">
+              <span class="text-muted">{{ document.client?.companyName || '-' }}</span>
+            </td>
+          </ng-container>
+
+          <!-- 9. Status -->
+          <ng-container matColumnDef="documentStatus">
+            <th class="table-column-130" mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "STATUS" | translate }}
+            </th>
+            <td class="table-column-130" mat-cell *matCellDef="let document">
+              @if (document.documentStatus) {
+              <span class="status-pill" [ngStyle]="{ 'color': document.documentStatus?.colorCode, 'border-color': document.documentStatus?.colorCode + '40', 'background-color': document.documentStatus?.colorCode + '15' }">
+                {{ document.documentStatus?.name }}
+              </span>
+              } @else {
+              <span class="text-muted">-</span>
+              }
+            </td>
+          </ng-container>
+
+          <!-- 10. Current Workflow -->
+          <ng-container matColumnDef="currentWorkflow">
+            <th class="table-column-160" mat-header-cell *matHeaderCellDef>
+              {{ "WORKFLOW" | translate }}
+            </th>
+            <td class="table-column-160" mat-cell *matCellDef="let document">
+              @if(document.workflowsDetail && document.workflowsDetail.length > 0) {
+              <div class="d-flex flex-column gap-1">
+                @for(workflow of document.workflowsDetail; let i = $index; track i) {
+                <a class="workflow-link d-inline-flex align-items-center gap-1"
+                  [ngClass]="{
+                    'workflow-success': workflow.workflowInstaceStatus == 2,
+                    'workflow-danger': workflow.workflowInstaceStatus == 3,
+                    'workflow-info': workflow.workflowInstaceStatus == 1
+                  }"
+                  (click)="viewVisualWorkflow(workflow)"
+                  matTooltip="View visual workflow graph">
+                  <mat-icon class="fs-6">account_tree</mat-icon>
+                  <span>{{ document.workflowsDetail[i].workflowName }}</span>
+                </a>
+                }
+              </div>
+              } @else {
+              <span class="text-muted">-</span>
+              }
+            </td>
+          </ng-container>
+
+          <!-- 11. Is Signed -->
+          <ng-container matColumnDef="isSigned">
+            <th class="table-column-120" mat-header-cell *matHeaderCellDef>
+              {{ "ISSIGN" | translate }}
+            </th>
+            <td class="table-column-120" mat-cell *matCellDef="let document">
+              @if(document.isSignatureExists) {
+              <span class="signed-badge d-inline-flex align-items-center gap-1">
+                <mat-icon class="fs-6 text-success">check_circle</mat-icon>
+                <span>{{ document.signBy }}</span>
+              </span>
+              } @else {
+              <span class="text-muted">-</span>
+              }
+            </td>
+          </ng-container>
+
+          <!-- 12. Sign Date -->
+          <ng-container matColumnDef="signDate">
+            <th class="table-column-130" mat-header-cell *matHeaderCellDef>
+              {{ "SIGNDATE" | translate }}
+            </th>
+            <td class="table-column-130" mat-cell *matCellDef="let document">
+              @if(document.signByDate && document.isSignatureExists) {
+              <span class="cell-date">{{ document?.signByDate | utcToLocalTime : "short" }}</span>
+              } @else {
+              <span class="text-muted">-</span>
+              }
+            </td>
+          </ng-container>
+
+          <!-- 13. Storage Type -->
+          <ng-container matColumnDef="storageType">
+            <th class="table-column-140" mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "STORAGE" | translate }}
+            </th>
+            <td class="table-column-140" mat-cell *matCellDef="let document">
+              <div class="storage-cell d-inline-flex align-items-center gap-1">
+                <mat-icon class="fs-6 text-muted">cloud_queue</mat-icon>
+                <span>{{ document.storageType | storageType : document.storageSettingName }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Footer / Paginator -->
+          <ng-container matColumnDef="footer">
+            <td mat-footer-cell colspan="13" *matFooterCellDef class="p-0 border-top">
+              @let pageIndex = documentStore.documentResourceParameter().skip / documentStore.documentResourceParameter().pageSize;
+              <mat-paginator
+                [length]="documentStore.documentResourceParameter().totalCount"
+                [pageSize]="documentStore.documentResourceParameter().pageSize"
+                [pageIndex]="pageIndex"
+                [pageSizeOptions]="[10, 20, 30, 50]"
+                [showFirstLastButtons]="true"
+                class="custom-paginator">
+              </mat-paginator>
+            </td>
+          </ng-container>
+
+          <tr class="grid-header-row" mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr class="grid-body-row" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <tr mat-footer-row *matFooterRowDef="footerToDisplayed; sticky: true"></tr>
+          <tr *matNoDataRow class="mat-row">
+            <td colspan="13" class="p-4 text-center text-muted">
+              <div class="empty-state d-flex flex-column align-items-center justify-content-center py-3">
+                <mat-icon class="fs-2 text-muted mb-1">archive</mat-icon>
+                <span class="fs-7 font-weight-bold">{{ "NO_DATA_FOUND" | translate }}</span>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Loading Spinner Overlay -->
+@if(documentStore.isLoading() || isLoadingResults){
+<div class="spinner-container">
+  <mat-progress-spinner mode="indeterminate" diameter="50" strokeWidth="4">
+  </mat-progress-spinner>
+</div>
+}

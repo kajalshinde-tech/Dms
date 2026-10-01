@@ -1,0 +1,253 @@
+// -------------------------------------------------------------
+// Login Audit Logs List Styles
+// -------------------------------------------------------------
+
+.page-header-row {
+  margin-bottom: 0.75rem;
+
+  @media (max-width: 575.98px) {
+    margin-bottom: 0.5rem;
+  }
+
+  .page-title {
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: var(--app-text-color, #0f172a) !important;
+    letter-spacing: -0.01em !important;
+    line-height: 1.25 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+  }
+
+  .page-title-icon {
+    color: var(--app-primary-color, #059669) !important;
+    font-size: 20px !important;
+    width: 20px !important;
+    height: 20px !important;
+    line-height: 20px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-right: 4px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+// Search Field Box
+.header-search-container {
+  min-width: 260px;
+
+  @media (max-width: 575.98px) {
+    width: 100%;
+    min-width: 100%;
+  }
+}
+
+.form-field-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 36px;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+
+  &:focus-within {
+    border-color: var(--app-primary-color, #059669);
+    box-shadow: 0 0 0 2.5px rgba(5, 150, 105, 0.12);
+  }
+
+  .field-icon {
+    position: absolute;
+    left: 10px;
+    color: #64748b;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .field-input {
+    padding-left: 34px !important;
+    padding-right: 12px !important;
+    font-size: 0.81rem;
+    color: #1e293b;
+    height: 100%;
+    border: none;
+    background: transparent;
+    box-shadow: none !important;
+
+    &::placeholder {
+      color: #94a3b8;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+// Main Table Card
+.doc-table-card {
+  background: #ffffff;
+  border: 1px solid var(--app-border-color, #e2e8f0);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+// Modern Table Styling
+.modern-doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+
+  .grid-header-row {
+    background-color: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0;
+    height: 42px;
+
+    th {
+      font-size: 0.72rem !important;
+      font-weight: 700 !important;
+      color: #475569 !important;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 6px 16px !important;
+      white-space: nowrap;
+      border-bottom: 1px solid #e2e8f0 !important;
+    }
+  }
+
+  .grid-body-row {
+    height: 48px;
+    border-bottom: 1px solid #f1f5f9;
+    transition: background-color 0.12s ease;
+
+    &:hover {
+      background-color: #f8fafc;
+    }
+
+    td {
+      font-size: 0.81rem !important;
+      color: #334155;
+      padding: 6px 16px !important;
+      border-bottom: 1px solid #f1f5f9 !important;
+    }
+  }
+
+  .time-icon-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background-color: #f1f5f9;
+    color: #64748b;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    .item-icon {
+      font-size: 15px;
+      width: 15px;
+      height: 15px;
+      line-height: 15px;
+    }
+  }
+
+  .user-icon-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background-color: #eff6ff;
+    color: #2563eb;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    .item-icon {
+      font-size: 15px;
+      width: 15px;
+      height: 15px;
+      line-height: 15px;
+    }
+  }
+
+  .badge-ip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background-color: #f8fafc;
+    color: #475569;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+    font-family: monospace;
+
+    .ip-icon {
+      font-size: 13px;
+      width: 13px;
+      height: 13px;
+      line-height: 13px;
+      color: #94a3b8;
+    }
+  }
+
+  .geo-text {
+    font-size: 0.77rem;
+    color: #64748b;
+    font-family: monospace;
+  }
+}
+
+// Status Badges
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  .pill-icon {
+    font-size: 13px;
+    width: 13px;
+    height: 13px;
+    line-height: 13px;
+  }
+
+  &.status-success {
+    background-color: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+  }
+
+  &.status-error {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+  }
+}
+
+// Spinner
+.spinner-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}

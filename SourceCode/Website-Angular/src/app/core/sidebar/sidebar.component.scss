@@ -1,0 +1,68 @@
+:host {
+  display: block;
+}
+
+.sidebar {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+
+  &::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  .menu {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+
+    &::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+
+    ::ng-deep {
+      ng-scrollbar,
+      .ng-scrollbar,
+      .ng-scrollbar-wrapper {
+        --scrollbar-size: 0px !important;
+        --scrollbar-thumb-color: transparent !important;
+        --scrollbar-track-color: transparent !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+
+        &::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
+        }
+
+        .ng-scrollbar-track,
+        .ng-scrollbar-thumb,
+        .scrollbar-track,
+        .scrollbar-thumb,
+        .ng-scrollbar-thumb-wrapper {
+          background-color: transparent !important;
+          background: transparent !important;
+          opacity: 0 !important;
+          visibility: hidden !important;
+          display: none !important;
+          border: none !important;
+          pointer-events: none !important;
+        }
+
+        .ng-scroll-viewport {
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+
+          &::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+          }
+        }
+      }
+    }
+  }
+}

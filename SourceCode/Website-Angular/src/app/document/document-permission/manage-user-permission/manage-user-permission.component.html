@@ -1,0 +1,130 @@
+<mat-dialog-content class="manage-submodal">
+  <!-- Header -->
+  <div class="modal-header d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+    <div class="d-flex align-items-center gap-2">
+      <div class="modal-header-icon">
+        <mat-icon>person_add</mat-icon>
+      </div>
+      <div>
+        <h6 class="modal-title mb-0">
+          {{ "USER_PERMISSION" | translate }}
+        </h6>
+        <span class="text-muted fs-11">
+          Assign document access permissions to specific users
+        </span>
+      </div>
+    </div>
+    <button type="button" (click)="onNoClick()" class="modal-close-btn" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form [formGroup]="permissionForm" class="modal-form-body">
+    <div class="row g-2">
+      <div class="col-12">
+        <div class="form-group mb-2">
+          <label class="form-label">{{'USERS' | translate}} <span class="text-danger">*</span></label>
+          <mat-select panelClass="mat-select-control" placeholder="{{ 'SELECT_USERS' | translate }}"
+            [(value)]="selectedUsers" multiple class="form-control">
+            <mat-select-trigger>
+              @if (selectedUsers.length > 0) {
+                <span>
+                  {{selectedUsers[0].firstName}} {{selectedUsers[0].lastName}} ({{selectedUsers[0].userName}})
+                </span>
+              }
+              @if (selectedUsers.length > 1) {
+                <span class="example-additional-selection text-muted ms-1">
+                  (+{{selectedUsers.length - 1}} {{selectedUsers.length === 2 ? 'other' : 'others'}})
+                </span>
+              }
+            </mat-select-trigger>
+            <input class="form-control mb-1" (keyup)="filterUsers($event)"
+              placeholder="{{ 'SEARCH_BY_USER_ROLE_NAME_AND_EMAIL' | translate }}" #input1 />
+            @for (user of filteredUsers; track user) {
+              <mat-option color="primary" [value]="user">
+                {{user.firstName}} {{user.lastName}} ({{user.userName}})
+              </mat-option>
+            }
+          </mat-select>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <mat-checkbox (change)="timeBoundChange($event)" color="primary" formControlName="isTimeBound">
+          <span class="fs-12">{{'SPACIFY_THE_PERIOD' | translate}}</span>
+        </mat-checkbox>
+      </div>
+
+      @if (permissionForm.get('isTimeBound')?.value) {
+        <div class="col-sm-12 col-md-6">
+          <div class="form-group mb-2">
+            <label class="form-label">{{'CHOOSE_A_START_DATE' | translate}}</label>
+            <div class="input-group input-group-sm">
+              <input formControlName="startDate" placeholder="{{'START_DATE' | translate}}" class="form-control"
+                [min]="minDate" [matDatepicker]="startDatePicker">
+              <button class="btn btn-outline-secondary calendar-trigger-btn" type="button" (click)="startDatePicker.open()">
+                <mat-icon class="calendar-icon">calendar_today</mat-icon>
+              </button>
+              <mat-datepicker #startDatePicker></mat-datepicker>
+            </div>
+            @if (permissionForm.get('startDate')?.touched && permissionForm.get('startDate')?.errors?.['required']) {
+              <div class="text-danger small mt-1">
+                {{'START_DATE_IS_REQURED' | translate}}
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="col-sm-12 col-md-6">
+          <div class="form-group mb-2">
+            <label class="form-label">{{'CHOOSE_A_END_DATE' | translate}}</label>
+            <div class="input-group input-group-sm">
+              <input formControlName="endDate" class="form-control" placeholder="{{'END_DATE' | translate}}"
+                [min]="permissionForm.get('startDate')?.value" [matDatepicker]="endDatePicker">
+              <button class="btn btn-outline-secondary calendar-trigger-btn" type="button" (click)="endDatePicker.open()">
+                <mat-icon class="calendar-icon">calendar_today</mat-icon>
+              </button>
+              <mat-datepicker #endDatePicker></mat-datepicker>
+            </div>
+            @if (permissionForm.get('startDate')?.touched && permissionForm.get('endDate')?.errors?.['required']) {
+              <div class="text-danger small mt-1">
+                {{'END_DATE_IS_REQURED' | translate}}
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <div class="col-12">
+        <mat-checkbox color="primary" formControlName="isAllowDownload">
+          <span class="fs-12">{{'ALLOW_DOWNLOAD' | translate}}</span>
+        </mat-checkbox>
+      </div>
+
+      <div class="col-12">
+        <mat-checkbox color="primary" formControlName="isAllowEmailNotification">
+          <span class="fs-12">{{'IS_ALLOW_NOTIFICATION' | translate}}</span>
+        </mat-checkbox>
+      </div>
+
+      @if (permissionForm.get('isAllowEmailNotification')?.value && !smtpConfigured) {
+        <div class="col-12">
+          <div class="alert alert-warning py-1 px-2 mb-2 fs-12">
+            {{ 'PLEASE_CONFIGURE_EMAIL_SMTP_SETTINGS' | translate }}
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer-actions d-flex align-items-center justify-content-end gap-2 mt-3 pt-2 border-top">
+      <button type="button" class="btn-modal-cancel" (click)="onNoClick()">
+        {{'CANCEL' | translate}}
+      </button>
+      <button type="button" class="btn-modal-primary" (click)="saveDocumentUserPermission()" cdkFocusInitial>
+        <mat-icon class="btn-icon-save">save</mat-icon>
+        {{'SAVE' | translate}}
+      </button>
+    </div>
+  </form>
+</mat-dialog-content>

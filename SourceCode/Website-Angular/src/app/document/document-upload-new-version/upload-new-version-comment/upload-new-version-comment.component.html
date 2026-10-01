@@ -1,0 +1,32 @@
+<div class="saas-dialog-container">
+  <!-- Dialog Header -->
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge info-badge">
+        <mat-icon>chat</mat-icon>
+      </div>
+      <div>
+        <h5 class="dialog-title mb-0">{{ "COMMENT" | translate }}</h5>
+        <p class="dialog-subtitle mb-0">Version Note & Description</p>
+      </div>
+    </div>
+    <button type="button" class="dialog-close-btn" (click)="closeDialog()" [attr.aria-label]="'CANCEL' | translate">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Dialog Body -->
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <div class="comment-display-card" [formGroup]="commentForm">
+      <textarea readonly class="form-control doc-form-input comment-readonly-box" formControlName="comment" rows="4"></textarea>
+    </div>
+  </mat-dialog-content>
+
+  <!-- Dialog Footer -->
+  <mat-dialog-actions class="saas-dialog-footer">
+    <button type="button" class="btn btn-saas-cancel ms-auto" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+      <span>{{ "CANCEL" | translate }}</span>
+    </button>
+  </mat-dialog-actions>
+</div>

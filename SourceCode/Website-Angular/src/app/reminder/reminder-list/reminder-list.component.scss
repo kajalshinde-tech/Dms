@@ -1,0 +1,443 @@
+// -------------------------------------------------------------
+// Reminder List Styles
+// -------------------------------------------------------------
+
+.page-header-row {
+  margin-bottom: 1.25rem;
+
+  @media (max-width: 575.98px) {
+    margin-bottom: 0.75rem;
+  }
+
+  .page-title {
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: var(--app-text-color, #0f172a) !important;
+    letter-spacing: -0.01em !important;
+    line-height: 1.25 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+  }
+
+  .page-title-icon {
+    color: var(--app-primary-color, #059669) !important;
+    font-size: 22px !important;
+    width: 22px !important;
+    height: 22px !important;
+    line-height: 22px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-right: 4px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+.btn-add-main {
+  height: 36px !important;
+  padding: 0 16px !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  background-color: var(--app-primary-color, #059669) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(5, 150, 105, 0.25) !important;
+
+  &:hover {
+    background-color: var(--primary-hover, #047857) !important;
+  }
+}
+
+// -------------------------------------------------------------
+// Filter Toolbar Card
+// -------------------------------------------------------------
+.doc-filter-card {
+  background: #ffffff;
+  border: 1px solid var(--app-border-color, #e2e8f0);
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+
+  .filter-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .filter-icon {
+      position: absolute;
+      left: 10px;
+      color: #94a3b8;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      line-height: 18px;
+      pointer-events: none;
+    }
+
+    .filter-control {
+      padding-left: 34px !important;
+      padding-right: 30px !important;
+    }
+
+    .btn-filter-clear {
+      position: absolute;
+      right: 6px;
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      padding: 0;
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+
+      &:hover {
+        color: #475569;
+      }
+
+      mat-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+        line-height: 14px;
+      }
+    }
+  }
+
+  .filter-control {
+    height: 38px !important;
+    font-size: 0.82rem !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    background-color: #f8fafc !important;
+    padding: 0 12px !important;
+    transition: all 0.2s ease !important;
+    color: #1e293b !important;
+    width: 100% !important;
+
+    &:focus {
+      background-color: #ffffff !important;
+      border-color: var(--app-primary-color, #059669) !important;
+      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.12) !important;
+      outline: none !important;
+    }
+  }
+
+  .btn-clear-all {
+    height: 38px;
+    padding: 0 12px;
+    border-radius: 8px;
+    background-color: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+    font-size: 0.78rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background-color: #e2e8f0;
+      color: #1e293b;
+    }
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      line-height: 16px;
+    }
+  }
+}
+
+// -------------------------------------------------------------
+// Datatable Card & Layout
+// -------------------------------------------------------------
+.doc-table-card {
+  background: #ffffff;
+  border: 1px solid var(--app-border-color, #e2e8f0);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.doc-table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+}
+
+.doc-table-scroll-container {
+  overflow-y: visible;
+  overflow-x: auto;
+  width: 100%;
+}
+
+.doc-modern-table {
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+
+  .doc-table-header-row {
+    background: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+
+    th {
+      font-size: 0.75rem !important;
+      font-weight: 700 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.03em !important;
+      color: #475569 !important;
+      padding: 12px 14px !important;
+      border-bottom: 1px solid #e2e8f0 !important;
+      background: #f8fafc !important;
+    }
+  }
+
+  .doc-table-row {
+    transition: background-color 0.15s ease;
+    border-bottom: 1px solid #f1f5f9;
+
+    &:hover {
+      background-color: var(--app-hover-bg, #f8fafc) !important;
+    }
+
+    td {
+      padding: 10px 14px !important;
+      font-size: 0.82rem !important;
+      color: #334155 !important;
+      vertical-align: middle !important;
+      border-bottom: 1px solid #f1f5f9 !important;
+    }
+  }
+
+  .doc-table-footer-row {
+    background: #f8fafc !important;
+    border-top: 1px solid #e2e8f0 !important;
+  }
+
+  .table-col-action {
+    width: 90px;
+    min-width: 90px;
+    text-align: center;
+  }
+
+  .table-col-date {
+    min-width: 160px;
+  }
+
+  .table-col-subject {
+    min-width: 180px;
+  }
+
+  .table-col-message {
+    min-width: 220px;
+  }
+
+  .table-col-frequency {
+    min-width: 130px;
+  }
+
+  .table-col-document {
+    min-width: 180px;
+  }
+}
+
+// -------------------------------------------------------------
+// Action Icon Buttons
+// -------------------------------------------------------------
+.btn-action-edit {
+  width: 30px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  border-radius: 8px !important;
+  background-color: var(--app-primary-color, #059669) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 1px 3px rgba(5, 150, 105, 0.25) !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  &:hover {
+    background-color: var(--primary-hover, #047857) !important;
+  }
+
+  .action-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+.btn-action-delete {
+  width: 30px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  border-radius: 8px !important;
+  background-color: #ffffff !important;
+  color: #dc2626 !important;
+  border: 1px solid #fee2e2 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  &:hover {
+    background-color: #fef2f2 !important;
+    border-color: #fca5a5 !important;
+  }
+
+  .action-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+// -------------------------------------------------------------
+// Typography & Badges
+// -------------------------------------------------------------
+.text-subject {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.text-message {
+  color: #475569;
+  font-size: 0.8rem;
+}
+
+.text-date {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.text-document {
+  color: var(--app-primary-color, #059669);
+  font-size: 0.82rem;
+  font-weight: 500;
+
+  .doc-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: var(--app-primary-color, #059669);
+    flex-shrink: 0;
+  }
+}
+
+.badge-frequency {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(5, 150, 105, 0.08);
+  color: var(--app-primary-color, #059669);
+  border: 1px solid rgba(5, 150, 105, 0.2);
+}
+
+// -------------------------------------------------------------
+// Empty State & Paginator
+// -------------------------------------------------------------
+.empty-state-wrapper {
+  .empty-state-icon {
+    mat-icon {
+      font-size: 42px;
+      width: 42px;
+      height: 42px;
+      color: #94a3b8;
+    }
+  }
+
+  .empty-state-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #334155;
+  }
+
+  .empty-state-desc {
+    font-size: 0.82rem;
+  }
+}
+
+::ng-deep {
+  .doc-custom-paginator {
+    background: transparent !important;
+    font-size: 0.8rem !important;
+
+    .mat-mdc-paginator-container {
+      padding: 4px 14px !important;
+      min-height: 46px !important;
+    }
+  }
+
+  mat-select.filter-control {
+    display: inline-flex !important;
+    align-items: center !important;
+    height: 38px !important;
+    padding: 0 12px !important;
+    box-sizing: border-box !important;
+    background-color: #f8fafc !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+
+    .mat-mdc-select-trigger {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .mat-mdc-select-value {
+      display: inline-flex !important;
+      align-items: center !important;
+      font-size: 0.82rem !important;
+      color: #1e293b !important;
+      line-height: normal !important;
+    }
+
+    .mat-mdc-select-arrow-wrapper {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      transform: none !important;
+      height: 100% !important;
+      margin-left: 6px !important;
+
+      .mat-mdc-select-arrow {
+        margin: 0 !important;
+        color: #64748b !important;
+        border-top-color: #64748b !important;
+        display: inline-block !important;
+        vertical-align: middle !important;
+      }
+    }
+  }
+}

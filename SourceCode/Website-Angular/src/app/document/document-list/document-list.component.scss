@@ -1,0 +1,724 @@
+// -------------------------------------------------------------
+// Document List Component Styles (Unified SaaS Layout & Table)
+// -------------------------------------------------------------
+
+// Page Header
+.page-header-row {
+  margin-bottom: 0.75rem;
+
+  @media (max-width: 575.98px) {
+    margin-bottom: 0.5rem;
+  }
+
+  .page-title {
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: var(--app-text-color, #0f172a) !important;
+    letter-spacing: -0.01em !important;
+    line-height: 1.25 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+  }
+
+  .page-title-icon {
+    color: var(--app-primary-color, #059669) !important;
+    font-size: 20px !important;
+    width: 20px !important;
+    height: 20px !important;
+    line-height: 20px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-right: 4px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+// -------------------------------------------------------------
+// Segmented Button Group (Folder View, Refresh, Settings)
+// -------------------------------------------------------------
+.modern-btn-group {
+  display: inline-flex;
+  border-radius: 6px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+
+  .btn-group-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 34px;
+    padding: 0 12px;
+    background: transparent;
+    border: none;
+    border-right: 1px solid #e2e8f0;
+    color: #475569;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:last-child {
+      border-right: none;
+    }
+
+    &:hover {
+      background-color: #f1f5f9;
+      color: var(--app-primary-color, #059669);
+    }
+
+    .btn-group-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      line-height: 16px;
+      color: #64748b;
+    }
+
+    &:hover .btn-group-icon {
+      color: var(--app-primary-color, #059669);
+    }
+  }
+}
+
+// -------------------------------------------------------------
+// Primary Add Document Button
+// -------------------------------------------------------------
+.btn-add-main {
+  height: 34px !important;
+  padding: 0 14px !important;
+  border-radius: 6px !important;
+  background-color: var(--app-primary-color, #059669) !important;
+  color: #ffffff !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  border: none !important;
+  box-shadow: 0 1px 4px rgba(5, 150, 105, 0.25) !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+
+  &:hover {
+    background-color: var(--primary-hover, #047857) !important;
+  }
+
+  mat-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+.btn-mobile-trigger {
+  width: 34px !important;
+  height: 34px !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 6px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #475569 !important;
+  background: #ffffff !important;
+
+  mat-icon {
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+
+// -------------------------------------------------------------
+// Unified Card Container
+// -------------------------------------------------------------
+.doc-table-card {
+  background: #ffffff;
+  border: 1px solid var(--app-border-color, #e2e8f0);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+// -------------------------------------------------------------
+// Filter Section (Uniform CSS Grid & Exact-Aligned Boxes)
+// -------------------------------------------------------------
+.card-filter-toolbar {
+  background: #ffffff;
+
+  .filter-header-title {
+    cursor: pointer;
+    user-select: none;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background-color: #f8fafc;
+    }
+
+    .filter-header-icon {
+      color: var(--app-primary-color, #059669);
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+
+    .filter-title-text {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .toggle-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: #94a3b8;
+    }
+  }
+
+  .btn-clear-filters {
+    height: 28px;
+    padding: 0 10px;
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 5px;
+    color: #dc2626;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.74rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background-color: #fee2e2;
+      border-color: #f87171;
+    }
+
+    mat-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  .filter-grid-container {
+    width: 100%;
+  }
+
+  .filter-grid-layout {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    width: 100%;
+
+    @media (max-width: 1199.98px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 575.98px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .filter-field-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 36px;
+    background-color: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+
+    &:focus-within {
+      background-color: #ffffff;
+      border-color: var(--app-primary-color, #059669);
+      box-shadow: 0 0 0 2.5px rgba(5, 150, 105, 0.12);
+    }
+
+    .filter-icon {
+      position: absolute;
+      left: 10px;
+      color: #64748b;
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      line-height: 16px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .filter-control {
+      width: 100%;
+      height: 100%;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding-left: 34px !important;
+      padding-right: 28px !important;
+      font-size: 0.81rem;
+      color: #1e293b;
+      outline: none;
+      box-sizing: border-box;
+
+      &::placeholder {
+        color: #94a3b8;
+      }
+    }
+
+    .filter-select {
+      display: flex;
+      align-items: center;
+      padding-left: 34px !important;
+      padding-right: 10px !important;
+      width: 100%;
+      height: 100%;
+      font-size: 0.81rem;
+      color: #1e293b;
+      cursor: pointer;
+
+      ::ng-deep .mat-mdc-select-trigger {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+      }
+
+      ::ng-deep .mat-mdc-select-value {
+        font-size: 0.81rem;
+        color: #1e293b;
+      }
+
+      ::ng-deep .mat-mdc-select-placeholder {
+        color: #94a3b8;
+      }
+    }
+
+    .btn-picker-trigger {
+      position: absolute;
+      right: 4px;
+      background: transparent;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      padding: 0;
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      z-index: 2;
+
+      &:hover {
+        background-color: #e2e8f0;
+        color: var(--app-primary-color, #059669);
+      }
+
+      mat-icon {
+        font-size: 15px;
+        width: 15px;
+        height: 15px;
+      }
+    }
+  }
+
+  .status-indicator-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+}
+
+// -------------------------------------------------------------
+// Datatable Area
+// -------------------------------------------------------------
+.doc-table-wrapper {
+  position: relative;
+  width: 100%;
+
+  .doc-table-scroll-container {
+    overflow-x: auto;
+    overflow-y: visible;
+    width: 100%;
+  }
+}
+
+.doc-modern-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+
+  .doc-table-header-row {
+    background: #f8fafc;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    height: 40px !important;
+
+    th {
+      font-size: 0.74rem !important;
+      font-weight: 700 !important;
+      color: #475569 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.03em !important;
+      padding: 8px 12px !important;
+      border-bottom: 1px solid #e2e8f0 !important;
+      white-space: nowrap !important;
+    }
+  }
+
+  .doc-table-row {
+    transition: background-color 0.15s ease;
+
+    &.odd-row {
+      background-color: #ffffff;
+    }
+
+    &.even-row {
+      background-color: #fbfcfe;
+    }
+
+    &:hover {
+      background-color: #f1f5f9 !important;
+    }
+
+    td {
+      padding: 8px 12px !important;
+      border-bottom: 1px solid #f1f5f9 !important;
+      font-size: 0.81rem !important;
+      color: #334155;
+      vertical-align: middle !important;
+    }
+  }
+
+  // Column Specifics
+  .table-col-select {
+    width: 48px;
+    min-width: 48px;
+    max-width: 48px;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  .table-col-action {
+    width: 90px;
+    min-width: 90px;
+  }
+
+  .btn-batch-share {
+    width: 28px !important;
+    height: 28px !important;
+    background-color: var(--app-primary-color, #059669) !important;
+    color: #ffffff !important;
+
+    mat-icon {
+      font-size: 15px !important;
+      width: 15px !important;
+      height: 15px !important;
+    }
+  }
+
+  .btn-action-more {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 6px !important;
+    background-color: #f1f5f9 !important;
+    color: #475569 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    transition: all 0.15s ease !important;
+
+    &:hover {
+      background-color: var(--app-primary-light, rgba(5, 150, 105, 0.12)) !important;
+      color: var(--app-primary-color, #059669) !important;
+    }
+
+    mat-icon {
+      font-size: 16px !important;
+      width: 16px !important;
+      height: 16px !important;
+    }
+  }
+
+  .btn-action-badge {
+    height: 24px;
+    padding: 0 6px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    background: transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    .action-badge-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
+
+    .action-badge-count {
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    &.btn-comment-badge {
+      background-color: #eff6ff;
+      border-color: #bfdbfe;
+      color: #2563eb;
+
+      &:hover {
+        background-color: #dbeafe;
+      }
+    }
+
+    &.btn-shared-badge {
+      background-color: #f0fdf4;
+      border-color: #bbf7d0;
+      color: #16a34a;
+
+      &:hover {
+        background-color: #dcfce7;
+      }
+    }
+  }
+
+  // Document Number Link
+  .doc-badge-link {
+    display: inline-flex;
+    align-items: center;
+    background: #f1f5f9;
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    .doc-no-text {
+      font-size: 0.77rem;
+      font-weight: 700;
+      color: #0284c7;
+      font-family: monospace;
+    }
+
+    &:hover {
+      background-color: #e0f2fe;
+      border-color: #bae6fd;
+      .doc-no-text {
+        color: #0369a1;
+      }
+    }
+  }
+
+  // Document Name Link & Icon
+  .doc-icon-wrapper {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background: #f1f5f9;
+    color: #64748b;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    .doc-type-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  .doc-name-link {
+    font-weight: 600;
+    color: #0f172a;
+    font-size: 0.82rem;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--app-primary-color, #059669);
+      text-decoration: underline;
+    }
+  }
+
+  // Workflow Pills
+  .workflow-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    max-width: 140px;
+
+    &.workflow-success {
+      background-color: #f0fdf4;
+      color: #16a34a;
+      border: 1px solid #bbf7d0;
+    }
+
+    &.workflow-danger {
+      background-color: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+    }
+
+    &.workflow-running {
+      background-color: #eff6ff;
+      color: #2563eb;
+      border: 1px solid #bfdbfe;
+    }
+
+    &:hover {
+      filter: brightness(0.95);
+    }
+  }
+
+  // Document Status Badge
+  .doc-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.73rem;
+    font-weight: 600;
+    border: 1px solid;
+
+    .status-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+  }
+
+  // Signed Badge
+  .signed-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background-color: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #16a34a;
+    font-size: 0.73rem;
+    font-weight: 600;
+
+    .signed-icon {
+      font-size: 13px;
+      width: 13px;
+      height: 13px;
+    }
+  }
+
+  .folder-cell-icon,
+  .client-cell-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+}
+
+// -------------------------------------------------------------
+// Empty State
+// -------------------------------------------------------------
+.empty-state-wrapper {
+  .empty-state-icon {
+    mat-icon {
+      font-size: 38px;
+      width: 38px;
+      height: 38px;
+      color: #94a3b8;
+    }
+  }
+
+  .empty-state-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #334155;
+  }
+
+  .empty-state-desc {
+    font-size: 0.8rem;
+  }
+}
+
+// -------------------------------------------------------------
+// Custom Mat Paginator
+// -------------------------------------------------------------
+::ng-deep {
+  .doc-custom-paginator {
+    background: #f8fafc !important;
+    border-top: 1px solid #e2e8f0 !important;
+
+    .mat-mdc-paginator-container {
+      padding: 4px 12px !important;
+      min-height: 40px !important;
+      font-size: 0.78rem !important;
+    }
+
+    .mat-mdc-paginator-page-size-select {
+      margin: 0 4px !important;
+    }
+  }
+
+  .custom-saas-menu {
+    border-radius: 8px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+    border: 1px solid #e2e8f0 !important;
+
+    .mat-mdc-menu-item {
+      font-size: 0.82rem !important;
+      min-height: 38px !important;
+      padding: 0 14px !important;
+
+      mat-icon {
+        font-size: 17px !important;
+        width: 17px !important;
+        height: 17px !important;
+        margin-right: 8px !important;
+        color: #64748b;
+      }
+
+      &:hover {
+        background-color: #f1f5f9 !important;
+      }
+    }
+  }
+}
+
+// -------------------------------------------------------------
+// Loading Spinner Overlay
+// -------------------------------------------------------------
+.spinner-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}

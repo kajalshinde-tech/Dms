@@ -1,0 +1,283 @@
+<section class="content">
+  <div class="container-fluid category-hub-container">
+    <!-- 1. Page Header & Actions -->
+    <div class="d-flex mb-3 align-items-center justify-content-between flex-wrap gap-2">
+      <div class="me-auto d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">folder</mat-icon>
+        <span [dir]="langDir" class="mb-0 page-title">
+          {{ "DOCUMENT_CATEGORIES" | translate }}
+        </span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button
+          [dir]="langDir"
+          *hasClaim="'CREATE_CATEGORY'"
+          class="primary btn-add-main"
+          matButton="filled"
+          (click)="manageCategory(null)"
+        >
+          <mat-icon class="medium-icon fs-5 align-middle">create_new_folder</mat-icon>
+          <span class="d-none d-sm-inline ms-1">{{ "ADD_DOCUMENT_CATEGORY" | translate }}</span>
+          <span class="d-inline d-sm-none ms-1">Add Folder</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. Main Folder Card in Table Format -->
+    <mat-card appearance="outlined" class="folder-table-card">
+      <mat-card-header class="table-card-toolbar">
+        <div class="d-flex align-items-center justify-content-between w-100 flex-wrap gap-2">
+          <div class="d-flex align-items-center gap-2">
+            <div class="folder-header-icon">
+              <mat-icon>snippet_folder</mat-icon>
+            </div>
+            <div>
+              <div class="folder-card-title">Folder Directory</div>
+              <div class="folder-card-subtitle text-muted">
+                {{ getTotalCategoryCount(categories) }} Folders configured
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Search Filter -->
+          <div class="folder-search-wrapper flex-grow-1 flex-sm-grow-0">
+            <mat-icon class="search-icon">search</mat-icon>
+            <input
+              type="text"
+              class="form-control folder-search-input"
+              placeholder="Search folders..."
+              [(ngModel)]="searchTerm"
+            />
+            @if (searchTerm) {
+              <button class="clear-search-btn" (click)="searchTerm = ''" type="button">
+                <mat-icon>close</mat-icon>
+              </button>
+            }
+          </div>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content class="p-0">
+        @if (getDisplayedCategories().length > 0) {
+          <div class="table-responsive tree-table-responsive">
+            <div class="tree-table">
+              <!-- Table Header -->
+              <div class="tree-table-header">
+                <div class="th-cell col-name">{{ "CATEGORY_NAME" | translate }}</div>
+                <div class="th-cell col-subfolders">SUBFOLDERS</div>
+                <div class="th-cell col-desc">{{ "DESCRIPTION" | translate }}</div>
+                <div class="th-cell col-status">STATUS</div>
+                <div class="th-cell col-actions text-end">{{ "ACTION" | translate }}</div>
+              </div>
+
+              <!-- Tree Table Rows -->
+              <mat-tree [dir]="langDir" #tree [dataSource]="getDisplayedCategories()" [childrenAccessor]="childrenAccessor" class="category-tree-table">
+                <!-- Leaf Node (Direct / No subfolders) -->
+                <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding [matTreeNodePaddingIndent]="20" class="tree-table-row leaf-row">
+                  <!-- Column 1: Name & Icon -->
+                  <div class="td-cell col-name">
+                    <div class="tree-leaf-spacer">
+                      <span class="tree-leaf-dot"></span>
+                    </div>
+                    <div class="folder-icon-box" [class.is-shared]="node.isShared">
+                      <mat-icon class="folder-node-icon">{{ node.isShared ? 'folder_shared' : 'folder' }}</mat-icon>
+                    </div>
+                    <div class="folder-title-wrap" (click)="manageCategory(node)">
+                      <span class="folder-title-text">{{ node.name }}</span>
+                    </div>
+                  </div>
+
+                  <!-- Column 2: Subfolders -->
+                  <div class="td-cell col-subfolders">
+                    <span class="subfolder-none-pill">Direct</span>
+                  </div>
+
+                  <!-- Column 3: Description -->
+                  <div class="td-cell col-desc">
+                    @if (node.description) {
+                      <span class="desc-text" [matTooltip]="node.description">{{ node.description }}</span>
+                    } @else {
+                      <span class="empty-dash">—</span>
+                    }
+                  </div>
+
+                  <!-- Column 4: Status -->
+                  <div class="td-cell col-status">
+                    @if (node.isShared) {
+                      <span class="status-badge shared">
+                        <mat-icon>folder_shared</mat-icon>
+                        <span>Shared</span>
+                      </span>
+                    } @else {
+                      <span class="status-badge standard">
+                        <mat-icon>folder</mat-icon>
+                        <span>Standard</span>
+                      </span>
+                    }
+                  </div>
+
+                  <!-- Column 5: Actions -->
+                  <div class="td-cell col-actions">
+                    <div class="folder-actions-group">
+                      <button
+                        type="button"
+                        matTooltip="{{ 'ADD_SUBCATEGORY' | translate }}"
+                        *hasClaim="'EDIT_CATEGORY'"
+                        (click)="addSubCategory(node); $event.stopPropagation()"
+                        class="folder-action-btn btn-add"
+                      >
+                        <mat-icon>create_new_folder</mat-icon>
+                      </button>
+
+                      <button
+                        type="button"
+                        matTooltip="{{ 'SHARED_CATEGORY' | translate }}"
+                        *hasClaim="['ALL_SHARE_FOLDER', 'ASSIGNED_SHARE_FOLDER']"
+                        (click)="manageCategoryPermission(node); $event.stopPropagation()"
+                        class="folder-action-btn btn-share"
+                      >
+                        <mat-icon>share</mat-icon>
+                      </button>
+
+                      <button
+                        type="button"
+                        matTooltip="{{ 'ARCHIVE_CATEGORY' | translate }}"
+                        *hasClaim="['ALL_ARCHIVE_FOLDER', 'ASSIGNED_ARCHIVE_FOLDER']"
+                        (click)="deleteCategory(node); $event.stopPropagation()"
+                        class="folder-action-btn btn-delete"
+                      >
+                        <mat-icon>delete_outline</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </mat-tree-node>
+
+                <!-- Expandable Node (With subfolders) -->
+                <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding [matTreeNodePaddingIndent]="20" class="tree-table-row parent-row" [class.is-expanded]="tree.isExpanded(node)">
+                  <!-- Column 1: Name & Icon -->
+                  <div class="td-cell col-name">
+                    <button
+                      type="button"
+                      class="tree-toggle-btn"
+                      matTreeNodeToggle
+                      [attr.aria-label]="'Toggle ' + node.name"
+                      [class.is-expanded]="tree.isExpanded(node)"
+                    >
+                      <mat-icon class="toggle-icon">
+                        {{ tree.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+                      </mat-icon>
+                    </button>
+                    <div class="folder-icon-box" [class.is-shared]="node.isShared">
+                      <mat-icon class="folder-node-icon">{{ node.isShared ? 'folder_shared' : (tree.isExpanded(node) ? 'folder_open' : 'folder') }}</mat-icon>
+                    </div>
+                    <div class="folder-title-wrap" (click)="manageCategory(node)">
+                      <span class="folder-title-text font-bold">{{ node.name }}</span>
+                    </div>
+                  </div>
+
+                  <!-- Column 2: Subfolders -->
+                  <div class="td-cell col-subfolders">
+                    <span class="subfolder-count-pill" (click)="tree.toggle(node)" matTreeNodeToggle>
+                      <mat-icon>folder_zip</mat-icon>
+                      <span>{{ node.children?.length || 0 }} subfolders</span>
+                    </span>
+                  </div>
+
+                  <!-- Column 3: Description -->
+                  <div class="td-cell col-desc">
+                    @if (node.description) {
+                      <span class="desc-text" [matTooltip]="node.description">{{ node.description }}</span>
+                    } @else {
+                      <span class="empty-dash">—</span>
+                    }
+                  </div>
+
+                  <!-- Column 4: Status -->
+                  <div class="td-cell col-status">
+                    @if (node.isShared) {
+                      <span class="status-badge shared">
+                        <mat-icon>folder_shared</mat-icon>
+                        <span>Shared</span>
+                      </span>
+                    } @else {
+                      <span class="status-badge standard">
+                        <mat-icon>folder</mat-icon>
+                        <span>Standard</span>
+                      </span>
+                    }
+                  </div>
+
+                  <!-- Column 5: Actions -->
+                  <div class="td-cell col-actions">
+                    <div class="folder-actions-group">
+                      <button
+                        type="button"
+                        matTooltip="{{ 'ADD_SUBCATEGORY' | translate }}"
+                        *hasClaim="'EDIT_CATEGORY'"
+                        (click)="addSubCategory(node); $event.stopPropagation()"
+                        class="folder-action-btn btn-add"
+                      >
+                        <mat-icon>create_new_folder</mat-icon>
+                      </button>
+
+                      <button
+                        type="button"
+                        matTooltip="{{ 'SHARED_CATEGORY' | translate }}"
+                        *hasClaim="['ALL_SHARE_FOLDER', 'ASSIGNED_SHARE_FOLDER']"
+                        (click)="manageCategoryPermission(node); $event.stopPropagation()"
+                        class="folder-action-btn btn-share"
+                      >
+                        <mat-icon>share</mat-icon>
+                      </button>
+
+                      <button
+                        type="button"
+                        matTooltip="{{ 'ARCHIVE_CATEGORY' | translate }}"
+                        *hasClaim="['ALL_ARCHIVE_FOLDER', 'ASSIGNED_ARCHIVE_FOLDER']"
+                        (click)="deleteCategory(node); $event.stopPropagation()"
+                        class="folder-action-btn btn-delete"
+                      >
+                        <mat-icon>delete_outline</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </mat-tree-node>
+              </mat-tree>
+            </div>
+          </div>
+        } @else {
+          <!-- Empty State -->
+          <div class="empty-folder-state text-center py-5 px-3">
+            <div class="empty-icon-circle mb-3">
+              <mat-icon>folder_off</mat-icon>
+            </div>
+            <h6 class="fw-700 text-dark mb-1">
+              {{ searchTerm ? 'No matching folders found' : 'No Folders Created Yet' }}
+            </h6>
+            <p class="text-muted fs-13 mb-3">
+              {{ searchTerm ? 'Try searching with a different folder name.' : 'Create categories and folders to neatly organize your documents.' }}
+            </p>
+            @if (!searchTerm) {
+              <button
+                *hasClaim="'CREATE_CATEGORY'"
+                class="primary"
+                matButton="filled"
+                (click)="manageCategory(null)"
+              >
+                <mat-icon class="medium-icon fs-5 align-middle">create_new_folder</mat-icon>
+                <span class="ms-1">{{ "ADD_DOCUMENT_CATEGORY" | translate }}</span>
+              </button>
+            } @else {
+              <button
+                class="btn btn-outline-secondary btn-sm"
+                (click)="searchTerm = ''"
+              >
+                Clear Search
+              </button>
+            }
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>

@@ -1,0 +1,199 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized SaaS Page Header (No Question Mark Help Icon) -->
+    <div class="page-header-row mb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">share_location</mat-icon>
+        <span class="mb-0 page-title">
+          {{ "FILE_REQUEST_LINK" | translate }}
+        </span>
+      </div>
+
+      <!-- Header Actions -->
+      <div class="d-flex align-items-center gap-2">
+        <button *hasClaim="'ADD_FILE_REQUEST'" [routerLink]="['/file-request/manage']" class="primary btn-add-main"
+          matButton="filled">
+          <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
+          <span class="d-none d-sm-inline ms-1">{{ "ADD_FILE_REQUEST" | translate }}</span>
+          <span class="d-inline d-sm-none ms-1">Add</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Modern Datatable Card -->
+    <div class="doc-table-card">
+      <div class="doc-table-wrapper">
+        <div class="doc-table-scroll-container">
+          <table mat-table [dataSource]="fileRequestInfos" multiTemplateDataRows class="w-100 doc-modern-table">
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+              <th class="table-col-action" mat-header-cell *matHeaderCellDef>
+                {{ "ACTION" | translate }}
+              </th>
+              <td class="table-col-action" mat-cell *matCellDef="let fileRequestInfo">
+                <div class="d-flex align-items-center justify-content-center gap-1">
+                  <!-- Expand/Collapse Row Button -->
+                  <button mat-icon-button class="btn-row-expand" (click)="toggleRow(fileRequestInfo)"
+                    [matTooltip]="(fileRequestInfo == expandedElement ? 'COLLAPSE' : 'EXPAND') | translate">
+                    <mat-icon class="expand-icon">{{ fileRequestInfo == expandedElement ? 'expand_more' : 'chevron_right' }}</mat-icon>
+                  </button>
+
+                  <!-- Edit Action Button -->
+                  <button mat-icon-button class="btn-action-edit" *hasClaim="'EDIT_FILE_REQUEST'" [routerLink]="[
+                      '/file-request/manage',
+                      fileRequestInfo.id
+                    ]" [matTooltip]="'EDIT' | translate">
+                    <mat-icon class="action-icon">edit</mat-icon>
+                  </button>
+
+                  <!-- Delete Action Button -->
+                  <button mat-icon-button class="btn-action-delete" *hasClaim="'DELETE_FILE_REQUEST'"
+                    (click)="deleteFileRequest(fileRequestInfo)" type="button" [matTooltip]="'DELETE' | translate">
+                    <mat-icon class="action-icon">delete</mat-icon>
+                  </button>
+
+                  <!-- Copy Link Button -->
+                  <button mat-icon-button class="btn-action-copy" (click)="copyToClipboard(fileRequestInfo.id)" type="button"
+                    [matTooltip]="'COPY_LINK' | translate">
+                    <mat-icon class="action-icon">content_copy</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Expanded Detail Row (Nested Uploaded Documents List) -->
+            <ng-container matColumnDef="expandedDetail">
+              <td mat-cell *matCellDef="let fileRequestInfo" [attr.colspan]="displayedColumns.length" class="expanded-detail-cell p-0">
+                @if(fileRequestInfo == expandedElement) {
+                <div class="expanded-panel-container">
+                  <app-file-request-document-list [fileRequestInfo]="fileRequestInfo"></app-file-request-document-list>
+                </div>
+                }
+              </td>
+            </ng-container>
+
+            <!-- Subject Column -->
+            <ng-container matColumnDef="subject">
+              <th class="table-col-subject" mat-header-cell *matHeaderCellDef>
+                {{ "SUBJECT" | translate }}
+              </th>
+              <td class="table-col-subject" mat-cell *matCellDef="let fileRequestInfo">
+                <span class="text-subject" [matTooltip]="fileRequestInfo.subject">{{ fileRequestInfo.subject }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Email Column -->
+            <ng-container matColumnDef="email">
+              <th class="table-col-email" mat-header-cell *matHeaderCellDef>
+                {{ "EMAIL" | translate }}
+              </th>
+              <td class="table-col-email" mat-cell *matCellDef="let fileRequestInfo">
+                <span class="text-email">{{ fileRequestInfo.email || '-' }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Size In MB Column -->
+            <ng-container matColumnDef="sizeInMb">
+              <th class="table-col-size" mat-header-cell *matHeaderCellDef>
+                {{ "MAXIMUM_FILE_SIZE_UPLOAD" | translate }}
+              </th>
+              <td class="table-col-size" mat-cell *matCellDef="let fileRequestInfo">
+                <span class="badge-size" [appFileSizeLabel]="fileRequestInfo.sizeInMb"></span>
+              </td>
+            </ng-container>
+
+            <!-- Max Document Column -->
+            <ng-container matColumnDef="maxDocument">
+              <th class="table-col-max-docs text-center" mat-header-cell *matHeaderCellDef>
+                {{ "MAXIMUM_DOCUMENT_UPLOAD" | translate }}
+              </th>
+              <td class="table-col-max-docs text-center" mat-cell *matCellDef="let fileRequestInfo">
+                <span class="badge-count">{{ fileRequestInfo.maxDocument }}</span>
+              </td>
+            </ng-container>
+
+            <!-- File Extension Column -->
+            <ng-container matColumnDef="fileExtension">
+              <th class="table-col-extension" mat-header-cell *matHeaderCellDef>
+                {{ "ALLOW_FILE_EXTENSION" | translate }}
+              </th>
+              <td class="table-col-extension" mat-cell *matCellDef="let fileRequestInfo">
+                <span class="badge-extension" [matTooltip]="fileRequestInfo.allowExtension">
+                  {{ fileRequestInfo.allowExtension }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+              <th class="table-col-status" mat-header-cell *matHeaderCellDef>
+                {{ "STATUS" | translate }}
+              </th>
+              <td class="table-col-status" mat-cell *matCellDef="let fileRequestInfo" [appStatusColor]="
+                  fileRequestInfo.fileRequestStatus | fileRequestStatus
+                ">
+                <span class="badge-status-pill">
+                  <span class="status-dot"></span>
+                  {{ fileRequestInfo.fileRequestStatus | fileRequestStatus }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Created By Column -->
+            <ng-container matColumnDef="createdBy">
+              <th class="table-col-created-by" mat-header-cell *matHeaderCellDef>
+                {{ "CREATED_BY" | translate }}
+              </th>
+              <td class="table-col-created-by" mat-cell *matCellDef="let fileRequestInfo">
+                <span class="text-created-by">{{ fileRequestInfo.createdBy }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Created Date Column -->
+            <ng-container matColumnDef="createdDate">
+              <th class="table-col-created-date" mat-header-cell *matHeaderCellDef>
+                {{ "CREATED_DATE" | translate }}
+              </th>
+              <td class="table-col-created-date" mat-cell *matCellDef="let fileRequestInfo">
+                <span class="text-date">{{ fileRequestInfo.createdDate | utcToLocalTime : "shortDate" }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Link Expiry Time Column -->
+            <ng-container matColumnDef="linkExpiryTime">
+              <th class="table-col-expiry" mat-header-cell *matHeaderCellDef>
+                {{ "LINK_EXPIRATION" | translate }}
+              </th>
+              <td class="table-col-expiry" mat-cell *matCellDef="let fileRequestInfo">
+                @if(fileRequestInfo.linkExpiryTime) {
+                <span class="text-date text-expiry">{{ fileRequestInfo.linkExpiryTime | utcToLocalTime : "short" }}</span>
+                } @else {
+                <span class="text-muted">-</span>
+                }
+              </td>
+            </ng-container>
+
+            <!-- Empty Row -->
+            <tr *matNoDataRow>
+              <td colspan="10">
+                <div class="empty-state-wrapper py-5 text-center">
+                  <div class="empty-state-icon mb-2">
+                    <mat-icon>share_location</mat-icon>
+                  </div>
+                  <h6 class="empty-state-title mb-1">{{ "NO_DATA_FOUND" | translate }}</h6>
+                  <p class="empty-state-desc mb-0 text-muted">Create a new file request link using the button above.</p>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Header and Data Rows -->
+            <tr class="grid-header-color doc-table-header-row" mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr class="doc-table-row" mat-row *matRowDef="let row; columns: displayedColumns"
+              [class.is-expanded]="row == expandedElement"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="expandable-detail-row"></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

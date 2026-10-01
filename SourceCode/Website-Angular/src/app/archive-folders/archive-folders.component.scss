@@ -1,0 +1,304 @@
+// -------------------------------------------------------------
+// Archive Folders View Page Styles
+// -------------------------------------------------------------
+
+.page-header-row {
+  margin-bottom: 0.75rem;
+
+  @media (max-width: 575.98px) {
+    margin-bottom: 0.5rem;
+  }
+
+  .page-title {
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: var(--app-text-color, #0f172a) !important;
+    letter-spacing: -0.01em !important;
+    line-height: 1.25 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+  }
+
+  .page-title-icon {
+    color: var(--app-primary-color, #059669) !important;
+    font-size: 20px !important;
+    width: 20px !important;
+    height: 20px !important;
+    line-height: 20px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-right: 4px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+// Refresh Header Button
+.btn-header-refresh {
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 6px;
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  font-size: 0.81rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+
+  .refresh-icon {
+    font-size: 17px;
+    width: 17px;
+    height: 17px;
+    line-height: 17px;
+    color: #64748b;
+    transition: transform 0.4s ease;
+  }
+
+  &:hover {
+    background-color: #e2e8f0;
+    color: #1e293b;
+    border-color: #94a3b8;
+
+    .refresh-icon {
+      transform: rotate(180deg);
+      color: #1e293b;
+    }
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+// Main Table Card
+.doc-table-card {
+  background: #ffffff;
+  border: 1px solid var(--app-border-color, #e2e8f0);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+// Breadcrumb Toolbar
+.breadcrumb-toolbar {
+  background-color: #f8fafc !important;
+  min-height: 42px;
+
+  .breadcrumb-link {
+    color: var(--app-primary-color, #059669);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background-color: #e2e8f0;
+      color: var(--primary-hover, #047857);
+    }
+  }
+
+  .breadcrumb-current {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #334155;
+    padding: 2px 6px;
+  }
+
+  .breadcrumb-home-icon {
+    font-size: 17px;
+    width: 17px;
+    height: 17px;
+    line-height: 17px;
+    color: var(--app-primary-color, #059669);
+  }
+
+  .breadcrumb-separator {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    color: #94a3b8;
+  }
+}
+
+// Table Styling
+.modern-doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  margin-bottom: 0;
+
+  .grid-header-row {
+    background-color: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0;
+    height: 42px;
+
+    th {
+      font-size: 0.72rem !important;
+      font-weight: 700 !important;
+      color: #475569 !important;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 6px 12px !important;
+      white-space: nowrap;
+      border-bottom: 1px solid #e2e8f0 !important;
+      vertical-align: middle;
+    }
+  }
+
+  .grid-body-row {
+    height: 46px;
+    border-bottom: 1px solid #f1f5f9;
+    transition: background-color 0.12s ease;
+
+    &:hover {
+      background-color: #f8fafc;
+    }
+
+    td {
+      font-size: 0.81rem !important;
+      color: #334155;
+      padding: 6px 12px !important;
+      border-bottom: 1px solid #f1f5f9 !important;
+      vertical-align: middle;
+    }
+  }
+
+  .folder-item-link {
+    color: #1e293b;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.15s ease;
+
+    &:hover {
+      color: var(--app-primary-color, #059669);
+
+      .folder-name-text {
+        text-decoration: underline;
+      }
+    }
+
+    .folder-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+    }
+
+    .shared-icon {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .doc-link {
+    color: var(--app-primary-color, #059669);
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.15s ease;
+
+    &:hover {
+      color: var(--primary-hover, #047857);
+      
+      .doc-title {
+        text-decoration: underline;
+      }
+    }
+
+    .doc-file-icon {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+  }
+
+  .badge-mini-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: help;
+  }
+
+  .cell-docno {
+    font-family: inherit;
+    font-size: 0.8rem;
+    color: #64748b;
+    font-weight: 500;
+  }
+
+  .user-cell {
+    font-size: 0.8rem;
+    color: #334155;
+    font-weight: 500;
+  }
+
+  .cell-date {
+    font-size: 0.77rem;
+    color: #64748b;
+    white-space: nowrap;
+  }
+}
+
+// Action Button
+.btn-action-more {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 6px !important;
+  background-color: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 1px solid #cbd5e1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  cursor: pointer;
+  transition: all 0.15s ease !important;
+
+  &:hover {
+    background-color: #e2e8f0 !important;
+    color: #0f172a !important;
+    border-color: #94a3b8 !important;
+  }
+
+  .action-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+    line-height: 16px !important;
+  }
+}
+
+// Column Sizing
+.table-column-name { min-width: 220px; }
+.table-column-badge { width: 50px; min-width: 50px; }
+.table-column-140 { min-width: 140px; }
+.table-column-150 { min-width: 150px; }
+.table-column-160 { min-width: 160px; }
+.table-column-60 { width: 60px; min-width: 60px; }
+
+// Spinner
+.spinner-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}

@@ -1,0 +1,70 @@
+<div class="ai-panel-card h-100">
+  <!-- Panel Header -->
+  <div class="ai-panel-header">
+    <div class="d-flex align-items-center gap-2">
+      <div class="ai-header-badge">
+        <mat-icon>article</mat-icon>
+      </div>
+      <div>
+        <h6 class="ai-panel-title mb-0">{{ "DOCUMENT_SUMMARY" | translate }}</h6>
+        <p class="ai-panel-subtitle mb-0">Live preview, rich formatting & document generation</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel Body -->
+  <div class="ai-panel-body d-flex flex-column">
+    <form [formGroup]="aiEditorForm" class="d-flex flex-column flex-grow-1">
+      <div class="editor-section flex-grow-1 mb-3">
+        <div class="editor-container-wrapper">
+          <app-text-editor formControlName="editorData"></app-text-editor>
+        </div>
+        @if(aiEditorForm.get('editorData')?.touched &&
+        aiEditorForm.get('editorData')?.errors &&
+        aiEditorForm.get('editorData')?.errors?.['required']){
+        <div class="field-error-text mt-1 d-flex align-items-center gap-1">
+          <mat-icon class="err-icon">error_outline</mat-icon>
+          <span>{{ "DESCRIPTION_IS_REQUIRED" | translate }}</span>
+        </div>
+        }
+      </div>
+
+      <div class="d-flex align-items-center justify-content-start pt-2">
+        <button
+          [dir]="langDir"
+          type="button"
+          class="btn-save-pdf"
+          (click)="generateDocument()"
+          [disabled]="isLoadingResults"
+        >
+          <mat-icon class="btn-icon">picture_as_pdf</mat-icon>
+          <span>{{ "SAVE_AS_PDF" | translate }}</span>
+        </button>
+      </div>
+
+      <!-- Hidden PDF Render Canvas Container -->
+      <div style="position: absolute; left: -15420px; top: -15420px">
+        <div style="width: 100%; display: flex">
+          <div id="pdfDocument">
+            <div
+              class="container"
+              style="width: 95%; margin-right: auto; margin-left: auto"
+            >
+              <div
+                innerHTML="{{ aiEditorForm.get('editorData')?.value }}"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Loading State -->
+  @if(isLoadingResults) {
+  <div class="ai-loading-overlay">
+    <mat-progress-spinner mode="indeterminate" diameter="48" strokeWidth="4"></mat-progress-spinner>
+    <span class="loading-label mt-2">Preparing document export...</span>
+  </div>
+  }
+</div>

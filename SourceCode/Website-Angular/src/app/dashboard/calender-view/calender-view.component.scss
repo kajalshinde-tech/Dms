@@ -1,0 +1,259 @@
+.hub-card {
+  background: var(--app-card-bg, #ffffff) !important;
+  border: 1px solid var(--app-border-color, #e2e8f0) !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 6px 14px -3px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.03) !important;
+  }
+}
+
+.hub-card-header {
+  padding: 1rem 1.25rem 0.85rem !important;
+  border-bottom: 1px solid var(--app-border-color, #f1f5f9);
+}
+
+.hub-card-body {
+  padding: 1.25rem;
+}
+
+.calendar-scroll-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  @media (max-width: 576px) {
+    .fc {
+      min-width: 480px;
+    }
+  }
+}
+
+.hub-card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--app-text-color, #1e293b);
+  letter-spacing: -0.01em;
+}
+
+.hub-header-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &.primary-accent {
+    background: var(--app-primary-light, rgba(16, 185, 129, 0.12));
+    color: var(--app-primary-color, #059669);
+  }
+}
+
+.hub-count-pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+
+  &.primary-accent {
+    background: var(--app-primary-light, rgba(16, 185, 129, 0.1));
+    color: var(--app-primary-color, #059669);
+    border: 1px solid var(--app-primary-light, rgba(16, 185, 129, 0.25));
+  }
+}
+
+.hub-manage-btn {
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  font-size: 0.8rem !important;
+  border-color: var(--app-border-color, #e2e8f0) !important;
+  color: var(--app-text-muted, #475569) !important;
+  background-color: var(--app-card-bg, #ffffff) !important;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background-color: var(--app-primary-light, rgba(16, 185, 129, 0.1)) !important;
+    color: var(--app-primary-color, #059669) !important;
+    border-color: var(--app-primary-color, #059669) !important;
+  }
+}
+
+.fc-custom-event-content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  .event-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--app-primary-color, #059669);
+    flex-shrink: 0;
+    transition: background-color 0.2s ease;
+  }
+
+  .event-text {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--app-primary-color, #059669);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.2s ease;
+  }
+}
+
+/* FullCalendar Styling with Dynamic Theme Color */
+::ng-deep {
+  .fc {
+    --fc-border-color: var(--app-border-color, #e2e8f0);
+    --fc-button-bg-color: #ffffff;
+    --fc-button-border-color: #e2e8f0;
+    --fc-button-text-color: #475569;
+    --fc-button-hover-bg-color: #f8fafc;
+    --fc-button-hover-border-color: #cbd5e1;
+    --fc-button-active-bg-color: var(--app-primary-color, #10b981);
+    --fc-button-active-border-color: var(--app-primary-color, #10b981);
+    --fc-today-bg-color: var(--app-primary-light, rgba(16, 185, 129, 0.05));
+
+    font-family: inherit;
+
+    .fc-toolbar {
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem !important;
+
+      @media (max-width: 576px) {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.5rem !important;
+
+        .fc-toolbar-chunk {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+        }
+      }
+
+      .fc-toolbar-title {
+        font-size: 1.15rem !important;
+        font-weight: 700 !important;
+        color: var(--app-text-color, #1e293b);
+
+        @media (max-width: 576px) {
+          font-size: 0.95rem !important;
+        }
+      }
+
+      .fc-button {
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.4rem 0.85rem;
+        border-radius: 6px;
+        box-shadow: none !important;
+        transition: all 0.2s ease;
+        text-transform: capitalize;
+
+        @media (max-width: 576px) {
+          padding: 0.3rem 0.55rem !important;
+          font-size: 0.72rem !important;
+        }
+
+        &:focus {
+          box-shadow: 0 0 0 2px var(--app-primary-light, rgba(16, 185, 129, 0.2)) !important;
+        }
+
+        &.fc-button-active {
+          color: #ffffff !important;
+          background-color: var(--app-primary-color, #10b981) !important;
+          border-color: var(--app-primary-color, #10b981) !important;
+        }
+      }
+
+      .fc-button-group {
+        border-radius: 6px;
+        overflow: hidden;
+      }
+    }
+
+    .fc-col-header-cell {
+      background-color: var(--app-hover-bg, #f8fafc);
+      padding: 0.6rem 0;
+
+      .fc-col-header-cell-cushion {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--app-text-muted, #64748b);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        text-decoration: none;
+      }
+    }
+
+    .fc-daygrid-day-number {
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: var(--app-text-color, #334155);
+      padding: 5px 8px;
+      text-decoration: none;
+    }
+
+    .fc-day-other .fc-daygrid-day-number {
+      color: #94a3b8;
+      opacity: 0.7;
+    }
+
+    .fc-day-today {
+      background: var(--app-primary-light, rgba(16, 185, 129, 0.06)) !important;
+
+      .fc-daygrid-day-number {
+        color: var(--app-primary-color, #059669);
+        font-weight: 700;
+      }
+    }
+
+    /* Event Pill Dynamic Theme Styling */
+    .fc-event {
+      background-color: var(--app-primary-light, rgba(16, 185, 129, 0.1)) !important;
+      border: 1px solid var(--app-primary-light, rgba(16, 185, 129, 0.25)) !important;
+      border-radius: 6px !important;
+      padding: 2px 5px !important;
+      margin: 2px 3px !important;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+
+      &:hover {
+        transform: translateY(-1px);
+        background-color: var(--app-primary-color, #059669) !important;
+        border-color: var(--app-primary-color, #059669) !important;
+        box-shadow: 0 4px 10px var(--primary-light, rgba(16, 185, 129, 0.3)) !important;
+
+        .fc-custom-event-content {
+          .event-dot {
+            background-color: #ffffff !important;
+          }
+
+          .event-text {
+            color: #ffffff !important;
+          }
+        }
+      }
+    }
+  }
+}

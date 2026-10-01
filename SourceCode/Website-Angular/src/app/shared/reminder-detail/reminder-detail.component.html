@@ -1,0 +1,143 @@
+<div class="reminder-modal-container">
+  <!-- Modal Header -->
+  <div class="reminder-modal-header d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center gap-2">
+      <div class="modal-header-icon">
+        <mat-icon>notifications_active</mat-icon>
+      </div>
+      <div>
+        <h6 class="modal-title mb-0 fw-700">
+          {{ "REMINDER_DETAIL" | translate }}
+        </h6>
+        <span class="text-muted fs-11">Scheduled Reminder Information</span>
+      </div>
+    </div>
+    <button mat-icon-button class="modal-close-btn" (click)="closeDialog()" matTooltip="Close">
+      <mat-icon class="fs-18">close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content class="reminder-modal-content">
+    @if(isLoading) {
+      <div class="text-center p-4">
+        <mat-progress-spinner mode="indeterminate" diameter="40" strokeWidth="4" class="mx-auto mb-2"></mat-progress-spinner>
+        <div class="text-muted fs-12">Loading reminder details...</div>
+      </div>
+    } @else {
+      <form [formGroup]="reminderForm" class="d-flex flex-column gap-2">
+        <!-- Subject Card -->
+        <div class="detail-section-card">
+          <div class="detail-label d-flex align-items-center gap-1">
+            <mat-icon class="fs-14 text-primary">title</mat-icon>
+            <span>{{'SUBJECT' | translate}}</span>
+          </div>
+          <div class="detail-value fw-600 text-dark fs-13 mt-1">
+            {{ reminderForm.get('subject')?.value || 'No Subject' }}
+          </div>
+        </div>
+
+        <!-- Message Card -->
+        <div class="detail-section-card">
+          <div class="detail-label d-flex align-items-center gap-1">
+            <mat-icon class="fs-14 text-primary">chat_bubble_outline</mat-icon>
+            <span>{{'MESSAGE' | translate}}</span>
+          </div>
+          <div class="detail-message-box mt-1">
+            {{ reminderForm.get('message')?.value || 'No message content' }}
+          </div>
+        </div>
+
+        <!-- Notification Preferences Row -->
+        <div class="d-flex flex-wrap gap-2">
+          <div class="preference-pill" [class.active]="reminderForm.get('isRepeated')?.value">
+            <mat-icon class="fs-14">{{ reminderForm.get('isRepeated')?.value ? 'check_circle' : 'cancel' }}</mat-icon>
+            <span>{{'REPEATE_REMINDER' | translate}}</span>
+          </div>
+          <div class="preference-pill" [class.active]="reminderForm.get('isEmailNotification')?.value">
+            <mat-icon class="fs-14">{{ reminderForm.get('isEmailNotification')?.value ? 'mail' : 'mail_outline' }}</mat-icon>
+            <span>{{'SEND_EMAIL' | translate}}</span>
+          </div>
+        </div>
+
+        <!-- Repeated Frequency & Schedule Details -->
+        @if(reminderForm.get('isRepeated')?.value) {
+          <div class="detail-section-card">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <div class="detail-label d-flex align-items-center gap-1">
+                <mat-icon class="fs-14 text-primary">update</mat-icon>
+                <span>{{'FREQUENCY' | translate}}</span>
+              </div>
+              <span class="badge frequency-badge">
+                {{ reminderForm.get('frequency')?.value == '0' ? ('DAILY' | translate) :
+                   reminderForm.get('frequency')?.value == '1' ? ('WEEKLY' | translate) :
+                   reminderForm.get('frequency')?.value == '2' ? ('MONTHLY' | translate) :
+                   reminderForm.get('frequency')?.value == '3' ? ('QUARTERLY' | translate) :
+                   reminderForm.get('frequency')?.value == '4' ? ('HALF_YEARLY' | translate) : ('YEARLY' | translate) }}
+              </span>
+            </div>
+
+            <!-- Daily Weekdays Active Badges -->
+            @if(reminderForm.get('frequency')?.value == '0') {
+              <div>
+                <div class="text-muted fs-11 fw-600 text-uppercase mb-1">{{'WEEK_DAYS' | translate}}</div>
+                <div class="d-flex flex-wrap gap-1" formArrayName="dailyReminders">
+                  @for(dailyReminder of dailyRemindersArray.controls; track dailyReminder; let i = $index) {
+                    <div [formGroupName]="i" class="weekday-chip" [class.active]="dailyReminder.get('isActive')?.value">
+                      <span>{{ dailyReminder.get('name')?.value.substring(0, 3) | uppercase }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- Weekly Selected Day -->
+            @if(reminderForm.get('frequency')?.value == '1') {
+              <div>
+                <div class="text-muted fs-11 fw-600 text-uppercase mb-1">{{'WEEK_DAYS' | translate}}</div>
+                <div class="fw-600 text-dark fs-12">
+                  {{ reminderForm.get('dayOfWeek')?.value !== null ? ('WEEK_DAY_' + reminderForm.get('dayOfWeek')?.value | translate) : 'Every Week' }}
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Dates Schedule Grid -->
+        <div class="row g-2">
+          <div [ngClass]="reminderForm.get('isRepeated')?.value ? 'col-12 col-sm-6' : 'col-12'">
+            <div class="date-info-box">
+              <div class="d-flex align-items-center gap-1 text-muted fs-11 fw-600 text-uppercase mb-1">
+                <mat-icon class="fs-13 text-primary">event</mat-icon>
+                <span>{{ (reminderForm.get('isRepeated')?.value ? 'REMINDER_START_DATE' : 'REMINDER_DATE') | translate }}</span>
+              </div>
+              <div class="fw-700 text-dark fs-12">
+                {{ reminderForm.get('startDate')?.value || 'Not specified' }}
+              </div>
+            </div>
+          </div>
+
+          @if(reminderForm.get('isRepeated')?.value) {
+            <div class="col-12 col-sm-6">
+              <div class="date-info-box">
+                <div class="d-flex align-items-center gap-1 text-muted fs-11 fw-600 text-uppercase mb-1">
+                  <mat-icon class="fs-13 text-primary">event_busy</mat-icon>
+                  <span>{{ 'REMINDER_END_DATE' | translate }}</span>
+                </div>
+                <div class="fw-700 text-dark fs-12">
+                  {{ reminderForm.get('endDate')?.value || 'Ongoing / No Expiry' }}
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </form>
+    }
+  </mat-dialog-content>
+
+  <!-- Modal Footer -->
+  <div class="reminder-modal-footer d-flex align-items-center justify-content-end">
+    <button mat-flat-button class="modal-action-btn" (click)="closeDialog()">
+      <span>{{ 'CLOSE' | translate }}</span>
+    </button>
+  </div>
+</div>

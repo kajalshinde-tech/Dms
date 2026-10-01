@@ -1,0 +1,183 @@
+@if (!isDialogOpen) {
+  <section class="content">
+    <div class="container-fluid">
+      <!-- Standardized Page Header -->
+      <div class="page-header-row mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-2">
+          <mat-icon class="page-title-icon align-middle">business</mat-icon>
+          <span class="mb-0 page-title">
+            {{ (isEditMode ? 'EDIT_CLIENT' : 'ADD_CLIENT') | translate }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Modern Compact Form Card -->
+      <div class="form-container-wrapper">
+        <form [formGroup]="clientForm" (ngSubmit)="saveClient()">
+          <div class="doc-form-card compact-card">
+            <div class="client-form-grid">
+              <!-- 1. Company / Person Name -->
+              <div class="client-field-group">
+                <label class="form-label">{{ "COMPANY_PERSON_NAME" | translate }} <span class="text-danger">*</span></label>
+                <div class="field-input-wrapper">
+                  <mat-icon class="field-icon">domain</mat-icon>
+                  <input formControlName="companyName" class="form-control field-control" type="text" placeholder="{{ 'COMPANY_PERSON_NAME' | translate }}" />
+                </div>
+                @if(clientForm.get('companyName')?.touched && clientForm.get('companyName')?.errors && clientForm.get('companyName')?.errors?.['required'] ){
+                  <div class="text-danger small mt-1">
+                    {{ "COMPANY_PERSON_NAME_IS_REQUIRED" | translate }}
+                  </div>
+                }
+              </div>
+
+              <!-- 2. Contact Person -->
+              <div class="client-field-group">
+                <label class="form-label">{{ "CONTACT_PERSON" | translate }}</label>
+                <div class="field-input-wrapper">
+                  <mat-icon class="field-icon">person_outline</mat-icon>
+                  <input formControlName="contactPerson" class="form-control field-control" type="text" placeholder="{{ 'CONTACT_PERSON' | translate }}" />
+                </div>
+              </div>
+
+              <!-- 3. Email -->
+              <div class="client-field-group">
+                <label class="form-label">{{ "EMAIL" | translate }}</label>
+                <div class="field-input-wrapper">
+                  <mat-icon class="field-icon">mail_outline</mat-icon>
+                  <input formControlName="email" class="form-control field-control" type="email" placeholder="{{ 'EMAIL' | translate }}" />
+                </div>
+                @if(clientForm.get('email')?.touched && clientForm.get('email')?.errors && clientForm.get('email')?.errors?.['email']){
+                  <div class="text-danger small mt-1">
+                    {{ "PLEASE_ENTER_VALID_EMAIL" | translate }}
+                  </div>
+                }
+              </div>
+
+              <!-- 4. Mobile Number -->
+              <div class="client-field-group">
+                <label class="form-label">{{ "MOBILE_NUMBER" | translate }}</label>
+                <div class="field-input-wrapper">
+                  <mat-icon class="field-icon">call</mat-icon>
+                  <input formControlName="phoneNumber" class="form-control field-control" type="text" placeholder="{{ 'MOBILE_NUMBER' | translate }}" />
+                </div>
+              </div>
+
+              <!-- 5. Address (Full Width Grid Span) -->
+              <div class="client-field-group grid-span-full">
+                <label class="form-label">{{ "ADDRESS" | translate }}</label>
+                <div class="field-input-wrapper textarea-wrapper">
+                  <mat-icon class="field-icon field-icon-top">location_on</mat-icon>
+                  <textarea formControlName="address" class="form-control field-control field-textarea" rows="3" placeholder="{{ 'ADDRESS' | translate }}"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="form-footer-actions d-flex align-items-center gap-2 mt-3 pt-3">
+              <button type="submit" class="btn-save-main" matButton="filled" cdkFocusInitial>
+                <mat-icon class="medium-icon">save</mat-icon>
+                <span>{{ "SAVE" | translate }}</span>
+              </button>
+              <button type="button" class="btn-cancel-main" matButton="filled" [routerLink]="['/client']">
+                <mat-icon class="medium-icon">cancel</mat-icon>
+                <span>{{ "CANCEL" | translate }}</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+} @else {
+  <!-- Modal Mode -->
+  <mat-dialog-content class="manage-submodal">
+    <div class="modal-header d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+      <div class="d-flex align-items-center gap-2">
+        <div class="modal-header-icon">
+          <mat-icon>business</mat-icon>
+        </div>
+        <div>
+          <h6 class="modal-title mb-0">
+            {{ (isEditMode ? 'EDIT_CLIENT' : 'ADD_CLIENT') | translate }}
+          </h6>
+          <span class="text-muted fs-11">
+            Configure client organization and contact details
+          </span>
+        </div>
+      </div>
+      <button mat-icon-button (click)="onCancel()" class="modal-close-btn" type="button" aria-label="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <form [formGroup]="clientForm" (ngSubmit)="saveClient()" class="modal-form-body">
+      <div class="client-form-grid">
+        <!-- 1. Company / Person Name -->
+        <div class="client-field-group">
+          <label class="form-label">{{ "COMPANY_PERSON_NAME" | translate }} <span class="text-danger">*</span></label>
+          <div class="field-input-wrapper">
+            <mat-icon class="field-icon">domain</mat-icon>
+            <input formControlName="companyName" class="form-control field-control" type="text" placeholder="{{ 'COMPANY_PERSON_NAME' | translate }}" />
+          </div>
+          @if(clientForm.get('companyName')?.touched && clientForm.get('companyName')?.errors && clientForm.get('companyName')?.errors?.['required'] ){
+            <div class="text-danger small mt-1">
+              {{ "COMPANY_PERSON_NAME_IS_REQUIRED" | translate }}
+            </div>
+          }
+        </div>
+
+        <!-- 2. Contact Person -->
+        <div class="client-field-group">
+          <label class="form-label">{{ "CONTACT_PERSON" | translate }}</label>
+          <div class="field-input-wrapper">
+            <mat-icon class="field-icon">person_outline</mat-icon>
+            <input formControlName="contactPerson" class="form-control field-control" type="text" placeholder="{{ 'CONTACT_PERSON' | translate }}" />
+          </div>
+        </div>
+
+        <!-- 3. Email -->
+        <div class="client-field-group">
+          <label class="form-label">{{ "EMAIL" | translate }}</label>
+          <div class="field-input-wrapper">
+            <mat-icon class="field-icon">mail_outline</mat-icon>
+            <input formControlName="email" class="form-control field-control" type="email" placeholder="{{ 'EMAIL' | translate }}" />
+          </div>
+          @if(clientForm.get('email')?.touched && clientForm.get('email')?.errors && clientForm.get('email')?.errors?.['email']){
+            <div class="text-danger small mt-1">
+              {{ "PLEASE_ENTER_VALID_EMAIL" | translate }}
+            </div>
+          }
+        </div>
+
+        <!-- 4. Mobile Number -->
+        <div class="client-field-group">
+          <label class="form-label">{{ "MOBILE_NUMBER" | translate }}</label>
+          <div class="field-input-wrapper">
+            <mat-icon class="field-icon">call</mat-icon>
+            <input formControlName="phoneNumber" class="form-control field-control" type="text" placeholder="{{ 'MOBILE_NUMBER' | translate }}" />
+          </div>
+        </div>
+
+        <!-- 5. Address (Full Width Grid Span) -->
+        <div class="client-field-group grid-span-full">
+          <label class="form-label">{{ "ADDRESS" | translate }}</label>
+          <div class="field-input-wrapper textarea-wrapper">
+            <mat-icon class="field-icon field-icon-top">location_on</mat-icon>
+            <textarea formControlName="address" class="form-control field-control field-textarea" rows="3" placeholder="{{ 'ADDRESS' | translate }}"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer-actions d-flex align-items-center justify-content-end gap-2 mt-3 pt-2 border-top">
+        <button type="button" class="btn-modal-cancel" (click)="onCancel()">
+          {{ "CANCEL" | translate }}
+        </button>
+        <button type="submit" class="btn-modal-primary" cdkFocusInitial>
+          <mat-icon class="btn-icon-save">save</mat-icon>
+          {{ "SAVE" | translate }}
+        </button>
+      </div>
+    </form>
+  </mat-dialog-content>
+}

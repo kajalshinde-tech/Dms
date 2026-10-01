@@ -1,0 +1,132 @@
+<div class="saas-dialog-container position-relative">
+  <!-- Dialog Header -->
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge dark-badge">
+        <mat-icon>history</mat-icon>
+      </div>
+      <div>
+        <h5 class="dialog-title mb-0">{{ "VERSION_HISTORY" | translate }}</h5>
+        <p class="dialog-subtitle mb-0 text-truncate" [title]="data.name">{{ data.name }}</p>
+      </div>
+    </div>
+    <button type="button" class="dialog-close-btn" (click)="closeDialog()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Dialog Body -->
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <div class="table-responsive version-table-wrapper custom-scroll">
+      <table class="table version-modern-table mb-0">
+        <thead>
+          <tr>
+            <th>{{ "VERSION_NO" | translate }}</th>
+            <th>{{ "MODIFIED_DATE" | translate }}</th>
+            <th>{{ "CREATED_BY" | translate }}</th>
+            <th>{{ "SIGNBY" | translate }}</th>
+            <th>{{ "SIGNDATE" | translate }}</th>
+            <th>{{ "COMMENT" | translate }}</th>
+            <th class="text-end">{{ "ACTIONS" | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (version of data.documentVersions; track $index) {
+          <tr [class.is-current-row]="version.isCurrentVersion">
+            <td>
+              <span class="version-badge" [class.current]="version.isCurrentVersion">
+                v{{ version.versionNumber }}
+              </span>
+            </td>
+            <td class="cell-date">
+              {{ version.modifiedDate | utcToLocalTime : "full" }}
+            </td>
+            <td class="cell-user">
+              <div class="d-flex align-items-center gap-1">
+                <mat-icon class="micro-icon text-muted">person</mat-icon>
+                <span>{{ version.createdByUser }}</span>
+              </div>
+            </td>
+            <td>
+              @if(version.signBy){
+              <span class="signature-pill">
+                <mat-icon class="micro-icon">draw</mat-icon>
+                {{ version.signBy }}
+              </span>
+              } @else {
+              <span class="text-muted">-</span>
+              }
+            </td>
+            <td class="cell-date">
+              @if(version.signBy){
+              {{ version.signDate | utcToLocalTime : "short" }}
+              } @else {
+              <span class="text-muted">-</span>
+              }
+            </td>
+            <td>
+              @if(version.comment) {
+              <button type="button" class="btn btn-micro-action text-info" (click)="showComment(version.comment)" matTooltip="View comment">
+                <mat-icon>chat</mat-icon>
+              </button>
+              } @else {
+              <span class="text-muted">-</span>
+              }
+            </td>
+            <td class="text-end">
+              @if(version.isCurrentVersion) {
+              <span class="current-badge-pill">{{ "CURRENT_VERSION" | translate }}</span>
+              }
+              @if(!version.isCurrentVersion) {
+              <div class="d-flex align-items-center justify-content-end gap-1">
+                <button type="button" class="btn btn-micro-action text-primary" (click)="onDocumentView(version)" matTooltip="View">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                @if(!data.isAssignUser) {
+                <button type="button" *hasClaim="'ALL_DOWNLOAD_DOCUMENT'" (click)="downloadDocument(version)" class="btn btn-micro-action text-success" matTooltip="Download">
+                  <mat-icon>download</mat-icon>
+                </button>
+                <button type="button" *hasClaim="'ALL_RESTORE_VERSION'" (click)="restoreDocumentVersion(version)" class="btn btn-micro-action text-warning" matTooltip="Restore to Current Version">
+                  <mat-icon>restore</mat-icon>
+                </button>
+                } @if(data.isAssignUser) {
+                <button type="button" *hasClaim="'ASSIGNED_DOWNLOAD_DOCUMENT'" (click)="downloadDocument(version)" class="btn btn-micro-action text-success" matTooltip="Download">
+                  <mat-icon>download</mat-icon>
+                </button>
+                <button type="button" *hasClaim="'ASSIGNED_RESTORE_VERSION'" (click)="restoreDocumentVersion(version)" class="btn btn-micro-action text-warning" matTooltip="Restore to Current Version">
+                  <mat-icon>restore</mat-icon>
+                </button>
+                }
+              </div>
+              }
+            </td>
+          </tr>
+          }
+          @if(!data.documentVersions || data.documentVersions.length === 0) {
+          <tr>
+            <td colspan="7" class="text-center py-4 text-muted">
+              {{ "NO_DATA_FOUND" | translate }}
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </mat-dialog-content>
+
+  <!-- Dialog Footer -->
+  <mat-dialog-actions class="saas-dialog-footer">
+    <button type="button" class="btn btn-saas-cancel ms-auto" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+      <span>{{ "CANCEL" | translate }}</span>
+    </button>
+  </mat-dialog-actions>
+
+  <!-- Loading overlay -->
+  @if(isLoading || isLoadingResults) {
+  <div class="dialog-loading-overlay">
+    <mat-progress-spinner mode="indeterminate" diameter="44" strokeWidth="4"></mat-progress-spinner>
+    <span class="loading-text mt-2">Loading document versions...</span>
+  </div>
+  }
+</div>

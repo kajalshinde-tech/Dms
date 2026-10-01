@@ -1,0 +1,432 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized Page Header -->
+    <div class="page-header-row mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">business</mat-icon>
+        <span class="mb-0 page-title">
+          {{ "COMPANY_PROFILE" | translate }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Company Profile Form Card -->
+    <form [formGroup]="companyProfileForm">
+      <div class="doc-form-card mb-4">
+        <div class="card-header-strip p-3 border-bottom bg-light">
+          <div class="d-flex align-items-center gap-2">
+            <mat-icon class="text-primary fs-5">badge</mat-icon>
+            <div>
+              <h6 class="mb-0 font-weight-700 text-dark">
+                {{ "COMPANY_PROFILE" | translate }}
+              </h6>
+              <span class="text-muted extra-small">
+                Configure organization title, logo branding, and banner assets.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body p-3 p-md-4">
+          <div class="row g-4">
+            
+            <!-- 1. Company Title -->
+            <div class="col-12 col-md-8 col-lg-6">
+              <label class="field-label d-flex align-items-center gap-1 mb-1">
+                <span>{{ "COMPANY_TITLE" | translate }}</span>
+                <span class="text-danger">*</span>
+              </label>
+              <div class="form-field-box">
+                <mat-icon class="field-icon">domain</mat-icon>
+                <input type="text" id="companyTitle" formControlName="companyTitle" class="form-control field-input"
+                  placeholder="Enter company title" />
+              </div>
+              @if (companyProfileForm.get('companyTitle')?.touched &&
+              companyProfileForm.get('companyTitle')?.errors?.['required']) {
+                <div class="text-danger small mt-1">
+                  {{ "COMPANY_TITLE_IS_REQUIRED" | translate }}
+                </div>
+              }
+            </div>
+
+            <!-- 2. Brand Assets Section -->
+            <div class="col-12">
+              <label class="field-label d-flex align-items-center gap-1 mb-2">
+                <span>Brand & Visual Assets</span>
+              </label>
+
+              <div class="row g-3">
+                
+                <!-- Asset 1: Company Logo -->
+                <div class="col-12 col-md-6 col-lg-4">
+                  <div class="brand-asset-card p-3 rounded-3 border h-100 d-flex flex-column justify-content-between">
+                    <div>
+                      <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="asset-title font-weight-700 text-dark">{{ "COMPANY_LOGO" | translate }}</span>
+                        <span class="asset-badge">200 × 55</span>
+                      </div>
+                      <div class="asset-preview-box mb-3 d-flex align-items-center justify-content-center">
+                        @if (logoUrl) {
+                          <img [src]="logoUrl" alt="Company Logo" class="preview-img-contain" />
+                        } @else {
+                          <div class="d-flex flex-column align-items-center text-muted">
+                            <mat-icon class="fs-2 mb-1 text-muted">image</mat-icon>
+                            <span class="extra-small">No logo uploaded</span>
+                          </div>
+                        }
+                      </div>
+                    </div>
+
+                    <div>
+                      <input #logoUpload type="file" (change)="onLogoUpload($event)" accept="image/*" hidden />
+                      <button type="button" class="btn-upload-action w-100 mb-2" (click)="triggerLogoUpload(logoUpload)">
+                        <mat-icon class="btn-icon">cloud_upload</mat-icon>
+                        <span>{{ "CHANGE_LOGO" | translate }}</span>
+                      </button>
+                      <div class="d-flex align-items-start gap-1 text-muted extra-small">
+                        <mat-icon class="asset-info-icon">info</mat-icon>
+                        <span>{{ "THE_LOGO_SIZE_NOTE" | translate }}</span>
+                      </div>
+                      @if (companyProfileForm.get('logo')?.touched &&
+                      companyProfileForm.get('logo')?.errors?.['required']) {
+                        <div class="text-danger extra-small mt-1">
+                          {{ "COMPANY_LOGO_IS_REQUIRED" | translate }}
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Asset 2: Icon Logo (Mini/Favicon) -->
+                <div class="col-12 col-md-6 col-lg-4">
+                  <div class="brand-asset-card p-3 rounded-3 border h-100 d-flex flex-column justify-content-between">
+                    <div>
+                      <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="asset-title font-weight-700 text-dark">{{ "COMPANY_ICON_LOGO" | translate }}</span>
+                        <span class="asset-badge">48 × 48</span>
+                      </div>
+                      <div class="asset-preview-box mb-3 d-flex align-items-center justify-content-center">
+                        @if (logoIconUrl) {
+                          <img [src]="logoIconUrl" alt="Company Icon Logo" class="preview-icon-contain" />
+                        } @else {
+                          <div class="d-flex flex-column align-items-center text-muted">
+                            <mat-icon class="fs-2 mb-1 text-muted">crop_square</mat-icon>
+                            <span class="extra-small">No icon uploaded</span>
+                          </div>
+                        }
+                      </div>
+                    </div>
+
+                    <div>
+                      <input #logoIconUpload type="file" (change)="onLogoIconUpload($event)" accept="image/*" hidden />
+                      <button type="button" class="btn-upload-action w-100 mb-2" (click)="triggerLogoIconUpload(logoIconUpload)">
+                        <mat-icon class="btn-icon">cloud_upload</mat-icon>
+                        <span>{{ "CHANGE_ICON_LOGO" | translate }}</span>
+                      </button>
+                      <div class="d-flex align-items-start gap-1 text-muted extra-small">
+                        <mat-icon class="asset-info-icon">info</mat-icon>
+                        <span>{{ "THE_ICON_LOGO_SIZE_NOTE" | translate }}</span>
+                      </div>
+                      @if (companyProfileForm.get('logoIcon')?.touched &&
+                      companyProfileForm.get('logoIcon')?.errors?.['required']) {
+                        <div class="text-danger extra-small mt-1">
+                          {{ "COMPANY_ICON_LOGO_IS_REQUIRED" | translate }}
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Asset 3: Company Banner -->
+                <div class="col-12 col-lg-4">
+                  <div class="brand-asset-card p-3 rounded-3 border h-100 d-flex flex-column justify-content-between">
+                    <div>
+                      <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="asset-title font-weight-700 text-dark">{{ "COMPANY_BANNER" | translate }}</span>
+                        <span class="asset-badge">1000 × 500</span>
+                      </div>
+                      <div class="asset-preview-box mb-3 d-flex align-items-center justify-content-center">
+                        @if (bannerUrl) {
+                          <img [src]="bannerUrl" alt="Company Banner" class="preview-banner-cover" />
+                        } @else {
+                          <div class="d-flex flex-column align-items-center text-muted">
+                            <mat-icon class="fs-2 mb-1 text-muted">panorama</mat-icon>
+                            <span class="extra-small">No banner uploaded</span>
+                          </div>
+                        }
+                      </div>
+                    </div>
+
+                    <div>
+                      <input #bannerUpload type="file" (change)="onBannerUpload($event)" accept="image/*" hidden />
+                      <button type="button" class="btn-upload-action w-100 mb-2" (click)="triggerBannerUpload(bannerUpload)">
+                        <mat-icon class="btn-icon">cloud_upload</mat-icon>
+                        <span>{{ "CHANGE_BANNER" | translate }}</span>
+                      </button>
+                      <div class="d-flex align-items-start gap-1 text-muted extra-small">
+                        <mat-icon class="asset-info-icon">info</mat-icon>
+                        <span>{{ "THE_BANNER_SIZE_NOTE" | translate }}</span>
+                      </div>
+                      @if (companyProfileForm.get('banner')?.touched &&
+                      companyProfileForm.get('banner')?.errors?.['required']) {
+                        <div class="text-danger extra-small mt-1">
+                          {{ "COMPANY_BANNER_IS_REQUIRED" | translate }}
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Form Action Row -->
+          <div class="form-action-row mt-4 pt-3 border-top d-flex align-items-center gap-2">
+            <button type="button" class="btn-save-action" [disabled]="companyProfileForm.invalid" (click)="onSave()">
+              <mat-icon class="btn-icon">save</mat-icon>
+              <span>{{ "SAVE" | translate }}</span>
+            </button>
+            <button type="button" class="btn-cancel-action" [routerLink]="['/dashboard']">
+              <mat-icon class="btn-icon">close</mat-icon>
+              <span>{{ "CANCEL" | translate }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- Theme Customization Section -->
+    <div class="doc-form-card theme-customize-card mb-4">
+      <div class="card-header-strip p-3 border-bottom bg-light d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-2">
+          <mat-icon class="text-primary fs-5">palette</mat-icon>
+          <div>
+            <h6 class="mb-0 font-weight-700 text-dark">
+              Theme & Color Customization
+            </h6>
+            <span class="text-muted extra-small">
+              Select custom color schemes for the sidebar, topbar, active item styles, and primary accent across your application.
+            </span>
+          </div>
+        </div>
+        <button type="button" (click)="onResetTheme()" class="btn-reset-theme">
+          <mat-icon class="btn-icon">refresh</mat-icon>
+          <span>Reset Layouts</span>
+        </button>
+      </div>
+
+      <div class="card-body p-3 p-md-4">
+        <div class="customizer-container">
+          
+          <!-- 1. Sidebar Colors -->
+          <div class="theme-section mb-4">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <h6 class="theme-section-title mb-0">Sidebar Background:</h6>
+              <span class="hex-badge">{{ themeService.currentTheme().sidebarBg }}</span>
+            </div>
+            <div class="swatch-list">
+              @for (item of themePalettes.sidebar; track item.color) {
+                <button
+                  type="button"
+                  class="color-swatch"
+                  [ngClass]="{
+                    'active': themeService.currentTheme().sidebarBg === item.color,
+                    'is-white': item.color === '#ffffff'
+                  }"
+                  [style.background-color]="item.color"
+                  [title]="item.name"
+                  (click)="setSidebarBg(item.color)"
+                >
+                  @if (themeService.currentTheme().sidebarBg === item.color) {
+                    <mat-icon class="swatch-check" [ngClass]="item.color === '#ffffff' ? 'text-dark' : 'text-white'">check</mat-icon>
+                  }
+                </button>
+              }
+
+              <!-- Custom Color Picker -->
+              <label class="custom-color-picker-label" [title]="'Pick custom sidebar color'">
+                <input
+                  type="color"
+                  class="native-color-picker-input"
+                  [value]="themeService.currentTheme().sidebarBg"
+                  (input)="onCustomSidebarChange($event)"
+                />
+                <div
+                  class="custom-color-swatch"
+                  [ngClass]="{ 'active': !isPresetColor(themePalettes.sidebar, themeService.currentTheme().sidebarBg) }"
+                  [style.background-color]="!isPresetColor(themePalettes.sidebar, themeService.currentTheme().sidebarBg) ? themeService.currentTheme().sidebarBg : '#ffffff'"
+                >
+                  <mat-icon class="picker-icon" [ngClass]="!isPresetColor(themePalettes.sidebar, themeService.currentTheme().sidebarBg) ? 'text-white' : 'text-muted'">colorize</mat-icon>
+                </div>
+                <span class="custom-picker-text">Custom</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- 2. Sidebar Active Style -->
+          <div class="theme-section mb-4 pt-3 border-top">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <h6 class="theme-section-title mb-0">Sidebar Active Style:</h6>
+              <span class="hex-badge text-capitalize">{{ themeService.currentTheme().sidebarActiveStyle || 'filled' }}</span>
+            </div>
+            <div class="sidebar-active-grid">
+              @for (style of sidebarActiveStyles; track style.id) {
+                <button
+                  type="button"
+                  class="active-style-btn"
+                  [ngClass]="{ 'active': (themeService.currentTheme().sidebarActiveStyle || 'filled') === style.id }"
+                  (click)="setSidebarActiveStyle(style.id)"
+                  [title]="style.description"
+                >
+                  <div class="style-preview-container" [ngClass]="'preview-' + style.id">
+                    <div class="mini-item-mockup">
+                      <span class="mini-accent"></span>
+                      <span class="mini-bar"></span>
+                    </div>
+                  </div>
+                  <span class="style-label">{{ style.name }}</span>
+                </button>
+              }
+            </div>
+          </div>
+
+          <!-- 3. Topbar Colors -->
+          <div class="theme-section mb-4 pt-3 border-top">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <h6 class="theme-section-title mb-0">Topbar Background:</h6>
+              <span class="hex-badge">{{ themeService.currentTheme().topbarBg }}</span>
+            </div>
+            <div class="swatch-list">
+              @for (item of themePalettes.topbar; track item.color) {
+                <button
+                  type="button"
+                  class="color-swatch"
+                  [ngClass]="{
+                    'active': themeService.currentTheme().topbarBg === item.color,
+                    'is-white': item.color === '#ffffff'
+                  }"
+                  [style.background-color]="item.color"
+                  [title]="item.name"
+                  (click)="setTopbarBg(item.color)"
+                >
+                  @if (themeService.currentTheme().topbarBg === item.color) {
+                    <mat-icon class="swatch-check" [ngClass]="item.color === '#ffffff' ? 'text-dark' : 'text-white'">check</mat-icon>
+                  }
+                </button>
+              }
+
+              <!-- Custom Color Picker -->
+              <label class="custom-color-picker-label" [title]="'Pick custom topbar color'">
+                <input
+                  type="color"
+                  class="native-color-picker-input"
+                  [value]="themeService.currentTheme().topbarBg"
+                  (input)="onCustomTopbarChange($event)"
+                />
+                <div
+                  class="custom-color-swatch"
+                  [ngClass]="{ 'active': !isPresetColor(themePalettes.topbar, themeService.currentTheme().topbarBg) }"
+                  [style.background-color]="!isPresetColor(themePalettes.topbar, themeService.currentTheme().topbarBg) ? themeService.currentTheme().topbarBg : '#ffffff'"
+                >
+                  <mat-icon class="picker-icon" [ngClass]="!isPresetColor(themePalettes.topbar, themeService.currentTheme().topbarBg) ? 'text-white' : 'text-muted'">colorize</mat-icon>
+                </div>
+                <span class="custom-picker-text">Custom</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- 4. Primary Accent Colors -->
+          <div class="theme-section mb-4 pt-3 border-top">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <h6 class="theme-section-title mb-0">Primary Accent Color:</h6>
+              <span class="hex-badge primary-hex">{{ themeService.currentTheme().primaryColor }}</span>
+            </div>
+            <div class="swatch-list">
+              @for (item of themePalettes.primary; track item.color) {
+                <button
+                  type="button"
+                  class="color-swatch primary-swatch"
+                  [ngClass]="{
+                    'active': themeService.currentTheme().primaryColor === item.color
+                  }"
+                  [style.background-color]="item.color"
+                  [title]="item.name"
+                  (click)="setPrimaryColor(item.color)"
+                >
+                  @if (themeService.currentTheme().primaryColor === item.color) {
+                    <mat-icon class="swatch-check text-white">check</mat-icon>
+                  }
+                </button>
+              }
+
+              <!-- Custom Color Picker -->
+              <label class="custom-color-picker-label" [title]="'Pick custom primary accent color'">
+                <input
+                  type="color"
+                  class="native-color-picker-input"
+                  [value]="themeService.currentTheme().primaryColor"
+                  (input)="onCustomPrimaryChange($event)"
+                />
+                <div
+                  class="custom-color-swatch primary-picker-swatch"
+                  [ngClass]="{ 'active': !isPresetColor(themePalettes.primary, themeService.currentTheme().primaryColor) }"
+                  [style.background-color]="!isPresetColor(themePalettes.primary, themeService.currentTheme().primaryColor) ? themeService.currentTheme().primaryColor : 'transparent'"
+                >
+                  <mat-icon class="picker-icon" [ngClass]="!isPresetColor(themePalettes.primary, themeService.currentTheme().primaryColor) ? 'text-white' : 'text-primary'">palette</mat-icon>
+                </div>
+                <span class="custom-picker-text">Custom</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- 5. Font Style & Typography Settings -->
+          <div class="theme-section pt-3 border-top">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <div>
+                <h6 class="theme-section-title mb-1 d-flex align-items-center gap-2">
+                  <mat-icon class="fs-5 text-muted align-middle">font_download</mat-icon>
+                  Font Style & Typography:
+                </h6>
+                <p class="text-muted extra-small mb-0">Select typography style for application text and interface</p>
+              </div>
+              <span class="hex-badge font-active-badge">{{ getSelectedFontName() }}</span>
+            </div>
+            
+            <div class="font-select-wrapper mt-3">
+              <mat-form-field appearance="outline" class="w-100 font-form-field">
+                <mat-label>Application Font Family</mat-label>
+                <mat-select
+                  [value]="themeService.currentTheme().fontFamily"
+                  (selectionChange)="setFontFamily($event.value)"
+                  panelClass="custom-font-select-panel"
+                >
+                  <mat-select-trigger>
+                    <div class="selected-font-trigger" [style.font-family]="themeService.currentTheme().fontFamily">
+                      <span class="fw-bold">{{ getSelectedFontName() }}</span>
+                      <span class="badge bg-light text-muted border ms-2 px-2 py-1">{{ getSelectedFontPreview() }}</span>
+                    </div>
+                  </mat-select-trigger>
+                  @for (font of themeFonts; track font.id) {
+                    <mat-option [value]="font.family" class="font-select-option">
+                      <div class="font-option-row" [style.font-family]="font.family">
+                        <div class="font-option-left">
+                          <span class="font-option-name">{{ font.name }}</span>
+                          <span class="font-option-tag">{{ font.preview }}</span>
+                        </div>
+                        <span class="font-option-preview-text">The quick brown fox jumps over 123</span>
+                      </div>
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

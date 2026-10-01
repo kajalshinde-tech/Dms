@@ -1,0 +1,411 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized Compact Page Header -->
+    <div class="page-header-row mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">alarm_add</mat-icon>
+        <span class="mb-0 page-title">
+          {{ "MANAGE_REMINDER" | translate }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Modern Compact Form Card -->
+    <form [formGroup]="reminderForm">
+      <div class="doc-form-card compact-card">
+        
+        <!-- Row 1: Subject & Select Users -->
+        <div class="row g-2">
+          <!-- Subject Field -->
+          <div class="col-12 col-md-7">
+            <div class="form-group">
+              <label for="subject" class="form-label">
+                {{ "SUBJECT" | translate }} <span class="required-star">*</span>
+              </label>
+              <input formControlName="subject" type="text" class="form-control form-control-compact" id="subject"
+                placeholder="Enter reminder subject..." />
+              @if(reminderForm.get('subject')?.touched && reminderForm.get('subject')?.errors?.['required']) {
+              <div class="validation-error">
+                {{ "SUBJECT_IS_REQUIRED" | translate }}
+              </div>
+              }
+            </div>
+          </div>
+
+          <!-- Select Users Field -->
+          <div class="col-12 col-md-5">
+            <div class="form-group">
+              <label class="form-label">{{ "SELECT_USERS" | translate }}</label>
+              <mat-select panelClass="mat-select-control" placeholder="{{ 'SELECT_USERS' | translate }}"
+                class="form-control form-control-compact" [(value)]="selectedUsers" multiple>
+                <mat-select-trigger>
+                  @if(selectedUsers.length > 0) {
+                  <span>{{ selectedUsers[0].firstName }} {{ selectedUsers[0].lastName }}</span>
+                  } @if(selectedUsers.length > 1) {
+                  <span class="selection-count-badge">
+                    (+{{ selectedUsers.length - 1 }} {{ selectedUsers.length === 2 ? "other" : "others" }})
+                  </span>
+                  }
+                </mat-select-trigger>
+
+                @for(user of usersStore.users(); track user.id) {
+                <mat-option color="primary" [value]="user">
+                  {{ user.firstName }} {{ user.lastName }}
+                </mat-option>
+                }
+              </mat-select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: Message Field -->
+        <div class="row g-2 mt-1">
+          <div class="col-12">
+            <div class="form-group">
+              <label for="message" class="form-label">
+                {{ "MESSAGE" | translate }} <span class="required-star">*</span>
+              </label>
+              <textarea class="form-control form-control-textarea" formControlName="message" id="message" rows="2"
+                placeholder="Enter reminder message details..."></textarea>
+              @if(reminderForm.get('message')?.touched && reminderForm.get('message')?.errors?.['required']) {
+              <div class="validation-error">
+                {{ "MESSAGE_IS_REQUIRED" | translate }}
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 3: Notification Options Bar -->
+        <div class="compact-options-bar mt-2 p-2">
+          <div class="row g-2 align-items-center">
+            <!-- Repeat Reminder Toggle -->
+            <div class="col-auto">
+              <mat-checkbox color="primary" (change)="checkData($event)" formControlName="isRepeated">
+                <span class="toggle-label">{{ "REPEATE_REMINDER" | translate }}</span>
+              </mat-checkbox>
+            </div>
+
+            <!-- Send Email Toggle -->
+            <div class="col-auto">
+              <mat-checkbox color="primary" formControlName="isEmailNotification">
+                <span class="toggle-label">{{ "SEND_EMAIL" | translate }}</span>
+              </mat-checkbox>
+            </div>
+
+            <!-- Frequency Dropdown (When repeated) -->
+            @if(reminderForm.get('isRepeated')?.value) {
+            <div class="col-12 col-sm-6 col-md-4 ms-auto">
+              <div class="d-flex align-items-center gap-2">
+                <label for="frequency" class="form-label mb-0 text-nowrap">
+                  {{ "FREQUENCY" | translate }} <span class="required-star">*</span>:
+                </label>
+                <div class="flex-grow-1">
+                  <select class="form-control form-select form-control-compact" (change)="onFrequencyChange()" formControlName="frequency" id="frequency">
+                    <option value="">-- {{ "NONE" | translate }} --</option>
+                    @for(frequencyItem of reminderFrequencies; track frequencyItem) {
+                    <option [value]="frequencyItem?.id">
+                      {{ frequencyItem?.name?.toUpperCase() | translate }}
+                    </option>
+                    }
+                  </select>
+                </div>
+              </div>
+              @if(reminderForm.get('frequency')?.errors?.['required']) {
+              <div class="validation-error">
+                {{ "FREQUENCY_IS_REQUIRED" | translate }}
+              </div>
+              }
+            </div>
+            }
+          </div>
+        </div>
+
+        <!-- Recurrence Frequency Sub-Panels (When Repeated) -->
+        @if(reminderForm.get('isRepeated')?.value) {
+          <!-- Daily Frequency Options -->
+          @if(reminderForm.get('frequency')?.value == '0') {
+          <div class="recurrence-subpanel mt-2 p-2">
+            <label class="form-label fw-bold mb-1">{{ "WEEK_DAYS" | translate }}</label>
+            <div class="d-flex flex-wrap gap-2" formArrayName="dailyReminders">
+              @for(dailyReminder of dailyRemindersArray.controls; track dailyReminder; let i = $index) {
+              <div class="weekday-item" [formGroupName]="i">
+                <mat-checkbox color="primary" formControlName="isActive">
+                  <span class="toggle-label">{{ dailyReminder.get("name")?.value?.toUpperCase() | translate }}</span>
+                </mat-checkbox>
+              </div>
+              }
+            </div>
+          </div>
+          }
+
+          <!-- Weekly Frequency Options -->
+          @if(reminderForm.get('frequency')?.value == '1') {
+          <div class="recurrence-subpanel mt-2 p-2">
+            <label class="form-label fw-bold mb-1">{{ "WEEK_DAYS" | translate }}</label>
+            <mat-radio-group formControlName="dayOfWeek" class="d-flex flex-wrap gap-3">
+              @for(day of dayOfWeek; track day; let i = $index) {
+              <mat-radio-button color="primary" [value]="day.id">
+                <span class="toggle-label">{{ day.name | translate }}</span>
+              </mat-radio-button>
+              }
+            </mat-radio-group>
+          </div>
+          }
+
+          <!-- Quarterly Frequency Options -->
+          @if(reminderForm.get('frequency')?.value == '3') {
+          <div class="recurrence-subpanel mt-2 p-2">
+            <label class="form-label fw-bold mb-1">{{ "SELECT_QUARTER_DATE" | translate }}</label>
+            <div class="table-responsive">
+              <table class="table table-sm recurrence-table mb-0">
+                <thead>
+                  <tr>
+                    <th>Quarter</th>
+                    <th>{{ "MONTH" | translate }}</th>
+                    <th>{{ "DAY" | translate }}</th>
+                  </tr>
+                </thead>
+                <tbody formArrayName="quarterlyReminders">
+                  @for(quarterlyReminder of quarterlyRemindersArray.controls; track quarterlyReminder; let i = $index) {
+                  <tr>
+                    <ng-container [formGroupName]="i">
+                      <td class="align-middle fw-medium">
+                        {{ quarterlyReminder.get("name")?.value | translate }}
+                      </td>
+                      <td>
+                        <select (change)="onDateChange(quarterlyReminder)" class="form-control form-select form-control-sm"
+                          formControlName="month">
+                          @for(mon of quarterlyReminder.get('monthValues')?.value; track mon) {
+                          <option [value]="mon.id">{{ mon.name | translate }}</option>
+                          }
+                        </select>
+                      </td>
+                      <td>
+                        <select (change)="onDateChange(quarterlyReminder)" class="form-control form-select form-control-sm"
+                          formControlName="day">
+                          @for(day of days; track day) {
+                          <option [value]="day">{{ day }}</option>
+                          }
+                        </select>
+                        @if(quarterlyReminder.get('day')?.touched && quarterlyReminder?.hasError('invalidDate')) {
+                        <div class="validation-error">
+                          {{ "PLEASE_SELECT_VALID_DAY" | translate }}
+                        </div>
+                        }
+                      </td>
+                    </ng-container>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+          }
+
+          <!-- Half-Yearly Frequency Options -->
+          @if(reminderForm.get('frequency')?.value == '4') {
+          <div class="recurrence-subpanel mt-2 p-2">
+            <label class="form-label fw-bold mb-1">{{ "SELECT_DATE" | translate }}</label>
+            <div class="table-responsive">
+              <table class="table table-sm recurrence-table mb-0">
+                <thead>
+                  <tr>
+                    <th>Period</th>
+                    <th>{{ "MONTH" | translate }}</th>
+                    <th>{{ "DAY" | translate }}</th>
+                  </tr>
+                </thead>
+                <tbody formArrayName="halfYearlyReminders">
+                  @for(halfYearlyReminder of halfYearlyRemindersArray.controls; track halfYearlyReminder; let i = $index) {
+                  <tr>
+                    <ng-container [formGroupName]="i">
+                      <td class="align-middle fw-medium">
+                        {{ halfYearlyReminder.get("name")?.value | translate }}
+                      </td>
+                      <td>
+                        <select (change)="onDateChange(halfYearlyReminder)" class="form-control form-select form-control-sm"
+                          formControlName="month">
+                          @for(mon of halfYearlyReminder.get('monthValues')?.value; track mon) {
+                          <option [value]="mon.id">{{ mon.name | translate }}</option>
+                          }
+                        </select>
+                      </td>
+                      <td>
+                        <select (change)="onDateChange(halfYearlyReminder)" class="form-control form-select form-control-sm"
+                          formControlName="day">
+                          @for(day of days; track day) {
+                          <option [value]="day">{{ day }}</option>
+                          }
+                        </select>
+                        @if(halfYearlyReminder.get('day')?.touched && halfYearlyReminder?.hasError('invalidDate')) {
+                        <div class="validation-error">
+                          {{ "PLEASE_SELECT_VALID_DAY" | translate }}
+                        </div>
+                        }
+                      </td>
+                    </ng-container>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+          }
+        }
+
+        <!-- Row 4: Schedule / Date & Time Selection -->
+        <div class="mt-2">
+          <!-- Non-Repeated Schedule -->
+          @if(!reminderForm.get('isRepeated')?.value) {
+          <div class="row g-2">
+            <div class="col-12 col-sm-6">
+              <div class="form-group">
+                <label class="form-label">
+                  {{ "REMINDER_DATE" | translate }} <span class="required-star">*</span>
+                </label>
+                <div class="input-group">
+                  <input #ref class="form-control form-control-compact" formControlName="startDate" [matDatepicker]="startDatePicker"
+                    placeholder="{{ 'REMINDER_DATE' | translate }}" />
+                  <button class="btn btn-calendar" type="button" (click)="startDatePicker.open()">
+                    <mat-icon class="medium-icon fs-6 align-middle">calendar_today</mat-icon>
+                  </button>
+                  <mat-datepicker #startDatePicker></mat-datepicker>
+                </div>
+                @if(reminderForm.get('startDate')?.touched && reminderForm.get('startDate')?.errors?.['required']) {
+                <div class="validation-error">
+                  {{ "DATE_IS_REQUIRED" | translate }}
+                </div>
+                } @if(reminderForm.get('startDate')?.touched && reminderForm.get('startDate')?.errors?.['owlDateTimeMin']) {
+                <div class="validation-error">
+                  {{ "START_DATE_SHOULD_BE_GREATER_THEN_CURRENT_DATE_TIME" | translate }}
+                </div>
+                }
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-6">
+              <div class="form-group">
+                <label class="form-label">
+                  {{ "REMINDER_TIME" | translate }} <span class="required-star">*</span>
+                </label>
+                <div class="input-group">
+                  <input class="form-control form-control-compact timepicker-input" formControlName="startTime" [format]="24"
+                    [ngxTimepicker]="toggleIcon" readonly (click)="toggleIcon.open()" style="cursor: pointer;" />
+                  <button class="btn btn-calendar" type="button" (click)="toggleIcon.open()">
+                    <mat-icon class="medium-icon fs-6 align-middle">access_time</mat-icon>
+                  </button>
+                  <ngx-material-timepicker #toggleIcon></ngx-material-timepicker>
+                </div>
+                @if(reminderForm.get('startTime')?.touched && reminderForm.get('startTime')?.errors?.['required']) {
+                <div class="validation-error">
+                  {{ "TIME_IS_REQUIRED" | translate }}
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          }
+
+          <!-- Repeated Schedule (Start & End Date/Time) -->
+          @if(reminderForm.get('isRepeated')?.value) {
+          <div class="row g-2">
+            <div class="col-12 col-sm-6 col-lg-3">
+              <div class="form-group">
+                <label class="form-label">
+                  {{ "REMINDER_START_DATE" | translate }} <span class="required-star">*</span>
+                </label>
+                <div class="input-group">
+                  <input #ref class="form-control form-control-compact" formControlName="startDate" [matDatepicker]="startDatePicker"
+                    placeholder="{{ 'REMINDER_DATE' | translate }}" />
+                  <button class="btn btn-calendar" type="button" (click)="startDatePicker.open()">
+                    <mat-icon class="medium-icon fs-6 align-middle">calendar_today</mat-icon>
+                  </button>
+                  <mat-datepicker #startDatePicker></mat-datepicker>
+                </div>
+                @if(reminderForm.get('startDate')?.touched && reminderForm.get('startDate')?.errors) {
+                  @if(reminderForm.get('startDate')?.errors?.['required']) {
+                  <div class="validation-error">{{ "START_DATE_IS_REQUIRED" | translate }}</div>
+                  } @if(reminderForm.get('startDate')?.errors?.['owlDateTimeMin']) {
+                  <div class="validation-error">{{ "START_DATE_SHOULD_BE_GREATER_THEN_CURRENT_DATE_TIME" | translate }}</div>
+                  }
+                }
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-3">
+              <div class="form-group">
+                <label class="form-label">
+                  {{ "REMINDER_TIME" | translate }} <span class="required-star">*</span>
+                </label>
+                <div class="input-group">
+                  <input class="form-control form-control-compact timepicker-input" formControlName="startTime" [format]="24"
+                    [ngxTimepicker]="toggleIcon" readonly (click)="toggleIcon.open()" style="cursor: pointer;" />
+                  <button class="btn btn-calendar" type="button" (click)="toggleIcon.open()">
+                    <mat-icon class="medium-icon fs-6 align-middle">access_time</mat-icon>
+                  </button>
+                  <ngx-material-timepicker #toggleIcon></ngx-material-timepicker>
+                </div>
+                @if(reminderForm.get('startTime')?.touched && reminderForm.get('startTime')?.errors?.['required']) {
+                <div class="validation-error">{{ "TIME_IS_REQUIRED" | translate }}</div>
+                }
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-3">
+              <div class="form-group">
+                <label class="form-label">{{ "REMINDER_END_DATE" | translate }}</label>
+                <div class="input-group">
+                  <input #ref class="form-control form-control-compact" formControlName="endDate" [matDatepicker]="endDatePicker"
+                    placeholder="{{ 'REMINDER_DATE' | translate }}" />
+                  <button class="btn btn-calendar" type="button" (click)="endDatePicker.open()">
+                    <mat-icon class="medium-icon fs-6 align-middle">calendar_today</mat-icon>
+                  </button>
+                  <mat-datepicker #endDatePicker></mat-datepicker>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-3">
+              <div class="form-group">
+                <label class="form-label">{{ "REMINDER_END_TIME" | translate }}</label>
+                <div class="input-group">
+                  <input class="form-control form-control-compact timepicker-input" formControlName="endTime" [format]="24"
+                    [ngxTimepicker]="endTimeToggleIcon" readonly (click)="endTimeToggleIcon.open()" style="cursor: pointer;" />
+                  <button class="btn btn-calendar" type="button" (click)="endTimeToggleIcon.open()">
+                    <mat-icon class="medium-icon fs-6 align-middle">access_time</mat-icon>
+                  </button>
+                  <ngx-material-timepicker #endTimeToggleIcon></ngx-material-timepicker>
+                </div>
+                @if(reminderForm.get('endDate')?.touched && reminderForm.get('endTime')?.errors?.['required']) {
+                <div class="validation-error">{{ "ENDTIME_IS_REQUIRED" | translate }}</div>
+                }
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+
+        <!-- Form Footer Actions -->
+        <div class="form-footer-actions mt-3 pt-2 d-flex align-items-center gap-2">
+          <button class="btn-save-main" matButton="filled" (click)="createReminder()" type="submit" cdkFocusInitial>
+            <mat-icon class="medium-icon">save</mat-icon>
+            <span>{{ "SAVE" | translate }}</span>
+          </button>
+          <button type="button" class="btn-cancel-main" matButton="filled" [routerLink]="['/reminders']">
+            <mat-icon class="medium-icon">cancel</mat-icon>
+            <span>{{ "CANCEL" | translate }}</span>
+          </button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+  @if(isLoading) {
+  <div class="spinner-container">
+    <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+    </mat-progress-spinner>
+  </div>
+  }
+</section>

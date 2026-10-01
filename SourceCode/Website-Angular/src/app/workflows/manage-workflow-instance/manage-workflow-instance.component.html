@@ -1,0 +1,70 @@
+<div class="saas-dialog-container">
+  <!-- Dialog Header -->
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge success-badge">
+        <mat-icon>sync_alt</mat-icon>
+      </div>
+      <div>
+        <h5 class="dialog-title mb-0">{{ "START_WORKFLOW" | translate }}</h5>
+        <p class="dialog-subtitle mb-0">{{ data.document.name || ('WORKFLOW' | translate) }}</p>
+      </div>
+    </div>
+    <button type="button" class="dialog-close-btn" (click)="closeDialog()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Dialog Body -->
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <!-- Document Context Card -->
+    @if(data.document) {
+    <div class="doc-context-card mb-3">
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-2 overflow-hidden">
+          <mat-icon class="context-file-icon">description</mat-icon>
+          <span class="context-file-name text-truncate" [title]="data.document.name">{{ data.document.name }}</span>
+        </div>
+        @if(data.document.documentNumber) {
+        <span class="context-file-badge">{{ data.document.documentNumber }}</span>
+        }
+      </div>
+    </div>
+    }
+
+    <form [formGroup]="workflowInstanceForm">
+      <div class="form-group mb-2">
+        <label class="form-label-custom">
+          {{ 'WORKFLOW' | translate }} <span class="required-star">*</span>
+        </label>
+        <mat-select panelClass="mat-select-control custom-saas-select" class="form-control doc-form-input" formControlName="workflowId"
+          placeholder="{{ 'SELECT_WORKFLOW' | translate }}">
+          @for (workflow of workflows; track workflow.id) {
+          <mat-option [value]="workflow.id">
+            {{ workflow.name }}
+          </mat-option>
+          }
+        </mat-select>
+        @if (workflowInstanceForm.get('workflowId')?.touched && workflowInstanceForm.get('workflowId')?.errors) {
+        <div class="field-error-text">
+          @if (workflowInstanceForm.get('workflowId')?.errors?.['required']) {
+            <span>{{'SELECT_WORKFLOW' | translate}}</span>
+          }
+        </div>
+        }
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <!-- Dialog Footer -->
+  <mat-dialog-actions class="saas-dialog-footer">
+    <button type="button" class="btn-saas-cancel" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+      <span>{{'CANCEL' | translate}}</span>
+    </button>
+    <button type="button" class="btn-primary-custom" (click)="saveWorkflowInstance()">
+      <mat-icon>play_arrow</mat-icon>
+      <span>{{'START_WORKFLOW' | translate}}</span>
+    </button>
+  </mat-dialog-actions>
+</div>

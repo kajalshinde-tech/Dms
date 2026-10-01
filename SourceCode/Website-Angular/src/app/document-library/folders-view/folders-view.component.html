@@ -1,0 +1,389 @@
+<section class="content folder-view-page">
+  <div class="container-fluid">
+    <!-- 1. Page Header & Action Buttons -->
+    <div class="page-header-row mb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">folder_open</mat-icon>
+        <span class="mb-0 page-title">
+          {{ "FOLDER_VIEW" | translate }}
+        </span>
+      </div>
+
+      <!-- Action Group & Primary CTA -->
+      <div class="d-flex align-items-center gap-2">
+        <!-- Modern Segmented Button Group for Secondary Actions (Desktop) -->
+        <div class="modern-btn-group d-none d-md-inline-flex align-items-center" role="group">
+          <button type="button" class="btn-group-item" [routerLink]="['/assign/list-view']" [matTooltip]="'DOCUMENT_VIEW' | translate">
+            <mat-icon class="btn-group-icon">list</mat-icon>
+            <span class="btn-group-text">{{ "DOCUMENT_VIEW" | translate }}</span>
+          </button>
+
+          <button type="button" class="btn-group-item" (click)="onRefresh()" [matTooltip]="'REFRESH' | translate">
+            <mat-icon class="btn-group-icon">refresh</mat-icon>
+            <span class="btn-group-text">{{ "REFRESH" | translate }}</span>
+          </button>
+
+          <button *hasClaim="'CREATE_CATEGORY'" type="button" class="btn-group-item" (click)="onFoldersOrCategories()" [matTooltip]="'ADD_FOLDERS_OR_CATEGORY' | translate">
+            <mat-icon class="btn-group-icon">create_new_folder</mat-icon>
+            <span class="btn-group-text">{{ "ADD_FOLDERS_OR_CATEGORY" | translate }}</span>
+          </button>
+        </div>
+
+        <!-- Primary Add Document Action Button -->
+        <button *hasClaim="'ASSIGNED_CREATE_DOCUMENT'" (click)="onAddDocument(assignFoldersViewStore.selectedCategoryId())" class="primary btn-add-main" matButton="filled">
+          <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
+          <span class="d-none d-sm-inline ms-1">{{ "ADD_DOCUMENT" | translate }}</span>
+          <span class="d-inline d-sm-none ms-1">Add</span>
+        </button>
+
+        <!-- Small Screen / Tablet Actions Dropdown -->
+        <div class="d-inline-flex d-md-none">
+          <button mat-icon-button [matMenuTriggerFor]="mobileMenu" class="btn-mobile-trigger" aria-label="Actions" [matTooltip]="'Actions'">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #mobileMenu="matMenu" class="custom-saas-menu">
+            <button mat-menu-item [routerLink]="['/assign/list-view']">
+              <mat-icon>list</mat-icon>
+              <span>{{ "DOCUMENT_VIEW" | translate }}</span>
+            </button>
+            <button mat-menu-item (click)="onRefresh()">
+              <mat-icon>refresh</mat-icon>
+              <span>{{ "REFRESH" | translate }}</span>
+            </button>
+            <button *hasClaim="'CREATE_CATEGORY'" mat-menu-item (click)="onFoldersOrCategories()">
+              <mat-icon>create_new_folder</mat-icon>
+              <span>{{ "ADD_FOLDERS_OR_CATEGORY" | translate }}</span>
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Main Folder & File Card Container -->
+    <mat-card appearance="outlined" class="folder-view-card">
+      <!-- Breadcrumb Path Bar -->
+      <div class="breadcrumb-toolbar px-3 py-2 border-bottom">
+        <div class="d-flex align-items-center flex-wrap gap-1">
+          @if (assignFoldersViewStore.newCategoryPath().length > 0) {
+            <a role="button" class="breadcrumb-chip root-chip" (click)="onHomeClick()">
+              <mat-icon class="chip-icon">home</mat-icon>
+              <span class="chip-label">{{ "HOME" | translate }}</span>
+            </a>
+          } @else {
+            <span class="breadcrumb-chip root-chip active">
+              <mat-icon class="chip-icon">home</mat-icon>
+              <span class="chip-label">{{ "HOME" | translate }}</span>
+            </span>
+          }
+
+          @if (assignFoldersViewStore.newCategoryPath().length > 0) {
+            @let paths = assignFoldersViewStore.newCategoryPath();
+            @if (paths.length <= 2) {
+              <mat-icon class="breadcrumb-separator">chevron_right</mat-icon>
+              @if (paths.length === 2) {
+                <button [dir]="langDir" [matTooltip]="paths[0].name" type="button" [title]="paths[0].name"
+                  (click)="onFolderClickFromPath(paths[0])" class="breadcrumb-chip folder-chip">
+                  <mat-icon class="chip-icon">folder</mat-icon>
+                  <span class="chip-label">{{ isMobile ? (paths[0].name | limitTo: '15') : paths[0].name }}</span>
+                </button>
+              } @else {
+                <span [dir]="langDir" [matTooltip]="paths[0].name" class="breadcrumb-chip folder-chip active">
+                  <mat-icon class="chip-icon">folder_open</mat-icon>
+                  <span class="chip-label">{{ isMobile ? (paths[0].name | limitTo: '15') : paths[0].name }}</span>
+                </span>
+              }
+            } @else {
+              <mat-icon class="breadcrumb-separator">chevron_right</mat-icon>
+              <button class="breadcrumb-chip ellipsis-chip" (click)="onFolderClickFromPath(paths[paths.length - 2])">
+                ...
+              </button>
+            }
+
+            @for (path of paths; track i; let i = $index; let last = $last) {
+              @if (i > 0 && (paths.length <= 3 || i >= paths.length - 2)) {
+                @if (i < paths.length - 1) {
+                  <mat-icon class="breadcrumb-separator">chevron_right</mat-icon>
+                  <button [dir]="langDir" [matTooltip]="path.name" type="button" [title]="path.name"
+                    (click)="onFolderClickFromPath(path)" class="breadcrumb-chip folder-chip">
+                    <mat-icon class="chip-icon">folder</mat-icon>
+                    <span class="chip-label">{{ isMobile ? (path.name | limitTo: '15') : path.name }}</span>
+                  </button>
+                }
+                @if (i === paths.length - 1) {
+                  <mat-icon class="breadcrumb-separator">chevron_right</mat-icon>
+                  <span [dir]="langDir" [matTooltip]="path.name" class="breadcrumb-chip folder-chip active">
+                    <mat-icon class="chip-icon">folder_open</mat-icon>
+                    <span class="chip-label">{{ isMobile ? (path.name | limitTo: '15') : path.name }}</span>
+                  </span>
+                }
+              }
+            }
+          }
+        </div>
+      </div>
+
+      <!-- Datatable Content -->
+      <mat-card-content class="p-0">
+        <div class="table-responsive">
+          <div class="grid-height-folderview">
+            <table class="table modern-saas-table mb-0">
+              @let orderBy = (assignFoldersViewStore.documentResourceParameter() && assignFoldersViewStore.documentResourceParameter().orderBy) ? assignFoldersViewStore.documentResourceParameter().orderBy.split(' ') : ['name', 'asc'];
+              <thead matSort matSortDisableClear [matSortActive]="orderBy[0]" [matSortDirection]="orderBy[1] === 'desc' ? 'desc' : 'asc'" (matSortChange)="sortData($event)">
+                <tr class="table-header-row">
+                  <th style="min-width: 220px;" mat-sort-header="name" class="text-nowrap ps-3">
+                    {{ "NAME" | translate }}
+                  </th>
+                  <th style="width: 100px; min-width: 100px;" class="text-center">
+                    {{ "STATUS" | translate }}
+                  </th>
+                  <th style="width: 140px; min-width: 130px;" class="text-nowrap" mat-sort-header="documentNumber">
+                    {{ "DOCUMENT_NO" | translate }}
+                  </th>
+                  <th style="width: 160px; min-width: 140px;" class="text-nowrap" mat-sort-header="createdBy">
+                    {{ "CREATED_BY" | translate }}
+                  </th>
+                  <th style="width: 160px; min-width: 140px;" class="text-nowrap" mat-sort-header="createdDate">
+                    {{ "CREATED_AT" | translate }}
+                  </th>
+                  <th style="width: 70px; min-width: 60px;" class="text-center pe-3">
+                    {{ "ACTIONS" | translate }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- 1. Folders / Categories -->
+                @if (assignFoldersViewStore.categories() && assignFoldersViewStore.categories().length > 0) {
+                  @for (category of assignFoldersViewStore.sortedCategories(); track $index; let i = $index) {
+                    <tr class="folder-row">
+                      <td class="ps-3">
+                        <a role="button" class="folder-name-link d-inline-flex align-items-center text-decoration-none" (click)="onFolderClick(category)">
+                          <div class="folder-icon-box" [ngClass]="{ 'is-shared': category?.isShared }">
+                            @if (!category?.isShared) {
+                              <mat-icon class="folder-icon">folder</mat-icon>
+                            } @else {
+                              <mat-icon class="folder-icon">folder_shared</mat-icon>
+                            }
+                          </div>
+                          <span class="item-name fw-semibold text-dark">{{ category.name }}</span>
+                        </a>
+                      </td>
+                      <td class="text-center">
+                        @if (category?.isShared) {
+                          <span class="badge bg-light text-primary border border-primary-subtle rounded-pill px-2 py-1 fs-xs">
+                            <mat-icon class="badge-mini-icon me-1">share</mat-icon>Shared
+                          </span>
+                        }
+                      </td>
+                      <td>
+                        <span class="text-muted fs-xs">—</span>
+                      </td>
+                      <td class="text-nowrap">
+                        <div class="d-flex align-items-center">
+                          <span class="avatar-circle-sm me-2">{{ category.createdUserName ? category.createdUserName.charAt(0).toUpperCase() : 'U' }}</span>
+                          <span class="user-text">{{ category.createdUserName }}</span>
+                        </div>
+                      </td>
+                      <td class="text-nowrap">
+                        <div class="date-cell text-muted">
+                          <mat-icon class="date-icon me-1">schedule</mat-icon>
+                          <span>{{ category.createdDate | utcToLocalTime: "short" }}</span>
+                        </div>
+                      </td>
+                      <td class="text-center pe-3">
+                        <button mat-icon-button class="action-btn-circle" *hasClaim="['ASSIGNED_SHARE_FOLDER', 'ASSIGNED_ARCHIVE_FOLDER']" [matMenuTriggerFor]="folderMenu" [matTooltip]="'Actions'">
+                          <mat-icon class="action-icon">more_vert</mat-icon>
+                        </button>
+                        <mat-menu #folderMenu="matMenu" class="custom-saas-menu">
+                          <button *hasClaim="'ASSIGNED_SHARE_FOLDER'" mat-menu-item (click)="manageCategoryPermission(category)" type="button">
+                            <mat-icon class="menu-icon text-primary">share</mat-icon>
+                            <span>{{ "SHARE" | translate }}</span>
+                          </button>
+                          <button *hasClaim="'ASSIGNED_ARCHIVE_FOLDER'" mat-menu-item (click)="archiveFolder(category)" type="button">
+                            <mat-icon class="menu-icon text-warning">archive</mat-icon>
+                            <span>{{ "ARCHIVE" | translate }}</span>
+                          </button>
+                        </mat-menu>
+                      </td>
+                    </tr>
+                  }
+                }
+
+                <!-- 2. Documents / Files -->
+                @if (assignFoldersViewStore.sortedDocuments().length > 0) {
+                  @for (document of assignFoldersViewStore.sortedDocuments(); track document; let i = $index) {
+                    <tr class="document-row">
+                      <td class="ps-3">
+                        <a role="button" class="document-name-link d-inline-flex align-items-center text-decoration-none" (click)="onDocumentView(document)">
+                          <div class="file-icon-box">
+                            <img [src]="document.extension | imagePath" [alt]="document.name" class="file-type-img" loading="lazy" />
+                          </div>
+                          <span class="item-name fw-medium text-dark">{{ document.name }}</span>
+                        </a>
+                      </td>
+                      <td class="text-center">
+                        <div class="d-flex align-items-center justify-content-center gap-1">
+                          @if (document.workflowsDetail) {
+                            @let workflowName = (document.workflowsDetail | workflowCombine);
+                            @if (workflowName) {
+                              <span class="status-indicator-badge workflow" [matTooltip]="('CURRENT_WORKFLOW' | translate) + ': ' + workflowName">
+                                <mat-icon class="badge-icon">timeline</mat-icon>
+                              </span>
+                            }
+                          }
+                          @if (document.signBy) {
+                            <span class="status-indicator-badge signature" [matTooltip]="('SIGN_BY' | translate) + ': ' + document.signBy">
+                              <mat-icon class="badge-icon">draw</mat-icon>
+                            </span>
+                          }
+                          @if (document.commentCount && document.commentCount > 0) {
+                            <span class="status-indicator-badge comment" (click)="addComment(document)" [matTooltip]="('COMMENT' | translate) + ' (' + document.commentCount + ')'">
+                              <mat-icon class="badge-icon">chat</mat-icon>
+                              <span class="badge-number">{{ document.commentCount }}</span>
+                            </span>
+                          }
+                          @if (document.isShared) {
+                            <ng-container *hasClaim="['ASSIGNED_SHARE_DOCUMENT', 'ASSIGNED_SHARE_FOLDER']">
+                              <span class="status-indicator-badge share" (click)="manageSharePermission(document)" [matTooltip]="'SHARE' | translate">
+                                <mat-icon class="badge-icon">groups</mat-icon>
+                              </span>
+                            </ng-container>
+                          }
+                        </div>
+                      </td>
+                      <td>
+                        @if (document.documentNumber) {
+                          <span class="doc-number-badge">
+                            {{ document.documentNumber }}
+                          </span>
+                        } @else {
+                          <span class="text-muted fs-xs">—</span>
+                        }
+                      </td>
+                      <td class="text-nowrap">
+                        <div class="d-flex align-items-center">
+                          <span class="avatar-circle-sm me-2">{{ document.createdBy ? document.createdBy.charAt(0).toUpperCase() : 'U' }}</span>
+                          <span class="user-text">{{ document.createdBy }}</span>
+                        </div>
+                      </td>
+                      <td class="text-nowrap">
+                        <div class="date-cell text-muted">
+                          <mat-icon class="date-icon me-1">schedule</mat-icon>
+                          <span>{{ document.createdDate | utcToLocalTime: "short" }}</span>
+                        </div>
+                      </td>
+                      <td class="text-center pe-3">
+                        <button mat-icon-button class="action-btn-circle" *hasClaim="[
+                          'ASSIGNED_EDIT_DOCUMENT',
+                          'ASSIGNED_START_WORKFLOW',
+                          'ASSIGNED_GET_DOCUMENT_SUMMARY',
+                          'ASSIGNED_ADD_SIGNATURE',
+                          'ASSIGNED_SHARE_DOCUMENT',
+                          'ASSIGNED_CREATE_SHAREABLE_LINK',
+                          'ASSIGNED_DOWNLOAD_DOCUMENT',
+                          'ASSIGNED_UPLOAD_NEW_VERSION',
+                          'ASSIGNED_VIEW_VERSION_HISTORY',
+                          'ASSIGNED_ADD_COMMENT',
+                          'ASSIGNED_ADD_REMINDER',
+                          'ASSIGNED_SEND_EMAIL',
+                          'ASSIGNED_ARCHIVE_DOCUMENT',
+                          'ASSIGNED_MANAGE_INDEXING'
+                        ]" [matMenuTriggerFor]="docMenu" [matTooltip]="'Actions'">
+                          <mat-icon class="action-icon">more_vert</mat-icon>
+                        </button>
+
+                        <mat-menu #docMenu="matMenu" class="custom-saas-menu">
+                          <button *hasClaim="'ASSIGNED_EDIT_DOCUMENT'" mat-menu-item (click)="editDocument(document)">
+                            <mat-icon class="menu-icon text-primary">edit</mat-icon>
+                            <span>{{ "EDIT" | translate }}</span>
+                          </button>
+                          @if (checkWorkflowInstance(document)) {
+                            <button *hasClaim="'ASSIGNED_START_WORKFLOW'" mat-menu-item (click)="manageWorkflowInstance(document)">
+                              <mat-icon class="menu-icon text-success">sync_alt</mat-icon>
+                              <span>{{ "START_WORKFLOW" | translate }}</span>
+                            </button>
+                          }
+                          <button *hasClaim="'ASSIGNED_GET_DOCUMENT_SUMMARY'" mat-menu-item (click)="getDocumentSummary(document)" type="button">
+                            <mat-icon class="menu-icon text-info">smart_toy</mat-icon>
+                            <span>{{ "GET_DOCUMENT_SUMMARY" | translate }}</span>
+                          </button>
+                          <button *hasClaim="'ASSIGNED_ADD_SIGNATURE'" mat-menu-item (click)="onDocumentSignatureClick(document)">
+                            <mat-icon class="menu-icon text-purple">draw</mat-icon>
+                            <span>{{ "DOCUMENT_SIGNATURE" | translate }}</span>
+                          </button>
+                          <button *hasClaim="'ASSIGNED_SHARE_DOCUMENT'" mat-menu-item (click)="manageDocumentPermission(document)" type="button">
+                            <mat-icon class="menu-icon text-primary">share</mat-icon>
+                            <span>{{ "SHARE" | translate }}</span>
+                          </button>
+                          <button *hasClaim="'ASSIGNED_CREATE_SHAREABLE_LINK'" mat-menu-item (click)="onCreateShareableLink(document)" type="button">
+                            <mat-icon class="menu-icon text-secondary">link</mat-icon>
+                            <span>{{ "GET_SHAREABLE_LINK" | translate }}</span>
+                          </button>
+                          <button *hasClaim="'ASSIGNED_DOWNLOAD_DOCUMENT'" mat-menu-item (click)="downloadDocument(document)" type="button">
+                            <mat-icon class="menu-icon text-success">download</mat-icon>
+                            <span>{{ "DOWNLOAD" | translate }}</span>
+                          </button>
+                          <button *hasClaim="'ASSIGNED_UPLOAD_NEW_VERSION'" mat-menu-item (click)="uploadNewVersion(document)" type="button">
+                            <mat-icon class="menu-icon text-indigo">upload</mat-icon>
+                            <span>{{ "UPLOAD_NEW_VERSION_FILE" | translate }}</span>
+                          </button>
+                          <button *hasClaim="'ASSIGNED_VIEW_VERSION_HISTORY'" mat-menu-item (click)="onVersionHistoryClick(document)">
+                            <mat-icon class="menu-icon text-dark">history</mat-icon>
+                            <span>{{ "VERSION_HISOTRY" | translate }}</span>
+                          </button>
+                          <button *hasClaim="'ASSIGNED_ADD_COMMENT'" mat-menu-item (click)="addComment(document)" type="button">
+                            <mat-icon class="menu-icon text-info">chat</mat-icon>
+                            <span>{{ "COMMENT" | translate }}</span>
+                          </button>
+                          <button *hasClaim="'ASSIGNED_ADD_REMINDER'" mat-menu-item (click)="addReminder(document)" type="button">
+                            <mat-icon class="menu-icon text-warning">notifications</mat-icon>
+                            <span>{{ "ADD_REMINDER" | translate }}</span>
+                          </button>
+                          <button *hasClaim="'ASSIGNED_SEND_EMAIL'" mat-menu-item (click)="sendEmail(document)" type="button">
+                            <mat-icon class="menu-icon text-teal">forward_to_inbox</mat-icon>
+                            <span>{{ "SEND_EMAIL" | translate }}</span>
+                          </button>
+                          <button *hasClaim="'ASSIGNED_ARCHIVE_DOCUMENT'" mat-menu-item (click)="archiveDocument(document)" type="button">
+                            <mat-icon class="menu-icon text-danger">archive</mat-icon>
+                            <span>{{ "ARCHIVE" | translate }}</span>
+                          </button>
+                        </mat-menu>
+                      </td>
+                    </tr>
+                  }
+                }
+
+                <!-- Empty State -->
+                @if (!assignFoldersViewStore.isLoading() && assignFoldersViewStore.categories().length === 0 && assignFoldersViewStore.documents().length === 0) {
+                  <tr>
+                    <td colspan="6" class="text-center py-5">
+                      <div class="empty-folder-state d-flex flex-column align-items-center justify-content-center">
+                        <div class="empty-icon-box mb-3">
+                          <mat-icon class="empty-folder-icon">folder_open</mat-icon>
+                        </div>
+                        <h6 class="empty-title mb-1 fw-bold text-dark">{{ "NO_FILES_OR_FOLDERS_FOUND" | translate }}</h6>
+                        <p class="empty-subtitle text-muted fs-xs mb-0">Use the action buttons above to add folders or documents here.</p>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+
+            @if (assignFoldersViewStore.isLoading()) {
+              <div class="loading-overlay">
+                <mat-progress-spinner mode="indeterminate" diameter="36" strokeWidth="3"></mat-progress-spinner>
+                <span class="loading-text ms-2">Loading...</span>
+              </div>
+            }
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>
+
+@if (assignFoldersViewStore.isLoading() || isLoadingResults) {
+  <div class="spinner-container">
+    <mat-progress-spinner mode="indeterminate" diameter="50" strokeWidth="4"></mat-progress-spinner>
+  </div>
+}

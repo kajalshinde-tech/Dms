@@ -1,0 +1,172 @@
+// -------------------------------------------------------------
+// AI Prompt Template List Styles
+// -------------------------------------------------------------
+
+.page-header-row {
+  margin-bottom: 1.25rem;
+
+  .page-title {
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: var(--app-text-color, #0f172a) !important;
+    letter-spacing: -0.01em !important;
+    line-height: 1.25 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+  }
+
+  .page-title-icon {
+    color: var(--app-primary-color, #059669) !important;
+    font-size: 21px !important;
+    width: 21px !important;
+    height: 21px !important;
+    line-height: 21px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-right: 4px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+.modern-btn-group {
+  display: inline-flex;
+  align-items: stretch;
+  background-color: #ffffff;
+  border: 1px solid var(--app-border-color, #cbd5e1);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  height: 36px;
+  padding: 0;
+  margin: 0;
+
+  @media (max-width: 767.98px) {
+    display: none !important;
+  }
+
+  .btn-group-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 100%;
+    padding: 0 14px;
+    margin: 0;
+    background: #ffffff;
+    border: none;
+    border-right: 1px solid var(--app-border-color, #e2e8f0);
+    color: #475569;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    white-space: nowrap;
+    outline: none;
+    box-shadow: none;
+    border-radius: 0;
+    text-decoration: none;
+
+    &:last-child {
+      border-right: none;
+    }
+
+    .btn-group-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      line-height: 16px;
+      color: #64748b;
+      transition: color 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-group-text {
+      font-size: 0.78rem;
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    &:hover {
+      background-color: var(--app-hover-bg, #f8fafc);
+      color: var(--app-primary-color, #059669);
+
+      .btn-group-icon {
+        color: var(--app-primary-color, #059669);
+      }
+    }
+
+    &.is-active {
+      background-color: var(--app-primary-light, rgba(5, 150, 105, 0.1));
+      color: var(--app-primary-color, #059669);
+      font-weight: 600;
+
+      .btn-group-icon {
+        color: var(--app-primary-color, #059669);
+      }
+    }
+  }
+}
+
+// Action Button & Clean Icon Styling
+.btn-action-edit {
+  width: 32px !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  border-radius: 8px !important;
+  background-color: var(--app-primary-color, #059669) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 4px rgba(5, 150, 105, 0.25) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  border: none !important;
+
+  &:hover {
+    background-color: var(--primary-hover, #047857) !important;
+  }
+}
+
+.btn-action-delete {
+  width: 32px !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  border-radius: 8px !important;
+  background-color: #ffffff !important;
+  color: #dc2626 !important;
+  border: 1px solid #fee2e2 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+
+  &:hover {
+    background-color: #fef2f2 !important;
+    border-color: #fca5a5 !important;
+  }
+}
+
+.action-mat-icon,
+.medium-icon {
+  font-family: 'Material Icons' !important;
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  line-height: 18px !important;
+  letter-spacing: normal !important;
+  white-space: nowrap !important;
+  direction: ltr !important;
+  -webkit-font-feature-settings: 'liga' !important;
+  font-feature-settings: 'liga' !important;
+  -webkit-font-smoothing: antialiased !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+  text-rendering: optimizeLegibility !important;
+}

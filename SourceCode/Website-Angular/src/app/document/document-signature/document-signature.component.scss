@@ -1,0 +1,182 @@
+@import '../../shared/dialog-styles.scss';
+
+.signature-box-card {
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.signature-box-header {
+  background: #f8fafc;
+  padding: 8px 14px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .box-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+  }
+}
+
+.clear-sig-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #64748b;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #fee2e2;
+    border-color: #fca5a5;
+    color: #ef4444;
+  }
+}
+
+.canvas-wrapper {
+  background: #ffffff;
+  min-height: 180px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: crosshair;
+  padding: 8px;
+}
+
+.signature-canvas {
+  width: 100%;
+  height: 180px;
+  display: block;
+}
+
+.canvas-hint {
+  padding: 6px 14px;
+  background: #f8fafc;
+  border-top: 1px dashed #e2e8f0;
+  font-size: 11.5px;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.or-separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px dashed #e2e8f0;
+  }
+
+  span {
+    padding: 0 12px;
+    background: #ffffff;
+  }
+}
+
+.upload-sig-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.section-subtitle {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.prev-signature-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sig-preview-holder {
+  background: #f8fafc;
+  border: 1px solid #edf2f7;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  min-height: 60px;
+
+  .signature-img {
+    max-height: 50px;
+    max-width: 100%;
+    object-fit: contain;
+  }
+}
+
+.sig-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12px;
+
+  .sig-user {
+    font-weight: 600;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .sig-date {
+    color: #64748b;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+}
+
+.dialog-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(2px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+
+  .loading-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+  }
+}
+
+.sm-icon {
+  font-size: 15px;
+  width: 15px;
+  height: 15px;
+}

@@ -1,0 +1,122 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized Page Header -->
+    <div class="page-header-row mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">extension</mat-icon>
+        <span class="mb-0 page-title">
+          {{ "MANAGE_ALLOW_FILE_EXTENSIONS" | translate }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Main Form Card -->
+    <div class="doc-form-card compact-card">
+      <div class="card-header-strip p-3 border-bottom bg-light">
+        <div class="d-flex align-items-center gap-2">
+          <mat-icon class="text-primary fs-5">tune</mat-icon>
+          <div>
+            <h6 class="mb-0 font-weight-700 text-dark">
+              {{ isEditMode ? ("EDIT" | translate) : ("ADD" | translate) }} {{ "ALLOW_FILE_EXTENSIONS" | translate }}
+            </h6>
+            <span class="text-muted extra-small">
+              Configure supported file category and specify allowed file extensions.
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body p-3 p-md-4">
+        <form [formGroup]="allowFileExtensionForm">
+          <div class="row g-3">
+            
+            <!-- 1. File Type Selector -->
+            <div class="col-12 col-md-6 col-lg-5">
+              <label class="field-label d-flex align-items-center gap-1 mb-1">
+                <span>{{ "FILE_TYPE" | translate }}</span>
+                <span class="text-danger">*</span>
+              </label>
+              <div class="form-field-box">
+                <mat-icon class="field-icon">category</mat-icon>
+                <mat-select placeholder="{{ 'FILE_TYPE' | translate }}"
+                  class="form-control field-select" formControlName="fileType">
+                  @for(fileType of fileTypes; track fileType.key) {
+                    <mat-option [value]="fileType.value">
+                      {{ fileType.key | translate }}
+                    </mat-option>
+                  }
+                </mat-select>
+              </div>
+              @if(allowFileExtensionForm.get('fileType')?.touched && allowFileExtensionForm.get('fileType')?.hasError('required')) {
+                <div class="text-danger small mt-1">
+                  {{ "FILE_TYPE_IS_REQUIRED" | translate }}
+                </div>
+              }
+            </div>
+
+            <!-- 2. Extensions Section -->
+            <div class="col-12 mt-4">
+              <div class="extensions-section-header d-flex align-items-center justify-content-between pb-2 mb-3 border-bottom">
+                <div class="d-flex align-items-center gap-2">
+                  <mat-icon class="text-secondary fs-5">list_alt</mat-icon>
+                  <div>
+                    <span class="font-weight-700 text-dark small text-uppercase letter-spacing-1">
+                      {{ "EXTENSIONS" | translate }}
+                    </span>
+                    <span class="text-danger ms-1">*</span>
+                  </div>
+                </div>
+                <button type="button" class="btn-add-extension" (click)="addExtensionField()">
+                  <mat-icon class="btn-icon">add</mat-icon>
+                  <span>{{ "ADD_EXTENSION" | translate }}</span>
+                </button>
+              </div>
+
+              <div formArrayName="extensions">
+                <div class="row g-2">
+                  @for(control of extensions.controls; let i = $index; track trackByIndex(i)) {
+                    <div [formGroupName]="i" class="col-12 col-sm-6 col-md-4 col-lg-3">
+                      <div class="extension-input-chip">
+                        <span class="ext-prefix">.</span>
+                        <input formControlName="extension" class="ext-input form-control" type="text"
+                          placeholder="e.g. pdf, docx" />
+                        <button type="button" class="btn-remove-ext" (click)="removeExtensionField(i)"
+                          matTooltip="{{ 'DELETE' | translate }}">
+                          <mat-icon class="remove-icon">close</mat-icon>
+                        </button>
+                      </div>
+
+                      @if(control.get('extension')?.touched && control.get('extension')?.hasError('required')) {
+                        <div class="text-danger extra-small mt-1 px-1">
+                          {{ "EXTENSION_IS_REQUIRED" | translate }}
+                        </div>
+                      }
+                      @if(control.get('extension')?.touched && control.get('extension')?.hasError('pattern')) {
+                        <div class="text-danger extra-small mt-1 px-1">
+                          {{ "SPECIAL_CHARACTER_NOT_ALLOWED" | translate }}
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Form Action Buttons -->
+          <div class="form-action-row mt-4 pt-3 border-top d-flex align-items-center gap-2">
+            <button type="button" class="btn-save-action" (click)="saveAllowFileExtension()">
+              <mat-icon class="btn-icon">save</mat-icon>
+              <span>{{ isEditMode ? ("UPDATE" | translate) : ("SAVE" | translate) }}</span>
+            </button>
+            <button type="button" class="btn-cancel-action" [routerLink]="['/allow-file-extension']">
+              <mat-icon class="btn-icon">close</mat-icon>
+              <span>{{ "CANCEL" | translate }}</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

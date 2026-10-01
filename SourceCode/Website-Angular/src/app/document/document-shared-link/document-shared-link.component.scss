@@ -1,0 +1,134 @@
+@import '../../shared/dialog-styles.scss';
+
+.link-active-card {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+
+  &.active-dot {
+    background: #16a34a;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
+  }
+}
+
+.active-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #15803d;
+}
+
+.btn-icon-action {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+  }
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.link-copy-group {
+  .readonly-link-input {
+    background: #ffffff !important;
+    font-size: 12.5px !important;
+    color: #334155 !important;
+    font-family: monospace !important;
+  }
+
+  .copy-btn {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+  }
+}
+
+.settings-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 14px 16px;
+}
+
+.setting-item {
+  .setting-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #1e293b;
+    user-select: none;
+  }
+}
+
+.setting-divider {
+  height: 1px;
+  background: #edf2f7;
+  margin: 12px 0;
+}
+
+.setting-subcontrols {
+  padding-left: 28px;
+}
+
+.calendar-trigger-btn {
+  border-color: #cbd5e1 !important;
+  background: #f8fafc !important;
+  color: #64748b !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 10px !important;
+  cursor: pointer !important;
+
+  &:hover {
+    background: #edf2f7 !important;
+    color: #1e293b !important;
+  }
+
+  .calendar-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.dialog-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(2px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+
+  .loading-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+  }
+}

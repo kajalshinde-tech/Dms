@@ -1,0 +1,312 @@
+// -------------------------------------------------------------
+// Storage Settings List Styles
+// -------------------------------------------------------------
+
+.page-header-row {
+  margin-bottom: 0.75rem;
+
+  @media (max-width: 575.98px) {
+    margin-bottom: 0.5rem;
+  }
+
+  .page-title {
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: var(--app-text-color, #0f172a) !important;
+    letter-spacing: -0.01em !important;
+    line-height: 1.25 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+  }
+
+  .page-title-icon {
+    color: var(--app-primary-color, #059669) !important;
+    font-size: 20px !important;
+    width: 20px !important;
+    height: 20px !important;
+    line-height: 20px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-right: 4px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+// Header Action Button
+.btn-header-primary {
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 6px;
+  background-color: var(--app-primary-color, #059669);
+  color: #ffffff;
+  border: none;
+  font-size: 0.81rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px rgba(5, 150, 105, 0.2);
+
+  .btn-icon {
+    font-size: 17px;
+    width: 17px;
+    height: 17px;
+    line-height: 17px;
+  }
+
+  &:hover {
+    background-color: var(--primary-hover, #047857);
+    box-shadow: 0 2px 5px rgba(5, 150, 105, 0.3);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Main Table Card
+.doc-table-card {
+  background: #ffffff;
+  border: 1px solid var(--app-border-color, #e2e8f0);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+// Modern Table Styling
+.modern-doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+
+  .grid-header-row {
+    background-color: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0;
+    height: 42px;
+
+    th {
+      font-size: 0.72rem !important;
+      font-weight: 700 !important;
+      color: #475569 !important;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 6px 16px !important;
+      white-space: nowrap;
+      border-bottom: 1px solid #e2e8f0 !important;
+    }
+  }
+
+  .grid-body-row {
+    height: 48px;
+    border-bottom: 1px solid #f1f5f9;
+    transition: background-color 0.12s ease;
+
+    &:hover {
+      background-color: #f8fafc;
+    }
+
+    td {
+      font-size: 0.81rem !important;
+      color: #334155;
+      padding: 6px 16px !important;
+      border-bottom: 1px solid #f1f5f9 !important;
+    }
+  }
+
+  .type-icon-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background-color: #eff6ff;
+    color: #2563eb;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &.local-type {
+      background-color: #ecfdf5;
+      color: var(--app-primary-color, #059669);
+    }
+
+    .type-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      line-height: 16px;
+    }
+  }
+
+  .badge-config-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    background-color: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #dbeafe;
+    border-radius: 4px;
+    cursor: pointer;
+
+    .config-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+      line-height: 14px;
+    }
+  }
+
+  .table-input-box {
+    max-width: 200px;
+
+    .table-input {
+      height: 30px;
+      font-size: 0.8rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      padding: 2px 8px;
+
+      &:focus {
+        border-color: var(--app-primary-color, #059669);
+        box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.12);
+      }
+    }
+  }
+}
+
+// Action Edit Button
+.btn-action-edit {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 6px !important;
+  background-color: #eff6ff !important;
+  color: #2563eb !important;
+  border: 1px solid #dbeafe !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  cursor: pointer;
+  transition: all 0.15s ease !important;
+
+  &:hover {
+    background-color: #dbeafe !important;
+    color: #1d4ed8 !important;
+    border-color: #bfdbfe !important;
+  }
+
+  .action-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+    line-height: 16px !important;
+  }
+}
+
+// Compact Save/Cancel for Table
+.btn-save-compact {
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 4px;
+  background-color: var(--app-primary-color, #059669);
+  color: #ffffff;
+  border: none;
+  font-size: 0.76rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  .btn-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+  }
+
+  &:hover {
+    background-color: var(--primary-hover, #047857);
+  }
+}
+
+.btn-cancel-compact {
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 4px;
+  background-color: #ffffff;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  font-size: 0.76rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  .btn-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+  }
+
+  &:hover {
+    background-color: #f1f5f9;
+    color: #1e293b;
+  }
+}
+
+// Status Badges
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: capitalize;
+
+  .pill-icon {
+    font-size: 13px;
+    width: 13px;
+    height: 13px;
+    line-height: 13px;
+  }
+
+  &.status-active {
+    background-color: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+  }
+
+  &.status-inactive {
+    background-color: #f8fafc;
+    color: #64748b;
+    border: 1px solid #cbd5e1;
+  }
+}
+
+.extra-small {
+  font-size: 0.73rem;
+}
+
+.table-column-80 {
+  width: 80px;
+  min-width: 80px;
+}
+
+.table-column-160 {
+  width: 160px;
+  min-width: 160px;
+}

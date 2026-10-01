@@ -1,0 +1,378 @@
+// -------------------------------------------------------------
+// File Request List Styles
+// -------------------------------------------------------------
+
+.page-header-row {
+  margin-bottom: 1.25rem;
+
+  @media (max-width: 575.98px) {
+    margin-bottom: 0.75rem;
+  }
+
+  .page-title {
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: var(--app-text-color, #0f172a) !important;
+    letter-spacing: -0.01em !important;
+    line-height: 1.25 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+  }
+
+  .page-title-icon {
+    color: var(--app-primary-color, #059669) !important;
+    font-size: 22px !important;
+    width: 22px !important;
+    height: 22px !important;
+    line-height: 22px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-right: 4px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+.btn-add-main {
+  height: 36px !important;
+  padding: 0 16px !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  background-color: var(--app-primary-color, #059669) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(5, 150, 105, 0.25) !important;
+
+  &:hover {
+    background-color: var(--primary-hover, #047857) !important;
+  }
+}
+
+// -------------------------------------------------------------
+// Datatable Card & Layout
+// -------------------------------------------------------------
+.doc-table-card {
+  background: #ffffff;
+  border: 1px solid var(--app-border-color, #e2e8f0);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.doc-table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+}
+
+.doc-table-scroll-container {
+  min-height: 240px;
+  max-height: calc(100vh - 230px);
+  overflow-y: auto;
+  width: 100%;
+
+  @media (max-width: 767.98px) {
+    max-height: none;
+    min-height: 180px;
+  }
+}
+
+.doc-modern-table {
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+
+  .doc-table-header-row {
+    background: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+
+    th {
+      font-size: 0.75rem !important;
+      font-weight: 700 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.03em !important;
+      color: #475569 !important;
+      padding: 12px 14px !important;
+      border-bottom: 1px solid #e2e8f0 !important;
+      background: #f8fafc !important;
+    }
+  }
+
+  .doc-table-row {
+    transition: background-color 0.15s ease;
+    border-bottom: 1px solid #f1f5f9;
+
+    &:hover {
+      background-color: var(--app-hover-bg, #f8fafc) !important;
+    }
+
+    &.is-expanded {
+      background-color: rgba(5, 150, 105, 0.04) !important;
+      border-bottom: none !important;
+    }
+
+    td {
+      padding: 10px 14px !important;
+      font-size: 0.82rem !important;
+      color: #334155 !important;
+      vertical-align: middle !important;
+      border-bottom: 1px solid #f1f5f9 !important;
+    }
+  }
+
+  tr.expandable-detail-row {
+    height: 0 !important;
+    border: none !important;
+
+    td {
+      padding: 0 !important;
+      border: none !important;
+    }
+  }
+
+  .table-col-action {
+    min-width: 145px;
+    width: 145px;
+    text-align: center;
+  }
+
+  .table-col-subject {
+    min-width: 180px;
+  }
+
+  .table-col-email {
+    min-width: 180px;
+  }
+
+  .table-col-size {
+    min-width: 150px;
+  }
+
+  .table-col-max-docs {
+    min-width: 100px;
+  }
+
+  .table-col-extension {
+    min-width: 140px;
+  }
+
+  .table-col-status {
+    min-width: 120px;
+  }
+
+  .table-col-created-by {
+    min-width: 130px;
+  }
+
+  .table-col-created-date {
+    min-width: 130px;
+  }
+
+  .table-col-expiry {
+    min-width: 150px;
+  }
+}
+
+// -------------------------------------------------------------
+// Action Icon Buttons (Using Primary Color)
+// -------------------------------------------------------------
+.btn-row-expand {
+  width: 30px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  border-radius: 8px !important;
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 1px solid #e2e8f0 !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: #e2e8f0 !important;
+    color: var(--app-primary-color, #059669) !important;
+  }
+
+  .expand-icon {
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+
+.btn-action-edit {
+  width: 30px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  border-radius: 8px !important;
+  background-color: var(--app-primary-color, #059669) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 1px 3px rgba(5, 150, 105, 0.25) !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  &:hover {
+    background-color: var(--primary-hover, #047857) !important;
+  }
+
+  .action-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+.btn-action-delete {
+  width: 30px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  border-radius: 8px !important;
+  background-color: #ffffff !important;
+  color: #dc2626 !important;
+  border: 1px solid #fee2e2 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  &:hover {
+    background-color: #fef2f2 !important;
+    border-color: #fca5a5 !important;
+  }
+
+  .action-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+.btn-action-copy {
+  width: 30px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  border-radius: 8px !important;
+  background-color: var(--app-primary-color, #059669) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 1px 3px rgba(5, 150, 105, 0.25) !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  &:hover {
+    background-color: var(--primary-hover, #047857) !important;
+  }
+
+  .action-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+// -------------------------------------------------------------
+// Expanded Panel Container
+// -------------------------------------------------------------
+.expanded-panel-container {
+  background: #f8fafc;
+  border-bottom: 2px solid #e2e8f0;
+  padding: 1rem 1.25rem;
+  border-radius: 0 0 10px 10px;
+}
+
+// -------------------------------------------------------------
+// Cell Typography & Badges
+// -------------------------------------------------------------
+.text-subject {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.text-email,
+.text-created-by,
+.text-date {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.badge-size,
+.badge-count,
+.badge-extension {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.badge-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid currentColor;
+  background: rgba(255, 255, 255, 0.9);
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: currentColor;
+    flex-shrink: 0;
+  }
+}
+
+// -------------------------------------------------------------
+// Empty State
+// -------------------------------------------------------------
+.empty-state-wrapper {
+  .empty-state-icon {
+    mat-icon {
+      font-size: 42px;
+      width: 42px;
+      height: 42px;
+      color: #94a3b8;
+    }
+  }
+
+  .empty-state-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #334155;
+  }
+
+  .empty-state-desc {
+    font-size: 0.82rem;
+  }
+}

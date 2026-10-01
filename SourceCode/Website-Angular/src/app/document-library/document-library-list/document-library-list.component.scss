@@ -1,0 +1,735 @@
+::ng-deep .ng-dropdown-panel {
+  z-index: 9999 !important;
+  display: absolute !important;
+}
+
+@for $index from 0 through 300 {
+  $size: $index * 1;
+
+  .table-column-#{$size} {
+    min-width: #{$size}#{"px"};
+  }
+}
+
+.document-view-page {
+  padding-bottom: 2rem;
+}
+
+// -------------------------------------------------------------
+// 1. Page Header & Button Group
+// -------------------------------------------------------------
+.page-title {
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  color: var(--app-text-color, #0f172a) !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.25 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.page-title-icon {
+  color: var(--app-primary-color, #059669) !important;
+  font-size: 21px !important;
+  width: 21px !important;
+  height: 21px !important;
+  line-height: 21px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-right: 4px !important;
+  flex-shrink: 0 !important;
+}
+
+// Modern Segmented Button Group Toolbar
+.modern-btn-group {
+  display: inline-flex;
+  align-items: stretch;
+  background-color: #ffffff;
+  border: 1px solid var(--app-border-color, #cbd5e1);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  height: 36px;
+  padding: 0;
+  margin: 0;
+
+  @media (max-width: 767.98px) {
+    display: none !important;
+  }
+
+  .btn-group-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 100%;
+    padding: 0 12px;
+    margin: 0;
+    background: #ffffff;
+    border: none;
+    border-right: 1px solid var(--app-border-color, #e2e8f0);
+    color: #475569;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    white-space: nowrap;
+    outline: none;
+    box-shadow: none;
+    border-radius: 0;
+    text-decoration: none;
+
+    &:last-child {
+      border-right: none;
+    }
+
+    .btn-group-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      line-height: 16px;
+      color: #64748b;
+      transition: color 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-group-text {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: inherit;
+      line-height: 1;
+    }
+
+    &:hover {
+      background-color: var(--app-hover-bg, #f8fafc);
+      color: var(--app-primary-color, #059669);
+
+      .btn-group-icon {
+        color: var(--app-primary-color, #059669);
+      }
+    }
+
+    &:active {
+      background-color: #f1f5f9;
+    }
+  }
+}
+
+.btn-add-main {
+  height: 36px !important;
+  border-radius: 8px !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  padding: 0 14px !important;
+  box-shadow: 0 1px 3px var(--app-primary-light, rgba(5, 150, 105, 0.25)) !important;
+  background-color: var(--app-primary-color, #059669) !important;
+  color: #ffffff !important;
+  border: none !important;
+  transition: all 0.15s ease !important;
+  white-space: nowrap !important;
+
+  @media (max-width: 576px) {
+    padding: 0 10px !important;
+    height: 34px !important;
+    font-size: 0.75rem !important;
+  }
+
+  &:hover {
+    background-color: var(--app-primary-hover, #047857) !important;
+  }
+}
+
+.btn-mobile-trigger {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 6px !important;
+  border: 1px solid var(--app-border-color, #cbd5e1) !important;
+  color: #475569 !important;
+  background-color: #ffffff !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+  }
+}
+
+// -------------------------------------------------------------
+// 2. Compact Direct Filter Toolbar
+// -------------------------------------------------------------
+.doc-filter-card {
+  background: var(--app-card-bg, #ffffff) !important;
+  border: 1px solid var(--app-border-color, #e2e8f0) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+  overflow: hidden !important;
+}
+
+.doc-filter-body {
+  padding: 8px 10px !important;
+
+  @media (min-width: 768px) {
+    padding: 10px 12px !important;
+  }
+}
+
+.doc-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 6px;
+  align-items: center;
+
+  @media (max-width: 767.98px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  @media (max-width: 359.98px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.filter-input-col {
+  position: relative;
+  width: 100%;
+
+  @media (max-width: 767.98px) {
+    &.full-width-mobile {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+.date-range-col {
+  grid-column: 1 / -1;
+
+  @media (min-width: 992px) {
+    grid-column: span 2;
+  }
+}
+
+.input-with-icon {
+  position: relative;
+  width: 100%;
+
+  .field-icon {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    color: #94a3b8;
+    pointer-events: none;
+  }
+
+  .doc-form-input {
+    padding-left: 26px !important;
+  }
+}
+
+.doc-form-input {
+  height: 31px !important;
+  font-size: 0.75rem !important;
+  border-radius: 6px !important;
+  border: 1px solid var(--app-border-color, #cbd5e1) !important;
+  background-color: var(--app-hover-bg, #f8fafc) !important;
+  color: var(--app-text-color, #1e293b) !important;
+  padding: 2px 8px !important;
+  transition: all 0.15s ease !important;
+
+  &:focus {
+    background-color: #ffffff !important;
+    border-color: var(--app-primary-color, #059669) !important;
+    box-shadow: 0 0 0 2px var(--app-primary-light, rgba(5, 150, 105, 0.15)) !important;
+    outline: none !important;
+  }
+
+  &::placeholder {
+    color: #94a3b8 !important;
+    font-size: 0.73rem !important;
+  }
+}
+
+.select-trigger-text {
+  font-size: 0.75rem !important;
+  color: var(--app-text-color, #1e293b);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.category-tree-option {
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+
+  .folder-option-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    color: #f59e0b;
+  }
+}
+
+.status-option-badge {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.calendar-trigger-btn {
+  height: 31px !important;
+  padding: 0 7px !important;
+  border: 1px solid var(--app-border-color, #cbd5e1) !important;
+  border-left: none !important;
+  border-radius: 0 6px 6px 0 !important;
+  background-color: var(--app-hover-bg, #f8fafc) !important;
+  color: #64748b !important;
+
+  .calendar-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+  }
+
+  &:hover {
+    background-color: #ffffff !important;
+    color: var(--app-primary-color, #059669) !important;
+  }
+}
+
+// -------------------------------------------------------------
+// 3. Modern Data Table Card
+// -------------------------------------------------------------
+.doc-table-card {
+  background: var(--app-card-bg, #ffffff) !important;
+  border: 1px solid var(--app-border-color, #e2e8f0) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+  overflow: hidden !important;
+}
+
+.doc-table-wrapper {
+  overflow-x: auto;
+  position: relative;
+  width: 100%;
+}
+
+.doc-modern-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  // Header Row
+  .doc-table-header-row {
+    background-color: #f8fafc !important;
+    height: 42px !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+
+    th.mat-mdc-header-cell {
+      background-color: #f8fafc !important;
+      color: #475569 !important;
+      font-size: 11.5px !important;
+      font-weight: 700 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.03em !important;
+      border-bottom: 1px solid #e2e8f0 !important;
+      padding: 8px 12px !important;
+      white-space: nowrap !important;
+    }
+  }
+
+  // Data Rows
+  .doc-table-row {
+    height: 44px !important;
+    transition: background-color 0.15s ease-in-out;
+
+    &.odd-row {
+      background-color: #ffffff;
+    }
+
+    &.even-row {
+      background-color: #fafbfc;
+    }
+
+    &:hover {
+      background-color: var(--app-hover-bg, #f1f5f9) !important;
+    }
+
+    td.mat-mdc-cell {
+      padding: 8px 12px !important;
+      font-size: 12.5px !important;
+      color: var(--app-text-color, #1e293b) !important;
+      border-bottom: 1px solid #f1f5f9 !important;
+      vertical-align: middle !important;
+    }
+  }
+}
+
+// Checkbox Column
+.col-select-cell {
+  width: 48px;
+  min-width: 48px;
+  padding-left: 12px !important;
+  padding-right: 6px !important;
+}
+
+.btn-share-selected {
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  border-radius: 6px !important;
+  background-color: var(--app-primary-color, #059669) !important;
+  color: #ffffff !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  mat-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+  }
+}
+
+// Action Column
+.col-action-cell {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+.btn-row-action {
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  border-radius: 6px !important;
+  color: #64748b !important;
+  background: transparent !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.15s ease;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+  }
+
+  &:hover {
+    background-color: var(--app-primary-light, rgba(5, 150, 105, 0.12)) !important;
+    color: var(--app-primary-color, #059669) !important;
+  }
+}
+
+.table-micro-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+  }
+
+  &.comment-indicator {
+    background-color: #eff6ff;
+    color: #2563eb;
+
+    &:hover {
+      background-color: #dbeafe;
+    }
+  }
+
+  &.share-indicator {
+    background-color: #f0fdf4;
+    color: #16a34a;
+
+    &:hover {
+      background-color: #dcfce7;
+    }
+  }
+
+  .badge-num {
+    font-weight: 700;
+  }
+}
+
+// Workflow Chip
+.workflow-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+
+  .wf-icon {
+    font-size: 13px;
+    width: 13px;
+    height: 13px;
+    line-height: 13px;
+  }
+
+  &.wf-success {
+    background-color: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+
+    &:hover {
+      background-color: #d1fae5;
+    }
+  }
+
+  &.wf-danger {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+
+    &:hover {
+      background-color: #fee2e2;
+    }
+  }
+
+  &.wf-pending {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+
+    &:hover {
+      background-color: #dbeafe;
+    }
+  }
+}
+
+// Signed Badge
+.signed-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background-color: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+  font-size: 11.5px;
+  font-weight: 500;
+
+  .signed-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+  }
+
+  .signed-name {
+    max-width: 110px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+// Document Number & Name Links
+.doc-link-number {
+  color: var(--app-primary-color, #059669);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    color: var(--app-primary-hover, #047857);
+  }
+}
+
+.doc-type-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.doc-link-name {
+  color: #0f172a;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  max-width: 260px;
+  display: inline-block;
+
+  &:hover {
+    color: var(--app-primary-color, #059669);
+    text-decoration: underline;
+  }
+}
+
+// Document Status Badge
+.doc-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+}
+
+// Storage Tag
+.storage-tag {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background-color: #f1f5f9;
+  color: #475569;
+  font-size: 11.5px;
+  font-weight: 500;
+  border: 1px solid #e2e8f0;
+}
+
+// Client Name
+.client-name {
+  color: #334155;
+  font-size: 12px;
+  font-weight: 500;
+  display: block;
+  max-width: 160px;
+}
+
+// Date and Boolean Formatting
+.date-cell-text {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.dynamic-cell-text {
+  color: #334155;
+  font-size: 12px;
+}
+
+.bool-badge {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+
+  &.bool-true {
+    background-color: #ecfdf5;
+    color: #059669;
+  }
+
+  &.bool-false {
+    background-color: #f1f5f9;
+    color: #64748b;
+  }
+}
+
+// Table Footer & Paginator
+.doc-table-footer-row {
+  background-color: #ffffff !important;
+  border-top: 1px solid #e2e8f0 !important;
+}
+
+.table-paginator-footer {
+  border-top: 1px solid #e2e8f0;
+  background-color: #ffffff;
+}
+
+
+// Empty State
+.empty-state-box {
+  .empty-state-icon {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+    color: #cbd5e1;
+  }
+
+  .empty-state-text {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #64748b;
+  }
+}
+
+// Loading Spinner Overlay
+.spinner-overlay-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(2px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .custom-spinner {
+    ::ng-deep circle {
+      stroke: var(--app-primary-color, #059669) !important;
+    }
+  }
+}
+
+// Custom Menu Items Styling
+::ng-deep .custom-saas-menu {
+  border-radius: 8px !important;
+  border: 1px solid var(--app-border-color, #e2e8f0) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
+
+  .mat-mdc-menu-item {
+    font-size: 12.5px !important;
+    min-height: 36px !important;
+    padding: 0 12px !important;
+
+    mat-icon {
+      font-size: 17px !important;
+      width: 17px !important;
+      height: 17px !important;
+      color: #64748b !important;
+      margin-right: 8px !important;
+    }
+
+    &:hover {
+      background-color: var(--app-hover-bg, #f8fafc) !important;
+
+      mat-icon {
+        color: var(--app-primary-color, #059669) !important;
+      }
+    }
+  }
+}

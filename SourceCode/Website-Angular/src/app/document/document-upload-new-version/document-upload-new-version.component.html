@@ -1,0 +1,223 @@
+<div class="saas-dialog-container position-relative">
+  <!-- Dialog Header -->
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge warning-badge">
+        <mat-icon>drive_folder_upload</mat-icon>
+      </div>
+      <div>
+        <h5 class="dialog-title mb-0">{{ "UPLOAD_NEW_VERSION_FILE" | translate }}</h5>
+        <p class="dialog-subtitle mb-0 text-truncate" [title]="data.name">{{ data.name }}</p>
+      </div>
+    </div>
+    <button type="button" class="dialog-close-btn" (click)="closeDialog()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Dialog Body -->
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <form [formGroup]="documentForm">
+      <!-- Upload Box Card -->
+      <div class="upload-section-card mb-4">
+        <!-- Modern Drag & Drop Zone -->
+        <div class="mb-3">
+          <label class="form-label-custom">
+            {{ "DOCUMENT_UPLOAD" | translate }} <span class="required-star">*</span>
+          </label>
+          <input #fileInput (change)="upload(fileInput.files)" type="file" class="d-none" />
+
+          @if (!fileData) {
+          <div class="dropzone-box" (click)="fileInput.click()">
+            <div class="dropzone-icon-circle">
+              <mat-icon>cloud_upload</mat-icon>
+            </div>
+            <div class="dropzone-text-group">
+              <span class="dropzone-title">Click or browse to choose a new file</span>
+              <span class="dropzone-hint">Upload updated version for <b>{{ data.name }}</b></span>
+            </div>
+            <button type="button" class="btn-browse-file" (click)="$event.stopPropagation(); fileInput.click()">
+              <mat-icon>folder_open</mat-icon>
+              <span>Browse File</span>
+            </button>
+          </div>
+          } @else {
+          <div class="selected-file-card">
+            <div class="file-details-box">
+              <div class="file-icon-badge">
+                <mat-icon>description</mat-icon>
+              </div>
+              <div class="file-info-text overflow-hidden">
+                <span class="file-name text-truncate" [title]="fileData.name">{{ fileData.name }}</span>
+                <span class="file-meta">{{ (fileData.size / 1024).toFixed(1) }} KB &bull; Ready to upload</span>
+              </div>
+            </div>
+            <button type="button" class="btn-change-file" (click)="fileInput.click()">
+              <mat-icon>autorenew</mat-icon>
+              <span>Change File</span>
+            </button>
+          </div>
+          }
+
+          @if((documentForm.get('url')?.touched || documentForm.get('url')?.dirty) && documentForm.get('url')?.errors) {
+          @if(documentForm.get('url')?.errors?.['required']) {
+          <div class="field-error-text mt-2 d-flex align-items-center gap-1">
+            <mat-icon class="sm-err-icon">error_outline</mat-icon>
+            <span>{{ "DOCUMENT_IS_REQUIRED" | translate }}</span>
+          </div>
+          }
+          }
+          @if((documentForm.get('extension')?.touched || documentForm.get('extension')?.dirty) && documentForm.get('url')?.errors) {
+          @if(documentForm.get('extension')?.errors?.['required']) {
+          <div class="field-error-text mt-2 d-flex align-items-center gap-1">
+            <mat-icon class="sm-err-icon">error_outline</mat-icon>
+            <span>{{ "DOCUMENT_TYPE_IS_NOT_ALLOW" | translate }}</span>
+          </div>
+          }
+          }
+        </div>
+
+        <!-- Release Notes Comment -->
+        <div class="mb-3">
+          <label class="form-label-custom">{{ "COMMENT" | translate }}</label>
+          <textarea class="form-control doc-form-input comment-area" formControlName="comment" rows="2"
+            placeholder="Add release notes or reasons for this version update..."></textarea>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="d-flex align-items-center justify-content-end gap-2 pt-2 border-top">
+          <button type="button" class="btn-saas-cancel" (click)="closeDialog()">
+            <mat-icon>close</mat-icon>
+            <span>{{ "CANCEL" | translate }}</span>
+          </button>
+          <button *hasClaim="['ALL_UPLOAD_NEW_VERSION','ASSIGNED_UPLOAD_NEW_VERSION']" class="btn-primary-custom"
+            type="button" (click)="SaveDocument()">
+            <mat-icon>upload</mat-icon>
+            <span>{{ "SAVE" | translate }}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Version History Section -->
+      <div class="version-history-section">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <div class="d-flex align-items-center gap-2">
+            <div class="history-icon-badge">
+              <mat-icon>history</mat-icon>
+            </div>
+            <div>
+              <span class="version-section-title">{{ "VERSION_HISTORY" | translate }}</span>
+              <span class="text-muted d-block fs-11">Previous releases of this document</span>
+            </div>
+          </div>
+          <span class="version-count-pill">{{ documentVersions.length }} Versions</span>
+        </div>
+
+        <div class="table-responsive version-table-wrapper custom-scroll">
+          <table class="table version-modern-table mb-0">
+            <thead>
+              <tr>
+                <th>{{ "VERSION_NO" | translate }}</th>
+                <th>{{ "MODIFIED_DATE" | translate }}</th>
+                <th>{{ "CREATED_BY" | translate }}</th>
+                <th>{{ "SIGNBY" | translate }}</th>
+                <th>{{ "SIGNDATE" | translate }}</th>
+                <th>{{ "COMMENT" | translate }}</th>
+                <th class="text-end">{{ "ACTIONS" | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (version of documentVersions; track $index) {
+              <tr [class.is-current-row]="version.isCurrentVersion">
+                <td>
+                  <span class="version-badge" [class.current]="version.isCurrentVersion">
+                    v{{ version.versionNumber }}
+                  </span>
+                </td>
+                <td class="cell-date">
+                  {{ version.modifiedDate | utcToLocalTime : "full" }}
+                </td>
+                <td class="cell-user">
+                  <div class="d-flex align-items-center gap-1">
+                    <mat-icon class="micro-icon text-muted">person</mat-icon>
+                    <span>{{ version.createdByUser }}</span>
+                  </div>
+                </td>
+                <td>
+                  @if(version.signBy){
+                  <span class="signature-pill">
+                    <mat-icon class="micro-icon">draw</mat-icon>
+                    {{ version.signBy }}
+                  </span>
+                  } @else {
+                  <span class="text-muted">-</span>
+                  }
+                </td>
+                <td class="cell-date">
+                  @if(version.signBy){
+                  {{ version.signDate | utcToLocalTime : "short" }}
+                  } @else {
+                  <span class="text-muted">-</span>
+                  }
+                </td>
+                <td>
+                  @if(version.comment) {
+                  <button type="button" class="btn btn-micro-action text-info" (click)="showComment(version.comment)" matTooltip="View comment">
+                    <mat-icon>chat</mat-icon>
+                  </button>
+                  } @else {
+                  <span class="text-muted">-</span>
+                  }
+                </td>
+                <td class="text-end">
+                  @if(version.isCurrentVersion) {
+                  <span class="current-badge-pill">{{ "CURRENT_VERSION" | translate }}</span>
+                  }
+                  @if(!version.isCurrentVersion) {
+                  <div class="d-flex align-items-center justify-content-end gap-1">
+                    <button type="button" class="btn btn-micro-action text-primary" (click)="onDocumentView(version)" matTooltip="View">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                    @if(!data.isAssignUser) {
+                    <button type="button" *hasClaim="'ALL_DOWNLOAD_DOCUMENT'" (click)="downloadDocument(version)" class="btn btn-micro-action text-success" matTooltip="Download">
+                      <mat-icon>download</mat-icon>
+                    </button>
+                    <button type="button" *hasClaim="'ALL_RESTORE_VERSION'" (click)="restoreDocumentVersion(version)" class="btn btn-micro-action text-warning" matTooltip="Restore to Current Version">
+                      <mat-icon>restore</mat-icon>
+                    </button>
+                    } @else {
+                    <button type="button" *hasClaim="'ASSIGNED_DOWNLOAD_DOCUMENT'" (click)="downloadDocument(version)" class="btn btn-micro-action text-success" matTooltip="Download">
+                      <mat-icon>download</mat-icon>
+                    </button>
+                    <button type="button" *hasClaim="'ASSIGNED_RESTORE_VERSION'" (click)="restoreDocumentVersion(version)" class="btn btn-micro-action text-warning" matTooltip="Restore to Current Version">
+                      <mat-icon>restore</mat-icon>
+                    </button>
+                    }
+                  </div>
+                  }
+                </td>
+              </tr>
+              }
+              @if(documentVersions.length === 0) {
+              <tr>
+                <td colspan="7" class="text-center py-4 text-muted">
+                  {{ "NO_DATA_FOUND" | translate }}
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <!-- Loading overlay -->
+  @if(isLoading || isLoadingResults) {
+  <div class="dialog-loading-overlay">
+    <mat-progress-spinner class="example-margin" [mode]="mode" diameter="44" strokeWidth="4" [value]="progress">
+    </mat-progress-spinner>
+    <span class="loading-text mt-2">Processing document version...</span>
+  </div>
+  }
+</div>

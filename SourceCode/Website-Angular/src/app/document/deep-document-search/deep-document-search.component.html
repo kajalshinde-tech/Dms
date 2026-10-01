@@ -1,0 +1,339 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized SaaS Page Header -->
+    <div class="page-header-row mb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">manage_search</mat-icon>
+        <span class="mb-0 page-title">
+          {{ "DEEP_SEARCH" | translate }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Creative Deep Search Hero Section -->
+    <div class="deep-search-hero-card mb-4">
+      <div class="search-hero-content">
+        <!-- Unified Modern Search Bar -->
+        <form (ngSubmit)="searchDocuments()" name="form" novalidate class="search-form-container">
+          <div class="search-bar-unified">
+            <!-- Leading Icon -->
+            <div class="search-lead-icon">
+              <mat-icon>search</mat-icon>
+            </div>
+
+            <!-- Main Input Field -->
+            <input name="searchText" class="unified-search-input" [(ngModel)]="searchQuery" id="txtSearch"
+              placeholder="{{ 'DEEP_SEARCH_TEXTBOX_PLACEHOLDER' | translate }}" type="text" autocomplete="off" #input />
+
+            <!-- Clear Input Action Button -->
+            @if(searchQuery) {
+            <button type="button" class="btn-clear-search" (click)="searchQuery = ''" matTooltip="Clear">
+              <mat-icon>close</mat-icon>
+            </button>
+            }
+
+            <!-- Integrated Exact Match Toggle Pill (Desktop/Tablet) -->
+            <div class="exact-match-pill d-none d-sm-inline-flex" [class.is-checked]="isExactMatch"
+              (click)="isExactMatch = !isExactMatch" [matTooltip]="'ISEXACTMATCH' | translate">
+              <mat-icon class="pill-check-icon">{{ isExactMatch ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+              <span class="pill-text">{{ 'ISEXACTMATCH' | translate }}</span>
+            </div>
+
+            <!-- Primary Search Button -->
+            <button class="btn-hero-search" (click)="searchDocuments()" type="submit" id="btnSearch"
+              [disabled]="!searchQuery || !searchQuery.trim()">
+              <mat-icon class="btn-search-icon">search</mat-icon>
+              <span class="btn-search-label">{{ "SEARCH" | translate }}</span>
+            </button>
+          </div>
+
+          <!-- Mobile Exact Match Toggle (Visible only on < 576px screens) -->
+          <div class="mobile-exact-match-strip d-flex d-sm-none mt-2">
+            <div class="exact-match-pill-mobile" [class.is-checked]="isExactMatch" (click)="isExactMatch = !isExactMatch">
+              <mat-icon class="pill-check-icon">{{ isExactMatch ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
+              <span class="pill-text">{{ 'ISEXACTMATCH' | translate }}</span>
+            </div>
+          </div>
+        </form>
+
+        <!-- Informative OCR Feature & Note Banner -->
+        <div class="ocr-feature-strip mt-3">
+          <div class="ocr-pill-tag">
+            <mat-icon class="ai-spark-icon">auto_awesome</mat-icon>
+            <span>OCR AI Indexing</span>
+          </div>
+          <div class="ocr-strip-details">
+            <span class="note-badge">{{ "NOTE" | translate }}:</span>
+            <span class="note-text">{{ "DEEP_SEARCH_NOTE" | translate }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modern Datatable Card -->
+    <div class="doc-table-card">
+      <div class="doc-table-wrapper">
+        <div class="doc-table-scroll-container">
+          <table mat-table [dataSource]="dataSource" class="w-100 doc-modern-table">
+            <!-- Select Column -->
+            <ng-container matColumnDef="select">
+              <th class="table-col-select" mat-header-cell *matHeaderCellDef>
+                @if(selection.isEmpty()) {
+                <mat-checkbox (change)="$event ? masterToggle() : null" color="primary"
+                  [checked]="selection.hasValue() && isAllSelected()"
+                  [indeterminate]="selection.hasValue() && !isAllSelected()">
+                </mat-checkbox>
+                } @else {
+                <button mat-mini-fab class="btn-share-selection" matTooltipPosition="above"
+                  matTooltip="{{ 'CLICK_HERE_TO_SHARED_SELECT_DOCUMENTS' | translate }}"
+                  (click)="onSharedSelectDocument()" *hasClaim="'ALL_SHARE_DOCUMENT'"
+                  attr.aria-label="{{ 'SHARE' | translate }}">
+                  <mat-icon>share</mat-icon>
+                </button>
+                }
+              </th>
+              <td class="table-col-select" mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()" color="primary"
+                  (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                </mat-checkbox>
+              </td>
+            </ng-container>
+
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+              <th class="table-col-action" mat-header-cell *matHeaderCellDef>
+                {{ "ACTION" | translate }}
+              </th>
+              <td class="table-col-action" mat-cell *matCellDef="let document">
+                <div class="d-flex align-items-center justify-content-center gap-1">
+                  <button mat-icon-button class="btn-row-action" [matMenuTriggerFor]="menu" [attr.aria-label]="'Action'">
+                    <mat-icon class="action-icon">more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu" class="custom-saas-menu">
+                    <button *hasClaim="'EDIT_DOCUMENT'" mat-menu-item class="btn btn-light btn-sm"
+                      (click)="removeDocumentPageIndexing(document)">
+                      <mat-icon>delete</mat-icon>
+                      {{ "REMOVE_PAGE_INDEXING" | translate }}
+                    </button>
+                    <button *hasClaim="'EDIT_DOCUMENT'" mat-menu-item class="btn btn-light btn-sm"
+                      (click)="editDocument(document)">
+                      <mat-icon>edit</mat-icon>
+                      {{ "EDIT" | translate }}
+                    </button>
+                    <button *hasClaim="'SHARE_DOCUMENT'" mat-menu-item class="btn btn-light btn-sm"
+                      (click)="manageDocumentPermission(document)" type="button">
+                      <mat-icon>share</mat-icon>
+                      {{ "SHARE" | translate }}
+                    </button>
+                    <button *hasClaim="'CREATE_SHAREABLE_LINK'" mat-menu-item class="btn btn-light btn-sm"
+                      (click)="onCreateShareableLink(document)" type="button">
+                      <mat-icon>link</mat-icon>
+                      {{ "GET_SHAREABLE_LINK" | translate }}
+                    </button>
+                    <button class="btn btn-light btn-sm" mat-menu-item (click)="onDocumentView(document)"
+                      type="button">
+                      <mat-icon>visibility</mat-icon>
+                      {{ "VIEW" | translate }}
+                    </button>
+                    <button class="btn btn-light btn-sm" *hasClaim="'DOWNLOAD_DOCUMENT'" mat-menu-item
+                      (click)="downloadDocument(document)" type="button">
+                      <mat-icon>download</mat-icon>
+                      {{ "DOWNLOAD" | translate }}
+                    </button>
+                    <button mat-menu-item class="btn btn-light btn-sm" *hasClaim="'UPLOAD_NEW_VERSION'"
+                      (click)="uploadNewVersion(document)" type="button">
+                      <mat-icon>upload</mat-icon>
+                      {{ "UPLOAD_NEW_VERSION_FILE" | translate }}
+                    </button>
+                    <button class="btn btn-light btn-sm" mat-menu-item *hasClaim="'VIEW_VERSION_HISTORY'"
+                      (click)="onVersionHistoryClick(document)">
+                      <mat-icon>history</mat-icon>
+                      {{ "VERSION_HISOTRY" | translate }}
+                    </button>
+                    <button class="btn btn-light btn-sm" *hasClaim="'ADD_COMMENT'" mat-menu-item
+                      (click)="addComment(document)" type="button">
+                      <mat-icon>chat</mat-icon>
+                      {{ "COMMENT" | translate }}
+                    </button>
+                    <button class="btn btn-light btn-sm" *hasClaim="'ADD_REMINDER'" mat-menu-item
+                      (click)="addReminder(document)" type="button">
+                      <mat-icon>notifications</mat-icon>
+                      {{ "ADD_REMINDER" | translate }}
+                    </button>
+                    <button class="btn btn-light btn-sm" *hasClaim="'SEND_EMAIL'" mat-menu-item
+                      (click)="sendEmail(document)" type="button">
+                      <mat-icon>forward_to_inbox</mat-icon>
+                      {{ "SEND_EMAIL" | translate }}
+                    </button>
+                  </mat-menu>
+
+                  @if(document.commentCount > 0){
+                  <button mat-icon-button class="btn-badge-action" (click)="addComment(document)" [matTooltip]="'COMMENT' | translate">
+                    <mat-icon matBadgeSize="small" matBadge="{{ document.commentCount }}" matBadgeColor="accent">chat</mat-icon>
+                  </button>
+                  }
+                  <ng-container *hasClaim="['SHARE_DOCUMENT', 'SHARE_FOLDER']">
+                    @if(document.isShared) {
+                    <button mat-icon-button class="btn-badge-action text-primary" (click)="manageSharePermission(document)" [matTooltip]="'SHARE' | translate">
+                      <mat-icon>groups</mat-icon>
+                    </button>
+                    }
+                  </ng-container>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Document Number Column -->
+            <ng-container matColumnDef="documentNumber">
+              <th class="table-col-doc-no" mat-header-cell *matHeaderCellDef>
+                {{ "DOCUMENT_NO" | translate }}
+              </th>
+              <td class="table-col-doc-no" mat-cell *matCellDef="let document">
+                <a class="doc-link doc-number-link" (click)="onDocumentView(document)" [matTooltip]="'VIEW' | translate">
+                  <mat-icon class="doc-link-icon">tag</mat-icon>
+                  <span>{{ document.documentNumber }}</span>
+                </a>
+              </td>
+            </ng-container>
+
+            <!-- Version Number Column -->
+            <ng-container matColumnDef="versionNumber">
+              <th class="table-col-version text-center" mat-header-cell *matHeaderCellDef>
+                {{ "VERSION_NO" | translate }}
+              </th>
+              <td class="table-col-version text-center" mat-cell *matCellDef="let document">
+                <span class="badge-version">v{{ document.versionNumber }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th class="table-col-name" mat-header-cell *matHeaderCellDef>
+                {{ "NAME" | translate }}
+              </th>
+              <td class="table-col-name" mat-cell *matCellDef="let document">
+                <a class="doc-link doc-name-link" (click)="onDocumentView(document)" [matTooltip]="document.name">
+                  <mat-icon class="doc-file-icon">description</mat-icon>
+                  <span class="doc-name-text">{{ document.name }}</span>
+                </a>
+              </td>
+            </ng-container>
+
+            <!-- Is Signed Column -->
+            <ng-container matColumnDef="isSigned">
+              <th class="table-col-sign" mat-header-cell *matHeaderCellDef>
+                {{ "ISSIGN" | translate }}
+              </th>
+              <td class="table-col-sign" mat-cell *matCellDef="let document">
+                @if(document.url?.split('.')[1]==='pdf' && document.isSignatureExists) {
+                <span class="badge-signed">
+                  <mat-icon class="signed-icon">verified</mat-icon>
+                  <span class="signer-name">{{ document.signBy }}</span>
+                </span>
+                }
+              </td>
+            </ng-container>
+
+            <!-- Sign Date Column -->
+            <ng-container matColumnDef="signDate">
+              <th class="table-col-sign-date" mat-header-cell *matHeaderCellDef>
+                {{ "SIGNDATE" | translate }}
+              </th>
+              <td class="table-col-sign-date" mat-cell *matCellDef="let document">
+                @if(document.signByDate) {
+                <span class="text-date">{{ document?.signByDate | utcToLocalTime:'short' }}</span>
+                }
+              </td>
+            </ng-container>
+
+            <!-- Category Column -->
+            <ng-container matColumnDef="categoryName">
+              <th class="table-col-category" mat-header-cell *matHeaderCellDef>
+                {{ "DOCUMENT_CATEGORY" | translate }}
+              </th>
+              <td class="table-col-category" mat-cell *matCellDef="let document">
+                @if(document.categoryName) {
+                <span class="badge-category">
+                  <mat-icon class="category-icon">folder_open</mat-icon>
+                  <span>{{ document.categoryName }}</span>
+                </span>
+                }
+              </td>
+            </ng-container>
+
+            <!-- Document Status Column -->
+            <ng-container matColumnDef="documentStatus">
+              <th class="table-col-status" mat-header-cell *matHeaderCellDef>
+                {{ "DOCUMENT_STATUS" | translate }}
+              </th>
+              <td class="table-col-status" mat-cell *matCellDef="let document">
+                @if(document.documentStatus?.name) {
+                <span class="badge-status-pill" [ngStyle]="{ 'color': document.documentStatus?.colorCode, 'border-color': document.documentStatus?.colorCode }">
+                  <span class="status-dot" [ngStyle]="{ 'background-color': document.documentStatus?.colorCode }"></span>
+                  {{ document.documentStatus?.name }}
+                </span>
+                }
+              </td>
+            </ng-container>
+
+            <!-- Storage Type Column -->
+            <ng-container matColumnDef="storageType">
+              <th class="table-col-storage" mat-header-cell *matHeaderCellDef>
+                {{ "STORAGE" | translate }}
+              </th>
+              <td class="table-col-storage" mat-cell *matCellDef="let document">
+                <span class="storage-text">
+                  {{ document.storageType | storageType : document.storageSettingName }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Created Date Column -->
+            <ng-container matColumnDef="createdDate">
+              <th class="table-col-created-date" mat-header-cell *matHeaderCellDef>
+                {{ "CREATED_DATE" | translate }}
+              </th>
+              <td class="table-col-created-date" mat-cell *matCellDef="let document">
+                <span class="text-date">{{ document?.createdDate | utcToLocalTime:'shortDate' }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Created By Column -->
+            <ng-container matColumnDef="createdBy">
+              <th class="table-col-created-by" mat-header-cell *matHeaderCellDef>
+                {{ "CREATED_BY" | translate }}
+              </th>
+              <td class="table-col-created-by" mat-cell *matCellDef="let document">
+                <span class="text-created-by">{{ document?.createdBy }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Empty Row State -->
+            <tr *matNoDataRow>
+              <td colspan="12">
+                <div class="empty-state-wrapper py-5 text-center">
+                  <div class="empty-state-icon mb-2">
+                    <mat-icon>manage_search</mat-icon>
+                  </div>
+                  <h6 class="empty-state-title mb-1">{{ "NO_DATA_FOUND" | translate }}</h6>
+                  <p class="empty-state-desc mb-0 text-muted">{{ "DEEP_SEARCH_TEXTBOX_PLACEHOLDER" | translate }}</p>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Header and Data Rows -->
+            <tr class="grid-header-color doc-table-header-row" mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr class="doc-table-row" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+@if(isLoadingResults){
+<div class="spinner-container">
+  <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+  </mat-progress-spinner>
+</div>
+}

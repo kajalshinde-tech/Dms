@@ -1,0 +1,247 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized SaaS Page Header (No Question Mark Help Icon) -->
+    <div class="page-header-row mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">history</mat-icon>
+        <span class="mb-0 page-title">
+          {{ "RECENT_ACTIVITY" | translate }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Modern Filter Toolbar Card -->
+    <div class="doc-filter-card mb-3">
+      <div class="row g-2 align-items-center">
+        <!-- Doc Number Filter -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="filter-input-wrapper">
+            <mat-icon class="filter-icon">tag</mat-icon>
+            <input
+              class="form-control filter-control"
+              placeholder="{{ 'DOCUMENT_NO' | translate }}..."
+              #docNoInput
+            />
+          </div>
+        </div>
+
+        <!-- Document Name Filter -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="filter-input-wrapper">
+            <mat-icon class="filter-icon">search</mat-icon>
+            <input
+              class="form-control filter-control"
+              placeholder="{{ 'SEARCH_DOCUMENT_BY_NAME' | translate }}..."
+              #input
+            />
+          </div>
+        </div>
+
+        <!-- Folder / Category Filter -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <mat-select
+            panelClass="mat-select-control"
+            class="form-control filter-control"
+            [(value)]="selectedCategory"
+            placeholder="{{ 'SELECT_CATEGORY' | translate }}"
+            (selectionChange)="onCategoryChange($event)"
+          >
+            <mat-select-trigger>
+              {{ selectedCategory?.displayName ?? ("NONE" | translate) }}
+            </mat-select-trigger>
+            <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
+            @for (category of allCategories; track category) {
+            <mat-option [value]="category">
+              <div
+                class="category-option-item"
+                [ngStyle]="{
+                  'margin-left.px': (category.deafLevel ?? 0) * 16
+                }"
+              >
+                <mat-icon class="folder-option-icon me-1">folder</mat-icon>
+                <span>{{ category.name }}</span>
+              </div>
+            </mat-option>
+            }
+          </mat-select>
+        </div>
+
+        <!-- Operation Filter -->
+        <div class="col-12 col-sm-6 col-lg-2">
+          <mat-select
+            panelClass="mat-select-control"
+            class="form-control filter-control"
+            [(value)]="selectedOperation"
+            placeholder="{{ 'SELECT_OPERATION' | translate }}"
+            (selectionChange)="onOperationChange($event)"
+          >
+            <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
+            @for (operation of operations; track operation.value) {
+            <mat-option [value]="operation.value">
+              {{ operation.key }}
+            </mat-option>
+            }
+          </mat-select>
+        </div>
+
+        <!-- Reset Filters Button -->
+        <div class="col-12 col-lg-1 d-flex align-items-center">
+          <button type="button" class="btn btn-clear-all w-100" (click)="clearFilters()" matTooltip="Reset Filters">
+            <mat-icon class="align-middle">refresh</mat-icon>
+            <span class="d-lg-none ms-1">Reset</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modern Datatable Card -->
+    <div class="doc-table-card">
+      <div class="doc-table-wrapper">
+        <div class="doc-table-scroll-container">
+          <table
+            mat-table
+            [dataSource]="dataSource"
+            class="w-100 doc-modern-table"
+            matSort
+            matSortActive="createdDate"
+            matSortDirection="desc"
+          >
+            <!-- Action Date Column -->
+            <ng-container matColumnDef="createdDate">
+              <th
+                class="table-col-date"
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+              >
+                {{ "ACTION" | translate }} {{ "DATE" | translate }}
+              </th>
+              <td class="table-col-date" mat-cell *matCellDef="let document">
+                <span class="text-date">
+                  {{ document?.createdDate | utcToLocalTime : "full" }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Document Number Column -->
+            <ng-container matColumnDef="documentNumber">
+              <th class="table-col-docno" mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "DOCUMENT_NO" | translate }}
+              </th>
+              <td class="table-col-docno" mat-cell *matCellDef="let document">
+                @if (document.isDocumentDeleted === false) {
+                <a class="doc-number-badge cursor-pointer" (click)="onDocumentView(document)" [matTooltip]="'VIEW_DOCUMENT' | translate">
+                  <mat-icon class="badge-icon">visibility</mat-icon>
+                  <span>{{ document.documentNumber }}</span>
+                </a>
+                } @else {
+                <span class="text-muted">{{ document.documentNumber }}</span>
+                }
+              </td>
+            </ng-container>
+
+            <!-- Document Name Column -->
+            <ng-container matColumnDef="documentName">
+              <th class="table-col-name" mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "NAME" | translate }}
+              </th>
+              <td class="table-col-name" mat-cell *matCellDef="let document">
+                @if (document.isDocumentDeleted === false) {
+                <div class="d-flex align-items-center gap-1 doc-name-link cursor-pointer" (click)="onDocumentView(document)" [matTooltip]="document.documentName">
+                  <mat-icon class="doc-item-icon">description</mat-icon>
+                  <span class="text-name-truncate">{{ document.documentName }}</span>
+                </div>
+                } @else {
+                <div class="d-flex align-items-center gap-1 text-muted">
+                  <mat-icon class="doc-item-icon text-muted">description</mat-icon>
+                  <span>{{ document.documentName }}</span>
+                </div>
+                }
+              </td>
+            </ng-container>
+
+            <!-- Category / Folder Column -->
+            <ng-container matColumnDef="categoryName">
+              <th class="table-col-category" mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "CATEGORY_NAME" | translate }}
+              </th>
+              <td class="table-col-category" mat-cell *matCellDef="let document">
+                @if (document.categoryName) {
+                <div class="d-flex align-items-center gap-1 text-category">
+                  <mat-icon class="folder-item-icon">folder_open</mat-icon>
+                  <span>{{ document.categoryName }}</span>
+                </div>
+                } @else {
+                <span class="text-muted">-</span>
+                }
+              </td>
+            </ng-container>
+
+            <!-- Operation Column -->
+            <ng-container matColumnDef="operationName">
+              <th class="table-col-operation" mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "OPERATION" | translate }}
+              </th>
+              <td
+                class="table-col-operation"
+                mat-cell
+                *matCellDef="let document"
+              >
+                <span class="badge-operation" [appDocumentOperationColor]="document.operationName">
+                  {{ document.operationName.toUpperCase() | translate }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Empty Data Row -->
+            <tr *matNoDataRow>
+              <td colspan="5">
+                <div class="empty-state-wrapper py-5 text-center">
+                  <div class="empty-state-icon mb-2">
+                    <mat-icon>history_toggle_off</mat-icon>
+                  </div>
+                  <h6 class="empty-state-title mb-1">{{ 'NO_DATA_FOUND' | translate }}</h6>
+                  <p class="empty-state-desc mb-0 text-muted">No recent activity records match your filter criteria.</p>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Header, Data and Footer Rows -->
+            <tr
+              class="grid-header-color doc-table-header-row"
+              mat-header-row
+              *matHeaderRowDef="displayedColumns; sticky: true"
+            ></tr>
+            <tr class="doc-table-row" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr
+              class="doc-table-footer-row"
+              mat-footer-row
+              *matFooterRowDef="footerToDisplayed; sticky: true"
+            ></tr>
+
+            <!-- Footer Paginator -->
+            <ng-container matColumnDef="footer">
+              <td mat-footer-cell colspan="5" *matFooterCellDef class="p-0">
+                <mat-paginator
+                  [length]="documentResource.totalCount"
+                  [pageSize]="documentResource.pageSize"
+                  [pageSizeOptions]="[10, 20, 30]"
+                  [showFirstLastButtons]="true"
+                  class="doc-custom-paginator"
+                >
+                </mat-paginator>
+              </td>
+            </ng-container>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+@if(dataSource.loading$ | async) {
+<div class="spinner-container">
+  <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+  </mat-progress-spinner>
+</div>
+}

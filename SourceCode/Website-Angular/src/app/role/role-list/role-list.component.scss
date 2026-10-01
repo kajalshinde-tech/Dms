@@ -1,0 +1,221 @@
+// -------------------------------------------------------------
+// Roles List Page Styles
+// -------------------------------------------------------------
+
+.page-header-row {
+  margin-bottom: 0.75rem;
+
+  @media (max-width: 575.98px) {
+    margin-bottom: 0.5rem;
+  }
+
+  .page-title {
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: var(--app-text-color, #0f172a) !important;
+    letter-spacing: -0.01em !important;
+    line-height: 1.25 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+  }
+
+  .page-title-icon {
+    color: var(--app-primary-color, #059669) !important;
+    font-size: 20px !important;
+    width: 20px !important;
+    height: 20px !important;
+    line-height: 20px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-right: 4px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+// Header Action Button
+.btn-header-primary {
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 6px;
+  background-color: var(--app-primary-color, #059669);
+  color: #ffffff;
+  border: none;
+  font-size: 0.81rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px rgba(5, 150, 105, 0.2);
+
+  .btn-icon {
+    font-size: 17px;
+    width: 17px;
+    height: 17px;
+    line-height: 17px;
+  }
+
+  &:hover {
+    background-color: var(--primary-hover, #047857);
+    box-shadow: 0 2px 5px rgba(5, 150, 105, 0.3);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Main Table Card
+.doc-table-card {
+  background: #ffffff;
+  border: 1px solid var(--app-border-color, #e2e8f0);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+// Table Styling
+.modern-doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+
+  .grid-header-row {
+    background-color: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0;
+    height: 42px;
+
+    th {
+      font-size: 0.72rem !important;
+      font-weight: 700 !important;
+      color: #475569 !important;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 6px 16px !important;
+      white-space: nowrap;
+      border-bottom: 1px solid #e2e8f0 !important;
+    }
+  }
+
+  .grid-body-row {
+    height: 48px;
+    border-bottom: 1px solid #f1f5f9;
+    transition: background-color 0.12s ease;
+
+    &:hover {
+      background-color: #f8fafc;
+    }
+
+    td {
+      font-size: 0.81rem !important;
+      color: #334155;
+      padding: 6px 16px !important;
+      border-bottom: 1px solid #f1f5f9 !important;
+    }
+  }
+
+  .role-icon-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background-color: #ecfdf5;
+    color: var(--app-primary-color, #059669);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    .role-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      line-height: 16px;
+    }
+  }
+
+  .role-name-text {
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: #1e293b;
+  }
+}
+
+// Action Buttons
+.btn-action-edit {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 6px !important;
+  background-color: #eff6ff !important;
+  color: #2563eb !important;
+  border: 1px solid #dbeafe !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  cursor: pointer;
+  transition: all 0.15s ease !important;
+
+  &:hover {
+    background-color: #dbeafe !important;
+    color: #1d4ed8 !important;
+    border-color: #bfdbfe !important;
+  }
+
+  .action-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+    line-height: 16px !important;
+  }
+}
+
+.btn-action-delete {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 6px !important;
+  background-color: #fef2f2 !important;
+  color: #dc2626 !important;
+  border: 1px solid #fee2e2 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  cursor: pointer;
+  transition: all 0.15s ease !important;
+
+  &:hover {
+    background-color: #fee2e2 !important;
+    color: #b91c1c !important;
+    border-color: #fca5a5 !important;
+  }
+
+  .action-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+    line-height: 16px !important;
+  }
+}
+
+.table-column-100 {
+  width: 100px;
+  min-width: 100px;
+}
+
+// Spinner
+.spinner-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}

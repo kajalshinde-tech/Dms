@@ -1,0 +1,285 @@
+// -------------------------------------------------------------
+// Document Meta Tag List Styles
+// -------------------------------------------------------------
+
+.page-header-row {
+  margin-bottom: 0.75rem;
+
+  @media (max-width: 575.98px) {
+    margin-bottom: 0.5rem;
+  }
+
+  .page-title {
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: var(--app-text-color, #0f172a) !important;
+    letter-spacing: -0.01em !important;
+    line-height: 1.25 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+  }
+
+  .page-title-icon {
+    color: var(--app-primary-color, #059669) !important;
+    font-size: 20px !important;
+    width: 20px !important;
+    height: 20px !important;
+    line-height: 20px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-right: 4px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .btn-primary-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 6px;
+    background-color: var(--app-primary-color, #059669);
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    transition: all 0.15s ease;
+
+    &:hover {
+      filter: brightness(0.92);
+    }
+
+    .btn-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      line-height: 16px;
+    }
+  }
+}
+
+// Main Table Card
+.doc-table-card {
+  background: #ffffff;
+  border: 1px solid var(--app-border-color, #e2e8f0);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+// Modern Table Styling
+.modern-doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+
+  .grid-header-row {
+    background-color: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0;
+    height: 42px;
+
+    th {
+      font-size: 0.72rem !important;
+      font-weight: 700 !important;
+      color: #475569 !important;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 6px 16px !important;
+      white-space: nowrap;
+      border-bottom: 1px solid #e2e8f0 !important;
+    }
+  }
+
+  .grid-body-row {
+    height: 48px;
+    border-bottom: 1px solid #f1f5f9;
+    transition: background-color 0.12s ease;
+
+    &:hover {
+      background-color: #f8fafc;
+    }
+
+    td {
+      font-size: 0.81rem !important;
+      color: #334155;
+      padding: 6px 16px !important;
+      border-bottom: 1px solid #f1f5f9 !important;
+    }
+  }
+
+  .table-column-100 {
+    width: 90px;
+    min-width: 90px;
+  }
+
+  .table-column-140 {
+    width: 140px;
+    min-width: 120px;
+  }
+
+  .table-column-180 {
+    width: 180px;
+    min-width: 160px;
+  }
+}
+
+// Action Buttons
+.btn-action-edit {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 6px !important;
+  background-color: var(--app-primary-color, #059669) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  cursor: pointer;
+  transition: all 0.15s ease !important;
+
+  &:hover {
+    filter: brightness(0.9);
+  }
+
+  .action-icon {
+    font-size: 15px !important;
+    width: 15px !important;
+    height: 15px !important;
+    line-height: 15px !important;
+  }
+}
+
+.btn-action-delete {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 6px !important;
+  background-color: #ffffff !important;
+  color: #dc2626 !important;
+  border: 1px solid #fee2e2 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  cursor: pointer;
+  transition: all 0.15s ease !important;
+
+  &:hover {
+    background-color: #fee2e2 !important;
+    color: #b91c1c !important;
+  }
+
+  .action-icon {
+    font-size: 15px !important;
+    width: 15px !important;
+    height: 15px !important;
+    line-height: 15px !important;
+  }
+}
+
+// Locked System Badge
+.badge-system-locked {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border-radius: 4px;
+  background-color: #f1f5f9;
+  color: #94a3b8;
+  border: 1px solid #e2e8f0;
+
+  .lock-icon {
+    font-size: 13px;
+    width: 13px;
+    height: 13px;
+    line-height: 13px;
+  }
+}
+
+// Type Badge
+.badge-type-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  background-color: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+
+  .type-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    color: #64748b;
+  }
+}
+
+.item-icon-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background-color: #f0fdf4;
+  color: #16a34a;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  .item-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+  }
+}
+
+// Status Pills
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border-radius: 12px;
+  letter-spacing: 0.02em;
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &.status-pill-success {
+    background-color: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+
+    .status-dot {
+      background-color: #10b981;
+    }
+  }
+
+  &.status-pill-neutral {
+    background-color: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+
+    .status-dot {
+      background-color: #94a3b8;
+    }
+  }
+}

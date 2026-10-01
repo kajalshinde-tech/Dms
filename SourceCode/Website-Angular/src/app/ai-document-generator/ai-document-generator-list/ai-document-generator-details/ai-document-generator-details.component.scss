@@ -1,0 +1,241 @@
+// -------------------------------------------------------------
+// AI Document Generator Details Modal Styles
+// -------------------------------------------------------------
+
+.saas-dialog-container {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  max-height: 90vh;
+}
+
+// 1. Header
+.saas-dialog-header {
+  padding: 14px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid var(--app-border-color, #e2e8f0);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+
+  .header-info-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .dialog-icon-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(139, 92, 246, 0.18));
+    color: #6366f1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+    }
+  }
+
+  .dialog-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.25;
+  }
+
+  .dialog-subtitle {
+    font-size: 0.75rem;
+    color: #64748b;
+  }
+
+  .dialog-close-btn {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      line-height: 18px;
+    }
+
+    &:hover {
+      background-color: #fee2e2;
+      color: #ef4444;
+    }
+  }
+}
+
+// 2. Body
+.saas-dialog-body {
+  padding: 16px 20px !important;
+  background-color: #f8fafc;
+  overflow-y: auto;
+  max-height: calc(90vh - 120px);
+}
+
+.detail-section-card {
+  background: #ffffff;
+  border: 1px solid var(--app-border-color, #e2e8f0);
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+
+  .section-card-header {
+    padding: 10px 14px;
+    background: #fafbfc;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .section-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      line-height: 16px;
+      color: var(--app-primary-color, #059669);
+    }
+
+    .section-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #334155;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+  }
+
+  .section-card-body {
+    padding: 14px;
+  }
+}
+
+// Form Controls
+.form-label-custom {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  .label-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    color: #94a3b8;
+  }
+}
+
+.form-control-custom {
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 10px !important;
+  font-size: 0.78rem !important;
+  border: 1px solid var(--app-border-color, #cbd5e1) !important;
+  border-radius: 6px !important;
+  background-color: #f8fafc !important;
+  color: #1e293b !important;
+  width: 100%;
+
+  &:disabled,
+  &[readonly] {
+    background-color: #f1f5f9 !important;
+    color: #334155 !important;
+    cursor: default;
+  }
+}
+
+.prompt-textarea-custom {
+  border: 1px solid var(--app-border-color, #cbd5e1) !important;
+  border-radius: 6px !important;
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  font-size: 0.8rem !important;
+  line-height: 1.45 !important;
+  padding: 10px !important;
+  resize: vertical;
+}
+
+.editor-preview-wrapper {
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+// 3. Footer
+.saas-dialog-footer {
+  padding: 12px 20px;
+  border-top: 1px solid var(--app-border-color, #e2e8f0);
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  margin: 0;
+
+  .btn-saas-cancel {
+    height: 34px;
+    padding: 0 16px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    border-radius: 6px;
+    border: 1px solid var(--app-border-color, #cbd5e1);
+    background: #ffffff;
+    color: #475569;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      line-height: 16px;
+    }
+
+    &:hover {
+      background-color: #f1f5f9;
+      color: #0f172a;
+    }
+  }
+}
+
+// Custom Scrollbar
+.custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 3px;
+  }
+}

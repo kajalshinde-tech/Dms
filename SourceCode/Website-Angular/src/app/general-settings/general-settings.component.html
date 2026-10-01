@@ -1,0 +1,150 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized Page Header -->
+    <div class="page-header-row mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">settings_suggest</mat-icon>
+        <span class="mb-0 page-title">
+          {{ "GENERAL_SETTINGS" | translate }}
+        </span>
+      </div>
+    </div>
+
+    <div class="settings-grid">
+      
+      <!-- 1. OpenAI API Key Card -->
+      <div class="doc-form-card compact-card mb-3">
+        <div class="card-header-strip p-3 border-bottom bg-light">
+          <div class="d-flex align-items-center gap-2">
+            <div class="service-icon-circle openai-brand-circle d-flex align-items-center justify-content-center">
+              <mat-icon class="fs-5">psychology</mat-icon>
+            </div>
+            <div>
+              <h6 class="mb-0 font-weight-700 text-dark">
+                {{ "OPENAI_API_KEY" | translate }}
+              </h6>
+              <span class="text-muted extra-small">
+                Configure OpenAI API secret key for AI document summarization and smart generation.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body p-3 p-md-4">
+          <div class="row g-3 align-items-end">
+            <div class="col-12 col-md-9 col-lg-8">
+              <label class="field-label d-flex align-items-center gap-1 mb-1" for="openAIAPIKey">
+                <span>{{ "OPENAIAPIKEY" | translate }}</span>
+              </label>
+              <div class="form-field-box">
+                <mat-icon class="field-icon">key</mat-icon>
+                <input [type]="showOpenAIKey ? 'text' : 'password'" id="openAIAPIKey" [(ngModel)]="openAIAPIKey"
+                  class="form-control field-input pe-5" placeholder="{{ 'ENTER_OPENAI_API_KEY' | translate }}" />
+                <button type="button" class="btn-toggle-visibility" (click)="showOpenAIKey = !showOpenAIKey"
+                  matTooltip="{{ showOpenAIKey ? 'Hide key' : 'Show key' }}">
+                  <mat-icon>{{ showOpenAIKey ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="col-12 col-md-3 col-lg-4">
+              <button type="button" class="btn-save-action" (click)="onSaveOpenAIAPIKey('openai')">
+                <mat-icon class="btn-icon">save</mat-icon>
+                <span>{{ "SAVE" | translate }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Gemini API Key Card -->
+      <div class="doc-form-card compact-card mb-3">
+        <div class="card-header-strip p-3 border-bottom bg-light">
+          <div class="d-flex align-items-center gap-2">
+            <div class="service-icon-circle gemini-brand-circle d-flex align-items-center justify-content-center">
+              <mat-icon class="fs-5">auto_awesome</mat-icon>
+            </div>
+            <div>
+              <h6 class="mb-0 font-weight-700 text-dark">
+                {{ "GEMINI_API_KEY" | translate }}
+              </h6>
+              <span class="text-muted extra-small">
+                Configure Google Gemini API secret key for multi-modal AI processing and advanced analysis.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body p-3 p-md-4">
+          <div class="row g-3 align-items-end">
+            <div class="col-12 col-md-9 col-lg-8">
+              <label class="field-label d-flex align-items-center gap-1 mb-1" for="geminiAPIKey">
+                <span>{{ "GEMINI_API_KEY" | translate }}</span>
+              </label>
+              <div class="form-field-box">
+                <mat-icon class="field-icon">key</mat-icon>
+                <input [type]="showGeminiKey ? 'text' : 'password'" id="geminiAPIKey" [(ngModel)]="geminiAPIKey"
+                  class="form-control field-input pe-5" placeholder="Enter Gemini API Key" />
+                <button type="button" class="btn-toggle-visibility" (click)="showGeminiKey = !showGeminiKey"
+                  matTooltip="{{ showGeminiKey ? 'Hide key' : 'Show key' }}">
+                  <mat-icon>{{ showGeminiKey ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="col-12 col-md-3 col-lg-4">
+              <button type="button" class="btn-save-action" (click)="onSaveOpenAIAPIKey('gemini')">
+                <mat-icon class="btn-icon">save</mat-icon>
+                <span>{{ "SAVE" | translate }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. PDF Signature Setting Card -->
+      <div class="doc-form-card compact-card mb-3">
+        <div class="card-header-strip p-3 border-bottom bg-light">
+          <div class="d-flex align-items-center gap-2">
+            <div class="service-icon-circle signature-brand-circle d-flex align-items-center justify-content-center">
+              <mat-icon class="fs-5">draw</mat-icon>
+            </div>
+            <div>
+              <h6 class="mb-0 font-weight-700 text-dark">
+                {{ "PDF_SIGNATURE_SETTINGS" | translate }}
+              </h6>
+              <span class="text-muted extra-small">
+                Allow digital and handwritten signatures to be embedded directly into PDF documents.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body p-3 p-md-4">
+          <div class="row g-3 align-items-center">
+            <div class="col-12 col-md-9 col-lg-8">
+              <div class="feature-toggle-card d-flex align-items-center justify-content-between p-2 px-3 border rounded-3 bg-white">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="feature-icon-circle bg-light text-primary d-flex align-items-center justify-content-center">
+                    <mat-icon class="fs-5">gesture</mat-icon>
+                  </div>
+                  <div>
+                    <span class="d-block font-weight-600 text-dark small">{{ "ALLOW_SIGNATURE_INTO_PDF" | translate }}</span>
+                    <span class="text-muted extra-small">Enable PDF document signing feature for authorized users</span>
+                  </div>
+                </div>
+                <mat-slide-toggle [(ngModel)]="allowSignatureIntoPdf" color="primary">
+                </mat-slide-toggle>
+              </div>
+            </div>
+            <div class="col-12 col-md-3 col-lg-4">
+              <button type="button" class="btn-save-action" (click)="allowSignature()">
+                <mat-icon class="btn-icon">save</mat-icon>
+                <span>{{ "SAVE" | translate }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

@@ -1,0 +1,104 @@
+<div class="saas-dialog-container position-relative">
+  <!-- Dialog Header -->
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge info-badge">
+        <mat-icon>draw</mat-icon>
+      </div>
+      <div>
+        <h5 class="dialog-title mb-0">{{ "DOCUMENT_SIGNATURE" | translate }}</h5>
+        <p class="dialog-subtitle mb-0">{{ data?.name || ('ADD_YOUR_SIGNATURE' | translate) }}</p>
+      </div>
+    </div>
+    <button type="button" class="dialog-close-btn" (click)="closeDialog()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Dialog Body -->
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <!-- Signature Canvas Card -->
+    <div class="signature-box-card mb-3">
+      <div class="signature-box-header">
+        <div class="d-flex align-items-center gap-2">
+          <mat-icon class="sm-icon text-primary">gesture</mat-icon>
+          <span class="box-label">{{ "ADD_YOUR_SIGNATURE" | translate }}</span>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-secondary clear-sig-btn" (click)="clearSignature()">
+          <mat-icon class="sm-icon">refresh</mat-icon>
+          <span>{{ "CLEAR" | translate }}</span>
+        </button>
+      </div>
+      <div class="canvas-wrapper">
+        <canvas #canvas class="signature-canvas"></canvas>
+      </div>
+      <div class="canvas-hint">
+        <span>Draw your signature above using your mouse, stylus or touch screen.</span>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="or-separator my-3">
+      <span>{{ "OR" | translate }}</span>
+    </div>
+
+    <!-- Upload Signature File -->
+    <div class="upload-sig-card mb-3">
+      <label class="form-label-custom mb-1">
+        <mat-icon class="sm-icon align-middle me-1">upload_file</mat-icon>
+        {{"UPLOAD_YOUR_SIGNATURE" | translate}}
+      </label>
+      <input type="file" accept="image/png, image/jpeg" (change)="onFileSelected($event)"
+        class="form-control doc-form-input signature-upload" />
+      <span class="text-muted small mt-1 d-block">Supported formats: PNG, JPEG (transparent PNG recommended)</span>
+    </div>
+
+    <!-- Previous Signatures -->
+    @if(documentSignatures.length > 0) {
+    <div class="prev-signatures-section mt-4">
+      <h6 class="section-subtitle mb-2">Previous Signatures</h6>
+      <div class="row g-3">
+        @for (signature of documentSignatures; track $index) {
+        <div class="col-md-6">
+          <div class="prev-signature-card">
+            <div class="sig-preview-holder">
+              <img [src]="'data:image/png;base64,' + signature.data" alt="Signature" class="signature-img" />
+            </div>
+            <div class="sig-info">
+              <div class="sig-user text-truncate" [title]="signature.signatureUser">
+                <mat-icon class="sm-icon">person</mat-icon>
+                <span>{{ signature.signatureUser }}</span>
+              </div>
+              <div class="sig-date">
+                <mat-icon class="sm-icon">event</mat-icon>
+                <span>{{ signature.signatureDate | utcToLocalTime : "full" }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    }
+  </mat-dialog-content>
+
+  <!-- Dialog Footer -->
+  <mat-dialog-actions class="saas-dialog-footer">
+    <button type="button" class="btn btn-saas-cancel" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+      <span>{{ "CANCEL" | translate }}</span>
+    </button>
+    <button type="button" class="btn btn-primary-custom" (click)="saveSignature()" [disabled]="isLoading">
+      <mat-icon>save</mat-icon>
+      <span>{{ "SAVE" | translate }}</span>
+    </button>
+  </mat-dialog-actions>
+
+  <!-- Loading overlay -->
+  @if(isLoading) {
+  <div class="dialog-loading-overlay">
+    <mat-progress-spinner mode="indeterminate" diameter="42" strokeWidth="4"></mat-progress-spinner>
+    <span class="loading-text mt-2">Saving signature...</span>
+  </div>
+  }
+</div>

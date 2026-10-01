@@ -1,0 +1,37 @@
+<mat-card appearance="outlined" class="hub-card">
+  <mat-card-header class="hub-card-header">
+    <div class="d-flex align-items-center justify-content-between w-100 flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <div class="hub-header-icon primary-accent">
+          <mat-icon>calendar_month</mat-icon>
+        </div>
+        <div>
+          <span class="hub-card-title">
+            {{ "REMINDERS" | translate }}
+          </span>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <span class="hub-count-pill primary-accent">
+          {{ events.length }} Scheduled
+        </span>
+        <a mat-stroked-button class="hub-manage-btn" routerLink="/reminders">
+          <mat-icon class="fs-16 me-1">edit_calendar</mat-icon>
+          <span>Manage Reminders</span>
+        </a>
+      </div>
+    </div>
+  </mat-card-header>
+  <mat-card-content class="hub-card-body p-2 p-sm-3">
+    <div class="calendar-scroll-wrapper">
+      <full-calendar #calendar [events]="events" [options]="calendarOptions">
+        <ng-template #eventContent let-arg>
+          <div class="fc-custom-event-content" [title]="arg.event.title">
+            <span class="event-dot"></span>
+            <span class="event-text">{{ arg.event.title }}</span>
+          </div>
+        </ng-template>
+      </full-calendar>
+    </div>
+  </mat-card-content>
+</mat-card>

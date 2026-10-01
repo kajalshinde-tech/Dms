@@ -1,0 +1,111 @@
+<div class="saas-dialog-container position-relative">
+  <!-- Dialog Header -->
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge info-badge">
+        <mat-icon>forward_to_inbox</mat-icon>
+      </div>
+      <div>
+        <h5 class="dialog-title mb-0">{{ "SEND_EMAIL" | translate }}</h5>
+        <p class="dialog-subtitle mb-0 text-truncate" [title]="data.name">{{ data.name || ('SEND_EMAIL' | translate) }}</p>
+      </div>
+    </div>
+    <button type="button" class="dialog-close-btn" (click)="closeDialog()" [attr.aria-label]="'CANCEL' | translate">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Dialog Body -->
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <form [formGroup]="emailForm">
+      @if(!smtpConfigured) {
+      <div class="alert alert-warning d-flex align-items-center gap-2 mb-3 py-2 px-3">
+        <mat-icon class="fs-5">warning</mat-icon>
+        <span class="small">{{ "PLEASE_CONFIGURE_EMAIL_SMTP_SETTINGS" | translate }}</span>
+      </div>
+      }
+
+      <!-- Attachment Summary Card -->
+      <div class="attachment-pill-card mb-3">
+        <div class="d-flex align-items-center gap-2">
+          <mat-icon class="attachment-icon">attach_file</mat-icon>
+          <div class="overflow-hidden">
+            <span class="attachment-label">{{ "ATTACHMENT_DOCUMENT" | translate }}:</span>
+            <span class="attachment-name text-truncate ms-1" [title]="data.name">{{ data.name }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Fields -->
+      <div class="row g-3">
+        <!-- To Address -->
+        <div class="col-12 col-md-6">
+          <label class="form-label-custom">
+            {{ "TO" | translate }} ({{ 'EMAIL' | translate }}) <span class="required-star">*</span>
+          </label>
+          <input formControlName="toAddress" type="email" class="form-control doc-form-input" placeholder="recipient@example.com"
+            [attr.aria-label]="'To'" />
+          @if(emailForm.get('toAddress')?.touched && emailForm.get('toAddress')?.errors) {
+          <div class="field-error-text mt-1">
+            @if(emailForm.get('toAddress')?.errors?.['required']) {
+              <span>{{ "TO_ADDRESS_IS_REQUIRED" | translate }}</span>
+            }
+            @if(emailForm.get('toAddress')?.errors?.['email']) {
+              <span>{{ "EMAIL_IS_NOT_PROPER_FORMAT" | translate }}</span>
+            }
+          </div>
+          }
+        </div>
+
+        <!-- Subject -->
+        <div class="col-12 col-md-6">
+          <label class="form-label-custom">
+            {{ "SUBJECT" | translate }} <span class="required-star">*</span>
+          </label>
+          <input formControlName="subject" type="text" class="form-control doc-form-input" placeholder="{{ 'SUBJECT' | translate }}"
+            [attr.aria-label]="'Subject'" />
+          @if(emailForm.get('subject')?.touched && emailForm.get('subject')?.errors?.['required']) {
+          <div class="field-error-text mt-1">
+            <span>{{ "SUBJECT_IS_REQUIRED" | translate }}</span>
+          </div>
+          }
+        </div>
+
+        <!-- Message Body -->
+        <div class="col-12">
+          <label class="form-label-custom">
+            {{ "BODY" | translate }} <span class="required-star">*</span>
+          </label>
+          <div class="editor-shell">
+            <app-text-editor formControlName="body"></app-text-editor>
+          </div>
+          @if(emailForm.get('body')?.touched && emailForm.get('body')?.errors?.['required']) {
+          <div class="field-error-text mt-1">
+            <span>{{ "BODY_IS_REQUIRED" | translate }}</span>
+          </div>
+          }
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <!-- Dialog Footer -->
+  <mat-dialog-actions class="saas-dialog-footer">
+    <button type="button" class="btn btn-saas-cancel" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+      <span>{{ "CANCEL" | translate }}</span>
+    </button>
+    <button (click)="sendEmail()" type="button" class="btn btn-primary-custom" [disabled]="isLoading">
+      <mat-icon>send</mat-icon>
+      <span>{{ "SEND" | translate }}</span>
+    </button>
+  </mat-dialog-actions>
+
+  <!-- Loading overlay -->
+  @if(isLoading) {
+  <div class="dialog-loading-overlay">
+    <mat-progress-spinner mode="indeterminate" diameter="42" strokeWidth="4"></mat-progress-spinner>
+    <span class="loading-text mt-2">Sending email...</span>
+  </div>
+  }
+</div>

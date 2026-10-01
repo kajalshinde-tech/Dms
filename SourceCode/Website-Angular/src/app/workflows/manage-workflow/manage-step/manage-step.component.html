@@ -1,0 +1,94 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized Page Header -->
+    <div class="page-header-row mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">stairs</mat-icon>
+        <span class="mb-0 page-title">
+          {{ (workflowSteps.length == 0 ? "ADD_WORKFLOW_STEP" : "EDIT_WORKFLOW_STEP") | translate }}
+        </span>
+      </div>
+      @if (this.workflowInstances.length == 0) {
+      <div>
+        <button (click)="addStep(null)" class="primary btn-add-main" matButton="filled" type="button">
+          <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
+          <span>{{ "ADD_ANOTHER_STEP" | translate }}</span>
+        </button>
+      </div>
+      }
+    </div>
+
+    <!-- Step 2 Form Card -->
+    <div class="form-container-wrapper">
+      <form [formGroup]="stepFormGroup">
+        <div class="doc-form-card compact-card">
+          <!-- Step Indicator -->
+          <div class="step-indicator-bar mb-3 pb-2 border-bottom d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+              <span class="step-badge active">2</span>
+              <span class="step-label font-weight-bold">{{ "WORKFLOW_STEPS" | translate }}</span>
+            </div>
+            <span class="text-muted fs-7">Step 2 of 3</span>
+          </div>
+
+          <!-- Steps List -->
+          <div formArrayName="steps" class="steps-list-container d-flex flex-column gap-2">
+            @for (step of steps.controls; track $index; let i = $index) {
+            <div [formGroupName]="i" class="step-item-card p-2 p-sm-3 border rounded">
+              <div class="row g-2 align-items-center">
+                <div class="col-auto">
+                  <div class="step-number-pill">
+                    {{ i + 1 }}
+                  </div>
+                </div>
+
+                <div class="col">
+                  <div class="field-input-wrapper">
+                    <mat-icon class="field-icon">format_list_numbered</mat-icon>
+                    <input formControlName="stepName" class="form-control field-control" type="text"
+                      placeholder="{{ 'ENTER_THE_WORKFLOW_STEP_NAME' | translate }}"
+                      (blur)="checkUniqueStepName(i)" />
+                  </div>
+                  @if (step.get('stepName')?.touched && step.get('stepName')?.errors) {
+                    @if (step.get('stepName')?.errors?.['required']) {
+                    <div class="text-danger small mt-1">
+                      {{ "STEP_NAME_IS_REQUIRED" | translate }}
+                    </div>
+                    }
+                    @if (step.get('stepName')?.errors?.['notUnique']) {
+                    <div class="text-danger small mt-1">
+                      {{ "STEP_NAME_MUST_BE_UNIQUE" | translate }}
+                    </div>
+                    }
+                  }
+                </div>
+
+                @if (workflowInstances.length == 0 && i > 1 && steps.length > 2) {
+                <div class="col-auto">
+                  <button type="button" mat-icon-button class="btn-action-delete" (click)="removeStep(i)" matTooltip="Remove Step">
+                    <mat-icon class="action-icon">delete</mat-icon>
+                  </button>
+                </div>
+                }
+              </div>
+            </div>
+            }
+          </div>
+
+          <!-- Footer Actions -->
+          <div class="form-footer-actions d-flex align-items-center gap-2 mt-3 pt-3">
+            <button class="btn-save-main" matButton="filled" [disabled]="stepFormGroup.invalid || steps.length < 2"
+              (click)="saveWorkflowSteps()" cdkFocusInitial>
+              <span>{{ "NEXT" | translate }}</span>
+              <mat-icon class="medium-icon fs-5">arrow_forward</mat-icon>
+            </button>
+            <button type="button" class="btn-cancel-main" matButton="filled" (click)="onPreviousClick()">
+              <mat-icon class="medium-icon fs-5">arrow_back</mat-icon>
+              <span>{{ "PREVIOUS" | translate }}</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

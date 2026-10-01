@@ -1,0 +1,422 @@
+<nav #navbar class="navbar active">
+  <div class="container-fluid d-flex align-items-center justify-content-between">
+    <!-- Navbar Header (Brand Logo & Single Mobile Bar Toggle) -->
+    <div class="navbar-header" #navbarHeader>
+      <!-- Single Mobile Hamburger Toggle (VISIBLE ONLY ON MOBILE) -->
+      <a
+        onClick="return false;"
+        class="mobile-menu-toggle d-md-none"
+        (click)="mobileMenuSidebarOpen($event, 'overlay-open')"
+        title="Toggle Sidebar Menu"
+      >
+        <mat-icon class="header-icon">menu</mat-icon>
+      </a>
+
+      <!-- Brand Logo -->
+      <a class="navbar-brand" routerLink="/">
+        <img
+          [src]="logoUrl || '/images/logo.png'"
+          alt="Logo"
+          class="logo-img"
+        />
+      </a>
+    </div>
+
+    <!-- Desktop Sidemenu Collapse Button (VISIBLE ONLY ON DESKTOP/TABLET >= 768px) -->
+    <div class="desktop-collapse-control d-none d-md-flex align-items-center">
+      <button
+        mat-icon-button
+        (click)="callSidemenuCollapse()"
+        class="sidemenu-collapse nav-notification-icons"
+        title="Collapse Sidebar"
+      >
+        <mat-icon
+          [ngClass]="{ rotated: isOpenSidebar }"
+          class="header-icon"
+        >
+          menu_open
+        </mat-icon>
+      </button>
+    </div>
+
+    <!-- ✅ Header Right Controls (Notifications + Profile on Mobile, all on Desktop) -->
+    <div class="header-right-controls d-flex align-items-center gap-2">
+      <!-- Fullscreen (Desktop/Tablet only) -->
+      <button matMiniFab class="neutral header-fullscreen-btn d-none d-md-inline-flex" (click)="callFullscreen()" title="Fullscreen">
+        <mat-icon class="header-icon">fullscreen</mat-icon>
+      </button>
+
+      <!-- Language (Desktop/Tablet only) -->
+      <button
+        matMiniFab
+        [matMenuTriggerFor]="languagemenu"
+        class="neutral header-lang-btn d-none d-md-inline-flex"
+        title="Language"
+      >
+        <mat-icon class="header-icon">language</mat-icon>
+      </button>
+
+      <mat-menu #languagemenu="matMenu" class="lang-item-menu">
+        @for (item of languages; track item) {
+        <div class="lang-item">
+          <button
+            mat-menu-item
+            class="dropdown-item lang-item-list"
+            (click)="setNewLanguageRefresh(item)"
+            [ngClass]="{ active: language?.code === item.code }"
+          >
+            <img src="{{ item.imageUrl }}" class="flag-img" height="12" />
+            <span class="align-middle">{{ item.name }}</span>
+          </button>
+        </div>
+        }
+      </mat-menu>
+
+      <!-- Notifications (Visible on BOTH Mobile & Desktop) -->
+      <button
+        matMiniFab
+        [matMenuTriggerFor]="notificationMenu"
+        class="neutral position-relative header-notif-btn"
+        title="Notifications"
+      >
+        <mat-icon class="header-icon">notifications_none</mat-icon>
+        @if (notifications.length > 0) {
+        <span class="noti-badge-pill">{{ notifications.length }}</span>
+        }
+      </button>
+
+      <mat-menu #notificationMenu="matMenu" class="nfc-menu">
+        <!-- Notifications Menu (unchanged) -->
+        <div class="nfc-header">
+          <h5 class="mb-0">{{ "NOTIFICATIONS" | translate }}</h5>
+          <a
+            (click)="markAllAsReadNotification()"
+            class="nfc-mark-as-read cursor-pointer"
+          >
+            {{ "MARK_ALL_AS_READ" | translate }}
+          </a>
+        </div>
+        <div class="nfc-dropdown">
+          <ng-scrollbar style="height: 350px" visibility="hover">
+            <div class="noti-list header-menu">
+              <div class="menu">
+                <div>
+                  @for (notification of notifications; track notification)
+                  {
+                  <button
+                    mat-menu-item
+                    onClick="return false;"
+                    (click)="viewNotification(notification)"
+                  >
+                    <span class="table-img msg-user">
+                      <i
+                        class="material-icons nfc-type-icon"
+                        [ngClass]="{
+                          'nfc-green':
+                            notification.notificationsType != 2,
+                          'nfc-red': notification.notificationsType == 2
+                        }"
+                      >
+                        {{
+                          notification.notificationsType == 0
+                            ? "event_available"
+                            : notification.notificationsType == 1
+                            ? "description"
+                            : "schema"
+                        }}
+                      </i>
+                    </span>
+                    <span class="menu-info">
+                      <small class="menu-title">
+                        @if(notification.notificationsType == 1){
+                        <b>{{ notification.documentName }}</b>
+                        {{
+                          "DOCUMENT_PERMISSION_GRANTED_TO_YOU" | translate
+                        }}
+                        } @else{
+                        {{
+                          notification.message ||
+                             notification.documentName
+                        }}
+                        }
+                      </small>
+                      <span class="menu-desc mt-1">
+                        <i class="material-icons">access_time</i>
+                        {{
+                          notification.createdDate
+                            | utcToLocalTime : "shortDate"
+                        }}
+                      </span>
+                    </span>
+                  </button>
+                  }
+                </div>
+              </div>
+            </div>
+          </ng-scrollbar>
+        </div>
+        <div class="nfc-footer">
+          <a class="nfc-read-all" (click)="viewAllNotification()">
+            {{ "VIEW_ALL" | translate }}
+          </a>
+        </div>
+      </mat-menu>
+
+      <!-- Settings Gear Button in Topbar (Desktop/Tablet only) -->
+      <button
+        matMiniFab
+        class="neutral settings-gear-btn header-settings-btn d-none d-md-inline-flex"
+        (click)="toggleThemeDrawer()"
+        title="Theme Customizer"
+      >
+        <mat-icon class="header-icon gear-rotate">settings</mat-icon>
+      </button>
+
+      <!-- Profile Button (Visible on BOTH Mobile and Desktop) -->
+      <button
+        matMiniFab
+        [matMenuTriggerFor]="profilemenu"
+        class="neutral header-profile-btn"
+        title="User Profile"
+      >
+        <mat-icon class="header-icon">person_outline</mat-icon>
+      </button>
+
+      <!-- Profile Dropdown Menu (Image 1 Style) -->
+      <mat-menu #profilemenu="matMenu" class="xintra-profile-menu" xPosition="before">
+        <div class="profile-menu-header px-3 py-2 border-bottom">
+          <h6 class="profile-user-name mb-0 text-dark fw-bold">
+            {{ getUserFullName() }}
+          </h6>
+          <small class="profile-user-role text-muted">
+            {{ getUserRoleOrEmail() }}
+          </small>
+        </div>
+        
+        <div class="profile-menu-items py-1">
+          <button mat-menu-item routerLink="my-profile" class="xintra-menu-item">
+            <mat-icon class="text-muted">person_outline</mat-icon>
+            <span>{{ "MY_PROFILE" | translate }}</span>
+          </button>
+          <button mat-menu-item routerLink="company-profile" class="xintra-menu-item">
+            <mat-icon class="text-muted">tune</mat-icon>
+            <span>Company Settings</span>
+          </button>
+          <button mat-menu-item (click)="toggleThemeDrawer()" class="xintra-menu-item">
+            <mat-icon class="text-muted">palette</mat-icon>
+            <span>Theme Switcher</span>
+          </button>
+          <div class="dropdown-divider my-1"></div>
+          <button mat-menu-item (click)="onLogout()" class="xintra-menu-item text-danger">
+            <mat-icon class="text-danger">logout</mat-icon>
+            <span class="text-danger">{{ "LOGOUT" | translate }}</span>
+          </button>
+        </div>
+      </mat-menu>
+    </div>
+  </div>
+</nav>
+
+<!-- ========================================================================= -->
+<!-- Slide-out Theme Switcher Drawer (Image 2 Style Offcanvas Panel) -->
+<!-- ========================================================================= -->
+@if (isThemeDrawerOpen) {
+  <div class="theme-drawer-backdrop" (click)="closeThemeDrawer()"></div>
+  <aside class="theme-switcher-drawer" [ngClass]="{ 'open': isThemeDrawerOpen }">
+    <div class="drawer-header d-flex align-items-center justify-content-between px-3 py-2.5 border-bottom">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="text-primary drawer-header-icon">palette</mat-icon>
+        <span class="mb-0 fw-bold text-dark drawer-title">Theme Switcher</span>
+      </div>
+      <button type="button" class="btn-close-drawer" (click)="closeThemeDrawer()" aria-label="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="drawer-body p-3">
+      <!-- Sidebar Colors -->
+      <div class="theme-option-group mb-3">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <span class="option-group-title">Sidebar / Menu Colors:</span>
+          <span class="drawer-hex-badge">{{ themeService.currentTheme().sidebarBg }}</span>
+        </div>
+        <div class="drawer-swatch-list">
+          @for (item of themePalettes.sidebar; track item.color) {
+            <button
+              type="button"
+              class="drawer-color-swatch"
+              [ngClass]="{
+                'active': themeService.currentTheme().sidebarBg === item.color,
+                'is-white': item.color === '#ffffff'
+              }"
+              [style.background-color]="item.color"
+              [title]="item.name"
+              (click)="setSidebarBg(item.color)"
+            >
+              @if (themeService.currentTheme().sidebarBg === item.color) {
+                <mat-icon class="swatch-check" [ngClass]="item.color === '#ffffff' ? 'text-dark' : 'text-white'">check</mat-icon>
+              }
+            </button>
+          }
+          <!-- Custom Sidebar Color Picker -->
+          <label class="drawer-custom-picker" title="Pick custom sidebar color">
+            <input
+              type="color"
+              class="d-none"
+              [value]="themeService.currentTheme().sidebarBg"
+              (input)="onCustomSidebarChange($event)"
+            />
+            <div
+              class="drawer-color-swatch picker-swatch"
+              [style.background-color]="!isPresetColor(themePalettes.sidebar, themeService.currentTheme().sidebarBg) ? themeService.currentTheme().sidebarBg : '#ffffff'"
+            >
+              <mat-icon class="picker-icon" [ngClass]="!isPresetColor(themePalettes.sidebar, themeService.currentTheme().sidebarBg) ? 'text-white' : 'text-muted'">colorize</mat-icon>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Sidebar Active Style -->
+      <div class="theme-option-group mb-3 pt-2.5 border-top">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <span class="option-group-title">Sidebar Active Style:</span>
+          <span class="drawer-hex-badge text-capitalize">{{ themeService.currentTheme().sidebarActiveStyle || 'filled' }}</span>
+        </div>
+        <div class="sidebar-active-grid">
+          @for (style of sidebarActiveStyles; track style.id) {
+            <button
+              type="button"
+              class="active-style-btn"
+              [ngClass]="{ 'active': (themeService.currentTheme().sidebarActiveStyle || 'filled') === style.id }"
+              (click)="setSidebarActiveStyle(style.id)"
+              [title]="style.description"
+            >
+              <div class="style-preview-container" [ngClass]="'preview-' + style.id">
+                <div class="mini-item-mockup">
+                  <span class="mini-accent"></span>
+                  <span class="mini-bar"></span>
+                </div>
+              </div>
+              <span class="style-label">{{ style.name }}</span>
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Topbar Colors -->
+      <div class="theme-option-group mb-3 pt-2.5 border-top">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <span class="option-group-title">Header / Topbar Colors:</span>
+          <span class="drawer-hex-badge">{{ themeService.currentTheme().topbarBg }}</span>
+        </div>
+        <div class="drawer-swatch-list">
+          @for (item of themePalettes.topbar; track item.color) {
+            <button
+              type="button"
+              class="drawer-color-swatch"
+              [ngClass]="{
+                'active': themeService.currentTheme().topbarBg === item.color,
+                'is-white': item.color === '#ffffff'
+              }"
+              [style.background-color]="item.color"
+              [title]="item.name"
+              (click)="setTopbarBg(item.color)"
+            >
+              @if (themeService.currentTheme().topbarBg === item.color) {
+                <mat-icon class="swatch-check" [ngClass]="item.color === '#ffffff' ? 'text-dark' : 'text-white'">check</mat-icon>
+              }
+            </button>
+          }
+          <!-- Custom Topbar Color Picker -->
+          <label class="drawer-custom-picker" title="Pick custom topbar color">
+            <input
+              type="color"
+              class="d-none"
+              [value]="themeService.currentTheme().topbarBg"
+              (input)="onCustomTopbarChange($event)"
+            />
+            <div
+              class="drawer-color-swatch picker-swatch"
+              [style.background-color]="!isPresetColor(themePalettes.topbar, themeService.currentTheme().topbarBg) ? themeService.currentTheme().topbarBg : '#ffffff'"
+            >
+              <mat-icon class="picker-icon" [ngClass]="!isPresetColor(themePalettes.topbar, themeService.currentTheme().topbarBg) ? 'text-white' : 'text-muted'">colorize</mat-icon>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Primary Accent Colors -->
+      <div class="theme-option-group mb-3 pt-2.5 border-top">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <span class="option-group-title">Theme Primary Accent:</span>
+          <span class="drawer-hex-badge primary-badge">{{ themeService.currentTheme().primaryColor }}</span>
+        </div>
+        <div class="drawer-swatch-list">
+          @for (item of themePalettes.primary; track item.color) {
+            <button
+              type="button"
+              class="drawer-color-swatch primary-swatch"
+              [ngClass]="{ 'active': themeService.currentTheme().primaryColor === item.color }"
+              [style.background-color]="item.color"
+              [title]="item.name"
+              (click)="setPrimaryColor(item.color)"
+            >
+              @if (themeService.currentTheme().primaryColor === item.color) {
+                <mat-icon class="swatch-check text-white">check</mat-icon>
+              }
+            </button>
+          }
+          <!-- Custom Primary Color Picker -->
+          <label class="drawer-custom-picker" title="Pick custom primary color">
+            <input
+              type="color"
+              class="d-none"
+              [value]="themeService.currentTheme().primaryColor"
+              (input)="onCustomPrimaryChange($event)"
+            />
+            <div
+              class="drawer-color-swatch picker-swatch primary-picker"
+              [style.background-color]="!isPresetColor(themePalettes.primary, themeService.currentTheme().primaryColor) ? themeService.currentTheme().primaryColor : '#ffffff'"
+            >
+              <mat-icon class="picker-icon" [ngClass]="!isPresetColor(themePalettes.primary, themeService.currentTheme().primaryColor) ? 'text-white' : 'text-primary'">palette</mat-icon>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Font Family & Typography -->
+      <div class="theme-option-group mb-2 pt-2.5 border-top">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <span class="option-group-title">Font Typography:</span>
+          <span class="drawer-hex-badge">{{ getSelectedFontName() }}</span>
+        </div>
+        <div class="compact-font-select-box">
+          <select
+            class="form-select compact-font-dropdown"
+            [value]="themeService.currentTheme().fontFamily"
+            (change)="onFontChange($event)"
+          >
+            @for (font of themeFonts; track font.id) {
+              <option [value]="font.family">
+                {{ font.name }} — {{ font.preview }}
+              </option>
+            }
+          </select>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Drawer Footer -->
+    <div class="drawer-footer p-3 border-top d-flex gap-2">
+      <button mat-flat-button color="warn" class="flex-grow-1 compact-footer-btn" (click)="onResetTheme()">
+        <mat-icon class="fs-6 align-middle me-1">refresh</mat-icon>
+        Reset Theme
+      </button>
+      <button mat-stroked-button class="flex-grow-1 compact-footer-btn" (click)="closeThemeDrawer()">
+        Close
+      </button>
+    </div>
+  </aside>
+}
+

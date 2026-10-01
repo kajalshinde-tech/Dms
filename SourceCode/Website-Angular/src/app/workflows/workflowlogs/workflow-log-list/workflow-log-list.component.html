@@ -1,0 +1,280 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized Page Header (No Question Mark) -->
+    <div class="page-header-row mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">history</mat-icon>
+        <span class="mb-0 page-title">
+          {{ "WORKFLOW_LOGS" | translate }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Main Table Card -->
+    <div class="doc-table-card">
+      <!-- Filter Toolbar -->
+      <div class="table-filter-toolbar p-2 p-sm-3 border-bottom">
+        <div class="filter-bar-container d-flex align-items-center justify-content-between flex-wrap gap-2">
+          <div class="filter-inputs-group d-flex align-items-center flex-grow-1 flex-wrap gap-2">
+            <!-- Filter 1: Workflow Name -->
+            <div class="filter-field-box">
+              <mat-icon class="filter-icon">schema</mat-icon>
+              <mat-select panelClass="mat-select-control custom-select-panel"
+                (selectionChange)="onWorkflowsChanges($event)"
+                placeholder="{{ 'NAME' | translate }}"
+                [(ngModel)]="workflowNameFilter"
+                class="form-control filter-select">
+                <mat-option [value]="">-- {{ "ALL_WORKFLOWS" | translate }} --</mat-option>
+                @for (workflow of workflows; track workflow.id) {
+                <mat-option [value]="workflow.id">
+                  {{ workflow.name }}
+                </mat-option>
+                }
+              </mat-select>
+            </div>
+
+            <!-- Filter 2: Workflow Status -->
+            <div class="filter-field-box">
+              <mat-icon class="filter-icon">flag</mat-icon>
+              <mat-select panelClass="mat-select-control custom-select-panel"
+                (selectionChange)="onWorkflowStatusChange($event)"
+                placeholder="{{ 'STATUS' | translate }}"
+                [(ngModel)]="workflowStatusFilter"
+                class="form-control filter-select">
+                <mat-option [value]="">-- {{ "ALL_STATUSES" | translate }} --</mat-option>
+                @for (status of workflowInstanceStatuses; track status.value) {
+                <mat-option [value]="status.value">
+                  {{ status.key | translate }}
+                </mat-option>
+                }
+              </mat-select>
+            </div>
+
+            <!-- Filter 3: Document Name -->
+            <div class="filter-field-box">
+              <mat-icon class="filter-icon">description</mat-icon>
+              <mat-select panelClass="mat-select-control custom-select-panel"
+                (selectionChange)="onDocumentChange($event)"
+                placeholder="{{ 'DOCUMENT_NAME' | translate }}"
+                [(ngModel)]="documentFilter"
+                class="form-control filter-select">
+                <mat-option [value]="">-- {{ "ALL_DOCUMENTS" | translate }} --</mat-option>
+                @for (document of documents; track document.id) {
+                <mat-option [value]="document.id">
+                  {{ document.documentNumber }}-{{ document.name }}
+                </mat-option>
+                }
+              </mat-select>
+            </div>
+          </div>
+
+          <!-- Filter Reset Button -->
+          <div class="filter-action-group">
+            <button type="button" class="btn-filter-reset" (click)="resetFilters()" matTooltip="Clear all filters">
+              <mat-icon class="reset-icon">restart_alt</mat-icon>
+              <span>{{ "RESET" | translate }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table Container -->
+      <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" matSortDisableClear class="modern-doc-table w-100" matSort
+          matSortActive="transitiondate" matSortDirection="asc">
+
+          <!-- 1. Detail / Action -->
+          <ng-container matColumnDef="detail">
+            <th class="table-column-60 text-center" mat-header-cell *matHeaderCellDef>
+              {{ "DETAIL" | translate }}
+            </th>
+            <td class="table-column-60 text-center" mat-cell *matCellDef="let workflowLog">
+              <button type="button" mat-icon-button class="btn-action-view" (click)="viewVisualWorkflow(workflowLog)" matTooltip="View Workflow Graph">
+                <mat-icon class="action-icon">schema</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <!-- 2. Workflow Name -->
+          <ng-container matColumnDef="workflowname">
+            <th class="table-column-180" mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "NAME" | translate }}
+            </th>
+            <td class="table-column-180" mat-cell *matCellDef="let workflowLog">
+              <div class="workflow-name-cell font-weight-600 text-dark">
+                {{ workflowLog?.workflowName }}
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- 3. Workflow Status -->
+          <ng-container matColumnDef="workflowInstanceStatus">
+            <th class="table-column-130" mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "STATUS" | translate }}
+            </th>
+            <td class="table-column-130" mat-cell *matCellDef="let workflowLog">
+              @switch (workflowLog.workflowInstanceStatus) {
+                @case (0) { <span class="status-pill status-initiated">Initiated</span> }
+                @case (1) { <span class="status-pill status-inprogress">In Progress</span> }
+                @case (2) { <span class="status-pill status-completed">Completed</span> }
+                @case (3) { <span class="status-pill status-cancelled">Cancelled</span> }
+                @default {
+                  <span class="status-pill status-default">{{ workflowLog.workflowInstanceStatus | workflowInstanceStatus }}</span>
+                }
+              }
+            </td>
+          </ng-container>
+
+          <!-- 4. Initiated By -->
+          <ng-container matColumnDef="initiatedUser">
+            <th class="table-column-150" mat-header-cell *matHeaderCellDef>
+              {{ "INITIATED_BY" | translate }}
+            </th>
+            <td class="table-column-150" mat-cell *matCellDef="let workflowLog">
+              <div class="user-cell d-flex align-items-center gap-1">
+                <mat-icon class="user-icon fs-6 text-muted">person_outline</mat-icon>
+                <span>{{ workflowLog?.initiatedBy }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- 5. Initiated Date -->
+          <ng-container matColumnDef="initiateddate">
+            <th class="table-column-160" mat-header-cell *matHeaderCellDef>
+              {{ "INITIATED_DATE" | translate }}
+            </th>
+            <td class="table-column-160" mat-cell *matCellDef="let workflowLog">
+              <span class="cell-date">{{ workflowLog?.inititatedAt | utcToLocalTime:'short' }}</span>
+            </td>
+          </ng-container>
+
+          <!-- 6. Document Number -->
+          <ng-container matColumnDef="documentNumber">
+            <th class="table-column-140" mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "DOCUMENT_NO" | translate }}
+            </th>
+            <td class="table-column-140" mat-cell *matCellDef="let workflowLog">
+              @if (workflowLog.isDocumentDeleted === false) {
+              <a class="doc-link" (click)="onDocumentView(workflowLog)">
+                {{ workflowLog?.documentNumber }}
+              </a>
+              } @else {
+              <span class="text-muted">{{ workflowLog?.documentNumber }}</span>
+              }
+            </td>
+          </ng-container>
+
+          <!-- 7. Document Name -->
+          <ng-container matColumnDef="documentname">
+            <th class="table-column-180" mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "DOCUMENT_NAME" | translate }}
+            </th>
+            <td class="table-column-180" mat-cell *matCellDef="let workflowLog">
+              @if (workflowLog.isDocumentDeleted === false) {
+              <a class="doc-link d-inline-flex align-items-center gap-1" (click)="onDocumentView(workflowLog)" matTooltip="Click to view document">
+                <mat-icon class="doc-icon fs-6">description</mat-icon>
+                <span class="doc-title">{{ workflowLog?.documentName }}</span>
+              </a>
+              } @else {
+              <span class="text-muted d-inline-flex align-items-center gap-1">
+                <mat-icon class="fs-6">description</mat-icon>
+                <span>{{ workflowLog?.documentName }}</span>
+              </span>
+              }
+            </td>
+          </ng-container>
+
+          <!-- 8. Transition Name -->
+          <ng-container matColumnDef="transitionname">
+            <th class="table-column-150" mat-header-cell *matHeaderCellDef>
+              {{ "TRANSITION_NAME" | translate }}
+            </th>
+            <td class="table-column-150" mat-cell *matCellDef="let workflowLog">
+              <span class="transition-badge-item">{{ workflowLog?.transitionName }}</span>
+            </td>
+          </ng-container>
+
+          <!-- 9. Steps -->
+          <ng-container matColumnDef="workflowsteps">
+            <th class="table-column-150" mat-header-cell *matHeaderCellDef>
+              {{ "STEPS" | translate }}
+            </th>
+            <td class="table-column-150" mat-cell *matCellDef="let workflowLog">
+              <span class="steps-badge">{{ workflowLog?.steps }}</span>
+            </td>
+          </ng-container>
+
+          <!-- 10. Workflow Transition Instance Status -->
+          <ng-container matColumnDef="workflowtransitioninstancestatus">
+            <th class="table-column-150" mat-header-cell *matHeaderCellDef>
+              {{ "WORKFLOW_TRANSITION_INSTANCE_STATUS" | translate }}
+            </th>
+            <td class="table-column-150" mat-cell *matCellDef="let workflowLog">
+              <span class="trans-status-badge" [workflowtransitioninstancestatuscolor]="workflowLog.workflowTransitionInstanceStatus">
+                {{ workflowLog?.workflowTransitionInstanceStatus | workflowTransitionInstanceStatus }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- 11. Perform By -->
+          <ng-container matColumnDef="performBy">
+            <th class="table-column-140" mat-header-cell *matHeaderCellDef>
+              {{ "PERFORM_BY" | translate }}
+            </th>
+            <td class="table-column-140" mat-cell *matCellDef="let workflowLog">
+              <span class="perform-by-text">{{ workflowLog?.performBy || '-' }}</span>
+            </td>
+          </ng-container>
+
+          <!-- 12. Transition Date -->
+          <ng-container matColumnDef="transitiondate">
+            <th class="table-column-160" mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ "TRANSITION_DATE" | translate }}
+            </th>
+            <td class="table-column-160" mat-cell *matCellDef="let workflowLog">
+              <span class="cell-date">{{ workflowLog?.transitionDate | utcToLocalTime:'short' }}</span>
+            </td>
+          </ng-container>
+
+          <!-- 13. Remark / Comment -->
+          <ng-container matColumnDef="comment">
+            <th class="table-column-160" mat-header-cell *matHeaderCellDef>
+              {{ "REMARK" | translate }}
+            </th>
+            <td class="table-column-160" mat-cell *matCellDef="let workflowLog">
+              <span class="comment-cell-text" [matTooltip]="workflowLog?.comment">{{ workflowLog?.comment || '-' }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Footer / Paginator -->
+          <ng-container matColumnDef="footer">
+            <td mat-footer-cell colspan="13" *matFooterCellDef class="p-0 border-top">
+              <mat-paginator [length]="workflowLogResource.totalCount" [pageSize]="workflowLogResource.pageSize"
+                [pageSizeOptions]="[10, 20, 30]" [showFirstLastButtons]="true" class="custom-paginator"></mat-paginator>
+            </td>
+          </ng-container>
+
+          <tr class="grid-header-row" mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr class="grid-body-row" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <tr mat-footer-row *matFooterRowDef="['footer']; sticky: true"></tr>
+          <tr *matNoDataRow class="mat-row">
+            <td colspan="13" class="p-4 text-center text-muted">
+              <div class="empty-state d-flex flex-column align-items-center justify-content-center py-3">
+                <mat-icon class="fs-2 text-muted mb-1">history</mat-icon>
+                <span class="fs-7 font-weight-bold">{{ "NO_DATA_FOUND" | translate }}</span>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Loading Spinner Overlay -->
+@if ((dataSource.loading$ | async) || isLoadingResults) {
+<div class="spinner-container">
+  <mat-progress-spinner mode="indeterminate" diameter="50" strokeWidth="4">
+  </mat-progress-spinner>
+</div>
+}

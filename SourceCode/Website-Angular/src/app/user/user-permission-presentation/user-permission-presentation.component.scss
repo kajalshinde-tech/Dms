@@ -1,0 +1,212 @@
+// -------------------------------------------------------------
+// User Permission Presentation Styles
+// -------------------------------------------------------------
+
+.page-header-row {
+  margin-bottom: 0.75rem;
+
+  @media (max-width: 575.98px) {
+    margin-bottom: 0.5rem;
+  }
+
+  .page-title {
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: var(--app-text-color, #0f172a) !important;
+    letter-spacing: -0.01em !important;
+    line-height: 1.25 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+  }
+
+  .page-title-icon {
+    color: var(--app-primary-color, #059669) !important;
+    font-size: 20px !important;
+    width: 20px !important;
+    height: 20px !important;
+    line-height: 20px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-right: 4px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+// Main Form Card
+.doc-form-card {
+  background: #ffffff;
+  border: 1px solid var(--app-border-color, #e2e8f0);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+// Permissions Section Header Bar
+.permissions-header-bar {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+
+  .extra-small {
+    font-size: 0.73rem;
+    color: #64748b;
+  }
+
+  .select-all-wrapper {
+    .select-all-checkbox {
+      font-size: 0.82rem;
+      color: #1e293b;
+    }
+  }
+}
+
+// Permission Group Cards
+.permission-group-card {
+  border-color: #e2e8f0 !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    border-color: #cbd5e1 !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  }
+
+  .permission-group-header {
+    background-color: #f8fafc;
+    border-color: #f1f5f9 !important;
+
+    .group-title {
+      font-size: 0.82rem;
+      letter-spacing: 0.01em;
+    }
+
+    .group-count-badge {
+      .badge {
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 9999px;
+        background-color: #f1f5f9;
+        color: #64748b;
+        border: 1px solid #e2e8f0;
+
+        &.badge-active {
+          background-color: #ecfdf5;
+          color: #047857;
+          border-color: #a7f3d0;
+        }
+      }
+    }
+  }
+
+  .permission-group-body {
+    background-color: #ffffff;
+  }
+}
+
+// Action Checkbox Cards
+.action-checkbox-card {
+  background-color: #ffffff;
+  border-color: #e2e8f0 !important;
+  transition: all 0.15s ease;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background-color: #f8fafc;
+    border-color: #cbd5e1 !important;
+  }
+
+  &.is-checked {
+    background-color: #f0fdf4;
+    border-color: #86efac !important;
+
+    .action-label-text {
+      color: #166534;
+      font-weight: 600;
+    }
+  }
+
+  .action-label-text {
+    font-size: 0.78rem;
+    color: #334155;
+    word-break: break-word;
+    line-height: 1.3;
+  }
+}
+
+// Form Action Buttons
+.form-action-row {
+  border-color: #e2e8f0 !important;
+
+  .btn-save-action {
+    height: 36px;
+    padding: 0 18px;
+    border-radius: 6px;
+    background-color: var(--app-primary-color, #059669);
+    color: #ffffff;
+    border: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 2px rgba(5, 150, 105, 0.2);
+
+    .btn-icon {
+      font-size: 17px;
+      width: 17px;
+      height: 17px;
+      line-height: 17px;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: var(--primary-hover, #047857);
+      box-shadow: 0 2px 5px rgba(5, 150, 105, 0.3);
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+  }
+
+  .btn-cancel-action {
+    height: 36px;
+    padding: 0 18px;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    font-size: 0.82rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+
+    .btn-icon {
+      font-size: 17px;
+      width: 17px;
+      height: 17px;
+      line-height: 17px;
+      color: #64748b;
+    }
+
+    &:hover {
+      background-color: #f1f5f9;
+      color: #1e293b;
+      border-color: #94a3b8;
+    }
+  }
+}

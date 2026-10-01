@@ -1,0 +1,113 @@
+<section class="nested-documents-section">
+  <!-- Section Title Header (No Question Mark Help Icon) -->
+  <div class="nested-header mb-2 d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center gap-2">
+      <mat-icon class="nested-header-icon">folder_shared</mat-icon>
+      <span class="nested-title">
+        {{ "UPLOADED_DOCUMENTS" | translate }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Nested Datatable Card -->
+  <div class="doc-nested-table-card">
+    <div class="table-responsive">
+      <table mat-table [dataSource]="fileRequestDocuments" class="w-100 doc-modern-table nested-table">
+        <!-- Action Column -->
+        <ng-container matColumnDef="action">
+          <th class="table-col-action text-center" mat-header-cell *matHeaderCellDef>
+            {{ "ACTION" | translate }}
+          </th>
+          <td class="table-col-action text-center" mat-cell *matCellDef="let fileRequestDocument">
+            <div class="d-flex align-items-center justify-content-center gap-1">
+              <ng-container *hasClaim="'APPROVED_FILE_REQUEST_DOCUMENTS'">
+                @if(fileRequestDocument.fileRequestDocumentStatus === fileRequestDocumentStatus.PENDING) {
+                <button mat-icon-button class="btn-action-approve" (click)="onAddDocument(fileRequestDocument)"
+                  [matTooltip]="'APPROVE' | translate">
+                  <mat-icon class="action-icon">check</mat-icon>
+                </button>
+                }
+              </ng-container>
+              <ng-container *hasClaim="'REJECTED_FILE_REQUEST_DOCUMENTS'">
+                @if(fileRequestDocument.fileRequestDocumentStatus === fileRequestDocumentStatus.PENDING) {
+                <button mat-icon-button (click)="rejectFileRequestDocument(fileRequestDocument)"
+                  class="btn-action-reject" type="button" [matTooltip]="'REJECT' | translate">
+                  <mat-icon class="action-icon">close</mat-icon>
+                </button>
+                }
+              </ng-container>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- File Name Column -->
+        <ng-container matColumnDef="fileUrl">
+          <th class="table-col-file" mat-header-cell *matHeaderCellDef>
+            {{ "FILE_NAME" | translate }}
+          </th>
+          <td class="table-col-file" mat-cell *matCellDef="let fileRequestDocument">
+            <a class="doc-link doc-file-link" (click)="onDocumentView(fileRequestDocument)" [matTooltip]="fileRequestDocument.name">
+              <mat-icon class="file-icon">description</mat-icon>
+              <span>{{ fileRequestDocument.name }}</span>
+            </a>
+          </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th class="table-col-status" mat-header-cell *matHeaderCellDef>
+            {{ "DOCUMENT_STATUS" | translate }}
+          </th>
+          <td class="table-col-status" mat-cell *matCellDef="let fileRequestDocument" [appStatusColor]="
+              fileRequestDocument.fileRequestDocumentStatus | fileRequestDocumentStatus
+            ">
+            <span class="badge-status-pill">
+              <span class="status-dot"></span>
+              {{ fileRequestDocument.fileRequestDocumentStatus | fileRequestDocumentStatus }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Uploaded Date Column -->
+        <ng-container matColumnDef="createdDate">
+          <th class="table-col-date" mat-header-cell *matHeaderCellDef>
+            {{ "UPLOADED_DATE" | translate }}
+          </th>
+          <td class="table-col-date" mat-cell *matCellDef="let fileRequestDocument">
+            <span class="text-date">{{ fileRequestDocument.createdDate | utcToLocalTime : "short" }}</span>
+          </td>
+        </ng-container>
+
+        <!-- Reason Column -->
+        <ng-container matColumnDef="reason">
+          <th class="table-col-reason" mat-header-cell *matHeaderCellDef>
+            {{ "REASON" | translate }}
+          </th>
+          <td class="table-col-reason" mat-cell *matCellDef="let fileRequestDocument">
+            <span class="text-reason">{{ fileRequestDocument.reason || '-' }}</span>
+          </td>
+        </ng-container>
+
+        <!-- Empty Row -->
+        <tr *matNoDataRow>
+          <td colspan="5">
+            <div class="empty-state-wrapper py-3 text-center">
+              <span class="text-muted">{{ "NO_DATA_FOUND" | translate }}</span>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Table Header and Data Rows -->
+        <tr class="grid-header-color doc-table-header-row" mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr class="doc-table-row" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+@if(isLoadingResults) {
+<div class="spinner-container">
+  <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+  </mat-progress-spinner>
+</div>
+}

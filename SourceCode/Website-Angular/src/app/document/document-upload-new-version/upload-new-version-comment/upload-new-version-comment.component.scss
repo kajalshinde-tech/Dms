@@ -1,0 +1,16 @@
+@import '../../../shared/dialog-styles.scss';
+
+.comment-display-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.comment-readonly-box {
+  background: #ffffff;
+  color: #1e293b;
+  font-size: 13.5px;
+  line-height: 1.5;
+  resize: vertical;
+}

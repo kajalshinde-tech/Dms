@@ -1,0 +1,166 @@
+<div class="saas-dialog-container position-relative">
+  <!-- Dialog Header -->
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge primary-badge">
+        <mat-icon>link</mat-icon>
+      </div>
+      <div>
+        <h5 class="dialog-title mb-0">{{ "SHAREABLE_LINK" | translate }}</h5>
+        <p class="dialog-subtitle mb-0">{{ data.document.name || ('SHAREABLE_LINK' | translate) }}</p>
+      </div>
+    </div>
+    <button type="button" class="dialog-close-btn" (click)="closeDialog()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Dialog Body -->
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <form [formGroup]="documentLinkForm">
+      <!-- Active Link Card (When Edit Mode) -->
+      @if (isEditMode) {
+      <div class="link-active-card mb-3">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <div class="d-flex align-items-center gap-2">
+            <span class="status-indicator active-dot"></span>
+            <span class="active-title">{{ "LINK_SHARING_IS_ON" | translate }}</span>
+          </div>
+          <div class="d-flex align-items-center gap-1">
+            <button type="button" class="btn btn-sm btn-icon-action text-primary" (click)="openLinkSettings()" matTooltip="Configure link settings">
+              <mat-icon>tune</mat-icon>
+            </button>
+            <button type="button" class="btn btn-sm btn-icon-action text-danger" (click)="deleteDocumentLink()" matTooltip="Delete link">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="input-group link-copy-group">
+          <input formControlName="linkCode" type="text" id="link" class="form-control doc-form-input readonly-link-input" readonly />
+          <button type="button" class="btn btn-primary-custom copy-btn" (click)="copyToClipboard(documentLinkForm.get('linkCode')?.value)">
+            <mat-icon>content_copy</mat-icon>
+            <span>{{'COPY' | translate}}</span>
+          </button>
+        </div>
+      </div>
+      }
+
+      <!-- Settings Section (When Creating or Resetting) -->
+      @if (!isEditMode || isResetLink) {
+      <div class="settings-card mb-3">
+        <!-- 1. Expiration Setting -->
+        <div class="setting-item">
+          <div class="d-flex align-items-center justify-content-between mb-1">
+            <div class="d-flex align-items-center gap-2">
+              <mat-checkbox color="primary" formControlName="isLinkExpiryTime" id="isLinkExpiryTime" class="custom-table-checkbox"></mat-checkbox>
+              <label for="isLinkExpiryTime" class="setting-label mb-0 cursor-pointer">{{ "IS_LINK_VALID_UNTIL" | translate}}</label>
+            </div>
+          </div>
+
+          @if (documentLinkForm.get('isLinkExpiryTime')?.value) {
+          <div class="setting-subcontrols mt-2 pt-2 border-top">
+            <div class="row g-2">
+              <div class="col-sm-7">
+                <div class="input-group input-group-sm">
+                  <input class="form-control doc-form-input" matInput formControlName="linkExpiryDate"
+                    placeholder="{{'MM_DD_YYYY' | translate}}" [matDatepicker]="linkExpiryDatePicker" [min]="minDate" />
+                  <button class="btn btn-outline-secondary calendar-trigger-btn" type="button" (click)="linkExpiryDatePicker.open()">
+                    <mat-icon class="calendar-icon">calendar_today</mat-icon>
+                  </button>
+                  <mat-datepicker #linkExpiryDatePicker></mat-datepicker>
+                </div>
+              </div>
+
+              <div class="col-sm-5">
+                <div class="input-group input-group-sm">
+                  <input class="form-control doc-form-input timepicker-input" formControlName="linkExpiryTime" [format]="24"
+                    placeholder="{{ 'EXPIRY_TIME' | translate }}" [ngxTimepicker]="timePicker" readonly (click)="timePicker.open()" style="cursor: pointer;" />
+                  <button class="btn btn-outline-secondary calendar-trigger-btn" type="button" (click)="timePicker.open()">
+                    <mat-icon class="calendar-icon">access_time</mat-icon>
+                  </button>
+                  <ngx-material-timepicker #timePicker></ngx-material-timepicker>
+                </div>
+              </div>
+            </div>
+
+            @if (documentLinkForm.get('isLinkExpiryTime')?.touched && documentLinkForm.hasError('linkExpiryDateValidator')) {
+            <div class="field-error-text mt-1">
+              <span>{{ "EXPIRY_DATE_AND_TIME_ARE_REQUIRED" | translate }}</span>
+            </div>
+            }
+            @if (documentLinkForm.get('linkExpiryTime')?.hasError('required') && documentLinkForm.get('linkExpiryDate')?.touched) {
+            <div class="field-error-text mt-1">
+              <span>{{ "EXPIRY_TIME_ARE_REQUIRED" | translate }}</span>
+            </div>
+            }
+          </div>
+          }
+        </div>
+
+        <div class="setting-divider"></div>
+
+        <!-- 2. Password Protection -->
+        <div class="setting-item">
+          <div class="d-flex align-items-center justify-content-between mb-1">
+            <div class="d-flex align-items-center gap-2">
+              <mat-checkbox color="primary" formControlName="isPassword" id="isPassword" class="custom-table-checkbox"></mat-checkbox>
+              <label for="isPassword" class="setting-label mb-0 cursor-pointer">{{ "IS_PASSWORD_REQUIRED" | translate}}</label>
+            </div>
+          </div>
+
+          @if (documentLinkForm.get('isPassword')?.value) {
+          <div class="setting-subcontrols mt-2 pt-2 border-top">
+            <input autocomplete="new-password" type="password" class="form-control doc-form-input" formControlName="password"
+              placeholder="{{ 'ENTER_PASSWORD' | translate }}" />
+            @if (documentLinkForm.get('isPassword')?.touched && documentLinkForm.hasError('passwordValidator')) {
+            <div class="field-error-text mt-1">
+              <span>{{ "PASSWORD_IS_REQUIRED" | translate }}</span>
+            </div>
+            }
+          </div>
+          }
+        </div>
+
+        <div class="setting-divider"></div>
+
+        <!-- 3. Allow Download -->
+        <div class="setting-item">
+          <div class="d-flex align-items-center gap-2">
+            <mat-checkbox formControlName="isAllowDownload" color="primary" id="isAllowDownload" class="custom-table-checkbox"></mat-checkbox>
+            <label for="isAllowDownload" class="setting-label mb-0 cursor-pointer">{{ "USERS_WITH_LINK_CAN_DOWNLOAD_THIS_ITEM" | translate}}</label>
+          </div>
+        </div>
+      </div>
+      }
+    </form>
+  </mat-dialog-content>
+
+  <!-- Dialog Footer -->
+  <mat-dialog-actions class="saas-dialog-footer">
+    <button type="button" class="btn btn-saas-cancel" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+      <span>{{ "CANCEL" | translate }}</span>
+    </button>
+    @if (!isEditMode) {
+    <button type="button" (click)="createLink()" class="btn btn-primary-custom" [disabled]="isLoading">
+      <mat-icon>link</mat-icon>
+      <span>{{ "CREATE_LINK" | translate }}</span>
+    </button>
+    }
+    @if (isEditMode && isResetLink) {
+    <button type="button" (click)="createLink()" class="btn btn-primary-custom" [disabled]="isLoading">
+      <mat-icon>save</mat-icon>
+      <span>{{ "UPDATE_LINK" | translate }}</span>
+    </button>
+    }
+  </mat-dialog-actions>
+
+  <!-- Loading overlay -->
+  @if (isLoading) {
+  <div class="dialog-loading-overlay">
+    <mat-progress-spinner mode="indeterminate" diameter="42" strokeWidth="4"></mat-progress-spinner>
+    <span class="loading-text mt-2">Updating link...</span>
+  </div>
+  }
+</div>

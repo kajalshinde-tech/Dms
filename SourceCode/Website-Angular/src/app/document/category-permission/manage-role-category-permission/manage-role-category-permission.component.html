@@ -1,0 +1,136 @@
+<div class="permission-modal-container">
+  <!-- Dialog Header -->
+  <div class="modal-header">
+    <div class="modal-header-left">
+      <div class="modal-header-icon role-icon">
+        <mat-icon>admin_panel_settings</mat-icon>
+      </div>
+      <div class="modal-header-text">
+        <h3 class="modal-title">{{ 'ROLE_PERMISSION' | translate }}</h3>
+      </div>
+    </div>
+    <button type="button" class="btn-dialog-close" (click)="onNoClick()" [matTooltip]="'CANCEL' | translate">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content class="modal-body">
+    <form [formGroup]="permissionForm" class="permission-form">
+      <!-- Role Selection -->
+      <div class="form-group-section">
+        <label class="form-label">
+          <mat-icon class="label-icon">group</mat-icon>
+          <span>{{ 'ROLES' | translate }}</span>
+        </label>
+        <mat-select panelClass="mat-select-control" placeholder="{{ 'SELECT_ROLES' | translate }}"
+          class="form-control modern-select" [(value)]="selectedRoles" multiple>
+          <mat-select-trigger>
+            @if (selectedRoles.length > 0) {
+            <span class="selected-item-text">
+              {{ selectedRoles[0].name }}
+            </span>
+            }
+            @if (selectedRoles.length > 1) {
+            <span class="badge-additional-count">
+              (+{{ selectedRoles.length - 1 }} others)
+            </span>
+            }
+          </mat-select-trigger>
+          @for (role of data.roles; track role) {
+          <mat-option [value]="role">
+            {{ role.name }}
+          </mat-option>
+          }
+        </mat-select>
+      </div>
+
+      <!-- Time Bound Section -->
+      <div class="time-bound-box" [class.is-expanded]="permissionForm.get('isTimeBound')?.value">
+        <mat-checkbox (change)="timeBoundChange($event)" color="primary" formControlName="isTimeBound" class="custom-checkbox">
+          <span class="checkbox-label-text">{{ 'SPACIFY_THE_PERIOD' | translate }}</span>
+        </mat-checkbox>
+
+        @if (permissionForm.get('isTimeBound')?.value) {
+        <div class="date-pickers-row mt-3">
+          <!-- Start Date -->
+          <div class="date-field-col">
+            <label class="date-field-label">
+              <mat-icon class="label-icon">event</mat-icon>
+              <span>{{ 'CHOOSE_A_START_DATE' | translate }}</span>
+            </label>
+            <div class="standard-date-control" (click)="startDatePicker.open()">
+              <input formControlName="startDate" placeholder="{{ 'START_DATE' | translate }}" class="standard-date-input"
+                [min]="minDate" [matDatepicker]="startDatePicker" readonly>
+              <button class="standard-date-btn" type="button" (click)="startDatePicker.open(); $event.stopPropagation()" [matTooltip]="'START_DATE' | translate">
+                <mat-icon>calendar_today</mat-icon>
+              </button>
+              <mat-datepicker #startDatePicker></mat-datepicker>
+            </div>
+            @if (permissionForm.get('startDate')?.touched && permissionForm.get('startDate')?.errors?.['required']) {
+            <div class="date-error-msg">
+              <mat-icon>error_outline</mat-icon>
+              <span>{{ 'START_DATE_IS_REQURED' | translate }}</span>
+            </div>
+            }
+          </div>
+
+          <!-- End Date -->
+          <div class="date-field-col">
+            <label class="date-field-label">
+              <mat-icon class="label-icon">event_busy</mat-icon>
+              <span>{{ 'CHOOSE_A_END_DATE' | translate }}</span>
+            </label>
+            <div class="standard-date-control" (click)="endDatePicker.open()">
+              <input formControlName="endDate" placeholder="{{ 'END_DATE' | translate }}" class="standard-date-input"
+                [min]="permissionForm.get('startDate')?.value || minDate" [matDatepicker]="endDatePicker" readonly>
+              <button class="standard-date-btn" type="button" (click)="endDatePicker.open(); $event.stopPropagation()" [matTooltip]="'END_DATE' | translate">
+                <mat-icon>calendar_today</mat-icon>
+              </button>
+              <mat-datepicker #endDatePicker></mat-datepicker>
+            </div>
+            @if (permissionForm.get('startDate')?.touched && permissionForm.get('endDate')?.errors?.['required']) {
+            <div class="date-error-msg">
+              <mat-icon>error_outline</mat-icon>
+              <span>{{ 'END_DATE_IS_REQURED' | translate }}</span>
+            </div>
+            }
+          </div>
+        </div>
+        }
+      </div>
+
+      <!-- Additional Permission Options -->
+      <div class="options-checklist">
+        <div class="option-item">
+          <mat-checkbox color="primary" formControlName="isAllowDownload" class="custom-checkbox">
+            <span class="option-title">{{ 'ALLOW_DOWNLOAD' | translate }}</span>
+          </mat-checkbox>
+        </div>
+        <div class="option-item">
+          <mat-checkbox color="primary" formControlName="isAllowEmailNotification" class="custom-checkbox">
+            <span class="option-title">{{ 'IS_ALLOW_NOTIFICATION' | translate }}</span>
+          </mat-checkbox>
+        </div>
+      </div>
+
+      @if (permissionForm.get('isAllowEmailNotification')?.value && !smtpConfigured) {
+      <div class="smtp-warning-banner">
+        <mat-icon>warning</mat-icon>
+        <span>{{ 'PLEASE_CONFIGURE_EMAIL_SMTP_SETTINGS' | translate }}</span>
+      </div>
+      }
+
+      <!-- Actions -->
+      <div class="modal-actions-footer">
+        <button matButton="filled" class="btn-submit-action" (click)="saveCategoryRolePermission()" cdkFocusInitial type="button">
+          <mat-icon>save</mat-icon>
+          <span>{{ 'SAVE' | translate }}</span>
+        </button>
+        <button matButton="outlined" class="btn-cancel-action" (click)="onNoClick()" type="button">
+          <mat-icon>close</mat-icon>
+          <span>{{ 'CANCEL' | translate }}</span>
+        </button>
+      </div>
+    </form>
+  </mat-dialog-content>
+</div>

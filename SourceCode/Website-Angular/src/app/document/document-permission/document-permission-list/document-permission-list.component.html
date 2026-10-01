@@ -1,0 +1,204 @@
+<div class="saas-dialog-container">
+  <!-- Dialog Header -->
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge primary-badge">
+        <mat-icon>share</mat-icon>
+      </div>
+      <div>
+        <h5 class="dialog-title mb-0">{{ "SHARE_DOCUMENT" | translate }}</h5>
+        <p class="dialog-subtitle mb-0 text-truncate" [title]="document.name">{{ document.name || ('SHARE' | translate) }}</p>
+      </div>
+    </div>
+    <button type="button" class="dialog-close-btn" (click)="closeDialog()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Dialog Body -->
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <!-- Context Card -->
+    @if (document) {
+    <div class="doc-context-card mb-3">
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-2 overflow-hidden">
+          <mat-icon class="context-file-icon">description</mat-icon>
+          <div>
+            <span class="context-file-name text-truncate d-block" [title]="document.name">{{ document.name }}</span>
+            @if (document.description) {
+            <span class="text-muted small text-truncate d-block" [title]="document.description">{{ document.description }}</span>
+            }
+          </div>
+        </div>
+        @if(document.documentNumber) {
+        <span class="context-file-badge">{{ document.documentNumber }}</span>
+        }
+      </div>
+    </div>
+    }
+
+    <!-- Action Bar: Add Buttons & Search -->
+    <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-2 mb-3">
+      <div class="d-flex align-items-center gap-2">
+        <button (click)="addDocumentUserPermission()" class="btn btn-primary-custom" type="button">
+          <mat-icon>person_add</mat-icon>
+          <span>{{ "ASSIGN_USERS" | translate }}</span>
+        </button>
+        <button (click)="addDocumentRolePermission()" class="btn btn-outline-primary-custom" type="button">
+          <mat-icon>group_add</mat-icon>
+          <span>{{ "ASSIGN_ROLES" | translate }}</span>
+        </button>
+      </div>
+
+      <div class="search-input-wrapper">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input class="form-control doc-form-input search-filter-input" (keyup)="applyPermissionFilter($event)"
+          placeholder="{{ 'SEARCH_BY_USER_ROLE_NAME_AND_EMAIL' | translate }}" #input1 />
+      </div>
+    </div>
+
+    <!-- Permissions Table -->
+    <div class="table-responsive permissions-table-wrapper custom-scroll">
+      <table mat-table [dataSource]="permissionsDataSource" class="permissions-modern-table w-100">
+        <!-- Action Column -->
+        <ng-container matColumnDef="action">
+          <th style="width: 70px" class="text-center" mat-header-cell *matHeaderCellDef>
+            {{ "ACTION" | translate }}
+          </th>
+          <td style="width: 70px" class="text-center" mat-cell *matCellDef="let userPermission">
+            <ng-container *hasClaim="['ASSIGNED_REMOVE_SHARE_DOCUMENT', 'ALL_REMOVE_SHARE_DOCUMENT']">
+              @if (userPermission.type == 'User') {
+              <button type="button" class="btn btn-icon-delete" (click)="deleteDocumentUserPermission(userPermission)" matTooltip="Delete">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+              } @if (userPermission.type == 'Role') {
+              <button type="button" class="btn btn-icon-delete" (click)="deleteDocumentRolePermission(userPermission)" matTooltip="Delete">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+              }
+            </ng-container>
+          </td>
+        </ng-container>
+
+        <!-- Type Column -->
+        <ng-container matColumnDef="type">
+          <th style="width: 90px" mat-header-cell *matHeaderCellDef>{{ "TYPE" | translate }}</th>
+          <td style="width: 90px" mat-cell *matCellDef="let userPermission">
+            <span class="type-pill" [class.user-type]="userPermission.type === 'User'" [class.role-type]="userPermission.type === 'Role'">
+              <mat-icon class="micro-icon">{{ userPermission.type === 'User' ? 'person' : 'group' }}</mat-icon>
+              <span>{{ userPermission.type }}</span>
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Allow Download Column -->
+        <ng-container matColumnDef="isAllowDownload">
+          <th style="width: 100px" class="text-center" mat-header-cell *matHeaderCellDef>
+            {{ "ALLOW_DOWNLOAD" | translate }}
+          </th>
+          <td style="width: 100px" class="text-center" mat-cell *matCellDef="let userPermission">
+            @if (userPermission.isAllowDownload) {
+            <span class="download-badge allow" matTooltip="Download allowed">
+              <mat-icon class="micro-icon">check</mat-icon>
+              <span>{{ "YES" | translate }}</span>
+            </span>
+            } @else {
+            <span class="download-badge disallow" matTooltip="Download restricted">
+              <mat-icon class="micro-icon">close</mat-icon>
+              <span>{{ "NO" | translate }}</span>
+            </span>
+            }
+          </td>
+        </ng-container>
+
+        <!-- User/Role Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ "USER_ROLE_NAME" | translate }}
+          </th>
+          <td mat-cell *matCellDef="let userPermission">
+            <div class="name-cell-text">
+              @if (userPermission.type == 'User') {
+              <span class="fw-semibold text-dark">
+                {{ userPermission.user?.firstName }} {{ userPermission.user?.lastName }}
+              </span>
+              } @if (userPermission.type == 'Role') {
+              <span class="fw-semibold text-dark">
+                {{ userPermission.role?.name }}
+              </span>
+              }
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Email Column -->
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef>{{ "EMAIL" | translate }}</th>
+          <td mat-cell *matCellDef="let userPermission">
+            @if (userPermission.type == 'User') {
+            <span class="text-muted">{{ userPermission.user?.email }}</span>
+            } @if (userPermission.type == 'Role') {
+            <span class="text-muted">--</span>
+            }
+          </td>
+        </ng-container>
+
+        <!-- Start Date Column -->
+        <ng-container matColumnDef="startDate">
+          <th style="width: 110px" mat-header-cell *matHeaderCellDef>
+            {{ "START_DATE" | translate }}
+          </th>
+          <td style="width: 110px" class="cell-date" mat-cell *matCellDef="let userPermission">
+            @if (userPermission.isTimeBound) {
+            <span>{{ userPermission.startDate | utcToLocalTime : "shortDate" }}</span>
+            } @else {
+            <span class="text-muted">--</span>
+            }
+          </td>
+        </ng-container>
+
+        <!-- End Date Column -->
+        <ng-container matColumnDef="endDate">
+          <th style="width: 110px" mat-header-cell *matHeaderCellDef>
+            {{ "END_DATE" | translate }}
+          </th>
+          <td style="width: 110px" class="cell-date" mat-cell *matCellDef="let userPermission">
+            @if (userPermission.isTimeBound) {
+            <span>{{ userPermission.endDate | utcToLocalTime : "shortDate" }}</span>
+            } @else {
+            <span class="text-muted">--</span>
+            }
+          </td>
+        </ng-container>
+
+        <!-- Footer / Paginator -->
+        <ng-container matColumnDef="footer">
+          <td mat-footer-cell colspan="7" *matFooterCellDef class="p-0">
+            <mat-paginator #userPermissionsPaginator [pageSizeOptions]="[10, 20, 50, 100]" [showFirstLastButtons]="true" class="custom-paginator"></mat-paginator>
+          </td>
+        </ng-container>
+
+        <tr *matNoDataRow>
+          <td colspan="7" class="text-center py-4 text-muted">
+            <div class="empty-state-cell">
+              <mat-icon class="fs-4 text-muted mb-1">group_off</mat-icon>
+              <div>{{ "NO_DATA_FOUND" | translate }}</div>
+            </div>
+          </td>
+        </tr>
+
+        <tr class="permissions-header-row" mat-header-row *matHeaderRowDef="documentPermissionsColumns; sticky: true"></tr>
+        <tr class="permissions-row" mat-row *matRowDef="let row; columns: documentPermissionsColumns"></tr>
+        <tr mat-footer-row *matFooterRowDef="footerToDisplayed; sticky: true"></tr>
+      </table>
+    </div>
+  </mat-dialog-content>
+
+  <!-- Dialog Footer -->
+  <mat-dialog-actions class="saas-dialog-footer">
+    <button type="button" class="btn btn-saas-cancel ms-auto" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+      <span>{{ "CLOSE" | translate }}</span>
+    </button>
+  </mat-dialog-actions>
+</div>

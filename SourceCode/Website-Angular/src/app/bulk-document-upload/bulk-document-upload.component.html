@@ -1,0 +1,568 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized SaaS Page Header (No Question Mark Help Icon) -->
+    <div class="page-header-row mb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">cloud_upload</mat-icon>
+        <span class="mb-0 page-title">
+          {{ "BULK_DOCUMENT_UPLOAD" | translate }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Main Bulk Upload Form Card -->
+    <form [formGroup]="documentForm">
+      <div class="doc-form-card">
+        <!-- Section 1: Destination & Categorization -->
+        <div class="form-section-header">
+          <mat-icon class="section-icon">folder_open</mat-icon>
+          <span class="section-title">Destination & Details</span>
+        </div>
+
+        <div class="form-section-body">
+          <div class="row g-3">
+            <!-- Folder / Category -->
+            <div class="col-12 col-sm-6 col-lg-3">
+              <div class="form-group">
+                <label [dir]="langDir" class="form-label">
+                  {{ "CATEGORY" | translate }} <span class="required-star">*</span>
+                </label>
+                <mat-select
+                  [dir]="langDir"
+                  panelClass="mat-select-control"
+                  class="form-control"
+                  formControlName="categoryId"
+                  placeholder="{{ 'SELECT_CATEGORY' | translate }}"
+                >
+                  <mat-select-trigger>
+                    <div class="d-flex align-items-center gap-1">
+                      <mat-icon class="folder-trigger-icon">folder</mat-icon>
+                      <span class="text-truncate">
+                        {{
+                          getCategoryNameById(
+                            documentForm.get("categoryId")?.value
+                          ) || ("SELECT_CATEGORY" | translate)
+                        }}
+                      </span>
+                    </div>
+                  </mat-select-trigger>
+                  <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
+                  @for(category of allCategories; track category.id) {
+                  <mat-option [value]="category.id">
+                    <div
+                      class="country-item"
+                      [ngStyle]="{
+                        'margin-left.px': (category.deafLevel ?? 0) * 16
+                      }"
+                    >
+                      <div class="d-flex align-items-center gap-1" [matTooltip]="category.name">
+                        <mat-icon class="folder-option-icon">folder</mat-icon>
+                        <span [class.fw-bold]="category.deafLevel == 0">{{ category.name }}</span>
+                      </div>
+                    </div>
+                  </mat-option>
+                  }
+                </mat-select>
+                @if(documentForm.get('categoryId')?.touched &&
+                documentForm.get('categoryId')?.errors &&
+                documentForm.get('categoryId')?.errors?.['required']) {
+                <div [dir]="langDir" class="validation-error">
+                  {{ "CATEGORY_IS_REQUIRED" | translate }}
+                </div>
+                }
+              </div>
+            </div>
+
+            <!-- Document Status -->
+            <div class="col-12 col-sm-6 col-lg-3">
+              <div class="form-group">
+                <label [dir]="langDir" class="form-label">
+                  {{ "DOCUMENT_STATUS" | translate }}
+                </label>
+                <mat-select
+                  [dir]="langDir"
+                  panelClass="mat-select-control"
+                  class="form-control"
+                  placeholder="{{ 'SELECT_STATUS' | translate }}"
+                  formControlName="documentStatusId"
+                >
+                  <mat-option>-- {{ "NONE" | translate }} --</mat-option>
+                  @for(documentStatus of documentStatues; track documentStatus.id) {
+                  <mat-option [value]="documentStatus.id">
+                    <span [ngStyle]="{ color: documentStatus?.colorCode }" class="fw-medium">
+                      {{ documentStatus.name }}
+                    </span>
+                  </mat-option>
+                  }
+                </mat-select>
+              </div>
+            </div>
+
+            <!-- Storage -->
+            <div class="col-12 col-sm-6 col-lg-3">
+              <div class="form-group">
+                <label [dir]="langDir" class="form-label">
+                  {{ "STORAGE" | translate }}
+                </label>
+                <mat-select
+                  [dir]="langDir"
+                  panelClass="mat-select-control"
+                  class="form-control"
+                  formControlName="storageSettingId"
+                >
+                  @for(storageSetting of storageSettings; track storageSetting.id) {
+                  <mat-option [value]="storageSetting.id">
+                    {{
+                      storageSetting.storageType
+                        | storageType : storageSetting.name
+                    }}
+                  </mat-option>
+                  }
+                </mat-select>
+              </div>
+            </div>
+
+            <!-- Client -->
+            <div class="col-12 col-sm-6 col-lg-3">
+              <div class="form-group">
+                <label [dir]="langDir" class="form-label">
+                  {{ "CLIENT" | translate }}
+                </label>
+                <mat-select
+                  [dir]="langDir"
+                  panelClass="mat-select-control"
+                  class="form-control"
+                  placeholder="{{ 'SELECT_CLIENT' | translate }}"
+                  formControlName="clientId"
+                >
+                  <mat-option>-- {{ "NONE" | translate }} --</mat-option>
+                  @for(client of clientStore.clients(); track client.id) {
+                  <mat-option [value]="client.id">
+                    <span> {{ client.companyName }} </span>
+                  </mat-option>
+                  }
+                </mat-select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Permissions & Access Sharing -->
+        <ng-container *hasClaim="'ALL_SHARE_DOCUMENT'">
+          <div class="form-section-header mt-4">
+            <mat-icon class="section-icon">share</mat-icon>
+            <span class="section-title">Sharing & Permissions (Optional)</span>
+          </div>
+
+          <div class="form-section-body">
+            <div class="row g-3">
+              <!-- Assign Roles Card -->
+              <div class="col-12 col-lg-6">
+                <div class="control-box-wrapper">
+                  <div class="form-group mb-2">
+                    <label [dir]="langDir" class="form-label">
+                      {{ "ASSIGN_ROLES" | translate }}
+                    </label>
+                    <mat-select
+                      [dir]="langDir"
+                      panelClass="mat-select-control"
+                      class="form-control"
+                      placeholder="{{ 'ROLES' | translate }}"
+                      formControlName="selectedRoles"
+                      multiple
+                    >
+                      <mat-select-trigger>
+                        @if(documentForm.get('selectedRoles')?.value?.length > 0) {
+                        <span>
+                          {{ documentForm.get("selectedRoles")?.value[0].name }}
+                        </span>
+                        } @if(documentForm.get('selectedRoles')?.value?.length > 1) {
+                        <span class="selection-count-badge">
+                          (+{{ documentForm.get("selectedRoles")?.value?.length - 1 }})
+                        </span>
+                        }
+                      </mat-select-trigger>
+                      @for(role of roles; track role.id){
+                      <mat-option [value]="role">
+                        {{ role.name }}
+                      </mat-option>
+                      }
+                    </mat-select>
+                  </div>
+
+                  @if(documentForm.get('selectedRoles')?.value?.length > 0) {
+                  <div class="box-inner-content mt-2 pt-2 border-top" formGroupName="rolePermissionForm">
+                    <mat-checkbox
+                      [dir]="langDir"
+                      color="primary"
+                      formControlName="isTimeBound"
+                      (change)="roleTimeBoundChange($event)"
+                    >
+                      <span class="toggle-label">{{ "SPACIFY_THE_PERIOD" | translate }}</span>
+                    </mat-checkbox>
+
+                    @if(rolePermissionFormGroup.get('isTimeBound')?.value) {
+                    <div class="row g-2 mt-2">
+                      <div class="col-12 col-sm-6">
+                        <div class="input-group">
+                          <input
+                            [dir]="langDir"
+                            #ref
+                            [min]="minDate"
+                            class="form-control"
+                            placeholder="{{ 'CHOOSE_A_START_DATE' | translate }}"
+                            formControlName="startDate"
+                            [matDatepicker]="startDatePicker"
+                          />
+                          <button
+                            [dir]="langDir"
+                            class="btn btn-calendar"
+                            type="button"
+                            (click)="startDatePicker.open()"
+                          >
+                            <mat-icon class="medium-icon fs-6 align-middle">calendar_today</mat-icon>
+                          </button>
+                          <mat-datepicker #startDatePicker></mat-datepicker>
+                        </div>
+                        @if(rolePermissionFormGroup.get('startDate')?.touched &&
+                        rolePermissionFormGroup.get('startDate')?.hasError('required')){
+                        <div class="validation-error">
+                          {{ "START_DATE_IS_REQURED" | translate }}
+                        </div>
+                        }
+                      </div>
+
+                      <div class="col-12 col-sm-6">
+                        <div class="input-group">
+                          <input
+                            [dir]="langDir"
+                            [min]="rolePermissionFormGroup.get('startDate')?.value"
+                            class="form-control"
+                            placeholder="{{ 'CHOOSE_A_END_DATE' | translate }}"
+                            formControlName="endDate"
+                            [matDatepicker]="endDatePicker"
+                          />
+                          <button
+                            [dir]="langDir"
+                            class="btn btn-calendar"
+                            type="button"
+                            (click)="endDatePicker.open()"
+                          >
+                            <mat-icon class="medium-icon fs-6 align-middle">calendar_today</mat-icon>
+                          </button>
+                          <mat-datepicker #endDatePicker></mat-datepicker>
+                        </div>
+                        @if(rolePermissionFormGroup.get('startDate')?.touched &&
+                        rolePermissionFormGroup.get('endDate')?.hasError('required')){
+                        <div class="validation-error">
+                          {{ "END_DATE_IS_REQURED" | translate }}
+                        </div>
+                        }
+                      </div>
+                    </div>
+                    }
+
+                    <div class="mt-2">
+                      <mat-checkbox
+                        [dir]="langDir"
+                        color="primary"
+                        formControlName="isAllowDownload"
+                      >
+                        <span class="toggle-label">{{ "ALLOW_DOWNLOAD" | translate }}</span>
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Assign Users Card -->
+              <div class="col-12 col-lg-6">
+                <div class="control-box-wrapper">
+                  <div class="form-group mb-2">
+                    <label [dir]="langDir" class="form-label">
+                      {{ "ASSIGN_USERS" | translate }}
+                    </label>
+                    <mat-select
+                      [dir]="langDir"
+                      panelClass="mat-select-control"
+                      class="form-control"
+                      placeholder="{{ 'USERS' | translate }}"
+                      formControlName="selectedUsers"
+                      multiple
+                    >
+                      <mat-select-trigger>
+                        @if(documentForm.get('selectedUsers')?.value?.length > 0){
+                        <span>
+                          {{ documentForm.get("selectedUsers")?.value[0]?.firstName }}
+                          {{ documentForm.get("selectedUsers")?.value[0]?.lastName }}
+                        </span>
+                        } @if(documentForm.get('selectedUsers')?.value?.length > 1){
+                        <span class="selection-count-badge">
+                          (+{{ documentForm.get("selectedUsers")?.value?.length - 1 }})
+                        </span>
+                        }
+                      </mat-select-trigger>
+                      @for(user of userStore.users(); track user.id) {
+                      <mat-option [value]="user">
+                        {{ user.firstName }} {{ user.lastName }}
+                      </mat-option>
+                      }
+                    </mat-select>
+                  </div>
+
+                  @if(documentForm.get('selectedUsers')?.value?.length > 0) {
+                  <div class="box-inner-content mt-2 pt-2 border-top" formGroupName="userPermissionForm">
+                    <mat-checkbox
+                      [dir]="langDir"
+                      color="primary"
+                      formControlName="isTimeBound"
+                      (change)="userTimeBoundChange($event)"
+                    >
+                      <span class="toggle-label">{{ "SPACIFY_THE_PERIOD" | translate }}</span>
+                    </mat-checkbox>
+
+                    @if(userPermissionFormGroup.get('isTimeBound')?.value) {
+                    <div class="row g-2 mt-2">
+                      <div class="col-12 col-sm-6">
+                        <div class="input-group">
+                          <input
+                            [dir]="langDir"
+                            #ref
+                            [min]="minDate"
+                            class="form-control"
+                            placeholder="{{ 'CHOOSE_A_START_DATE' | translate }}"
+                            formControlName="startDate"
+                            [matDatepicker]="userStartDatePicker"
+                          />
+                          <button
+                            [dir]="langDir"
+                            class="btn btn-calendar"
+                            type="button"
+                            (click)="userStartDatePicker.open()"
+                          >
+                            <mat-icon class="medium-icon fs-6 align-middle">calendar_today</mat-icon>
+                          </button>
+                          <mat-datepicker #userStartDatePicker></mat-datepicker>
+                        </div>
+                        @if(userPermissionFormGroup.get('startDate')?.touched &&
+                        userPermissionFormGroup.get('startDate')?.hasError('required')){
+                        <div class="validation-error">
+                          {{ "START_DATE_IS_REQURED" | translate }}
+                        </div>
+                        }
+                      </div>
+
+                      <div class="col-12 col-sm-6">
+                        <div class="input-group">
+                          <input
+                            [dir]="langDir"
+                            [min]="userPermissionFormGroup.get('startDate')?.value"
+                            class="form-control"
+                            placeholder="{{ 'CHOOSE_A_END_DATE' | translate }}"
+                            formControlName="endDate"
+                            [matDatepicker]="userEndDatePicker"
+                          />
+                          <button
+                            [dir]="langDir"
+                            class="btn btn-calendar"
+                            type="button"
+                            (click)="userEndDatePicker.open()"
+                          >
+                            <mat-icon class="medium-icon fs-6 align-middle">calendar_today</mat-icon>
+                          </button>
+                          <mat-datepicker #userEndDatePicker></mat-datepicker>
+                        </div>
+                        @if(userPermissionFormGroup.get('startDate')?.touched &&
+                        userPermissionFormGroup.get('endDate')?.hasError('required')){
+                        <div class="validation-error">
+                          {{ "END_DATE_IS_REQURED" | translate }}
+                        </div>
+                        }
+                      </div>
+                    </div>
+                    }
+
+                    <div class="mt-2">
+                      <mat-checkbox
+                        [dir]="langDir"
+                        color="primary"
+                        formControlName="isAllowDownload"
+                      >
+                        <span class="toggle-label">{{ "ALLOW_DOWNLOAD" | translate }}</span>
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Section 3: File Upload Area -->
+        <div class="form-section-header mt-4">
+          <mat-icon class="section-icon">upload_file</mat-icon>
+          <span class="section-title">Select Documents</span>
+        </div>
+
+        <div class="form-section-body">
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <div class="form-group">
+                <label [dir]="langDir" class="form-label">
+                  {{ "DOCUMENT_UPLOAD" | translate }} <span class="required-star">*</span>
+                </label>
+                <input
+                  [dir]="langDir"
+                  class="form-control form-control-file"
+                  #file
+                  (change)="onFileSelect($event)"
+                  type="file"
+                  multiple
+                />
+                @if(documentForm.get('files')?.touched &&
+                documentForm.get('files')?.value.length == 0){
+                <div [dir]="langDir" class="validation-error">
+                  {{ "DOCUMENT_IS_REQUIRED" | translate }}
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4: Queued Files List -->
+        @if(fileInputs.controls.length > 0){
+        <div class="form-section-header mt-4">
+          <mat-icon class="section-icon">format_list_bulleted</mat-icon>
+          <span class="section-title">Selected Documents ({{ fileInputs.controls.length }})</span>
+        </div>
+
+        <div class="form-section-body">
+          <div class="row g-3">
+            <div class="col-12 col-lg-8">
+              <div class="files-queue-list d-flex flex-column gap-2" formArrayName="files">
+                @for(file of fileInputs.controls; let i = $index; track $index){
+                <div class="file-queue-item p-2 d-flex align-items-center justify-content-between gap-2" [formGroupName]="i">
+                  <div class="d-flex align-items-center gap-2 flex-grow-1 min-w-0">
+                    <mat-icon class="file-item-icon">description</mat-icon>
+                    <div class="flex-grow-1">
+                      <input
+                        [dir]="langDir"
+                        formControlName="name"
+                        class="form-control form-control-sm"
+                        type="text"
+                        placeholder="{{ 'SELECTED_FILE_NAME' | translate }}"
+                      />
+                      @if(file.get('name')?.touched && file.get('name')?.errors && file.get('name')?.errors?.['required']){
+                      <div class="validation-error">
+                        {{ "NAME_IS_REQUIRED" | translate }}
+                      </div>
+                      }
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                    @if(file.get('message')?.value){
+                      @if(file.get('isSuccess')?.value){
+                      <span class="badge bg-success rounded-pill">
+                        {{ file.get("message")?.value }}
+                      </span>
+                      } @else {
+                      <span class="badge bg-danger rounded-pill">
+                        {{ file.get("message")?.value }}
+                      </span>
+                      }
+                    }
+
+                    <button
+                      mat-icon-button
+                      class="btn-file-delete"
+                      type="button"
+                      (click)="removeFile(i)"
+                      matTooltip="Remove file"
+                    >
+                      @if(file.get('isLoading')?.value){
+                      <mat-icon class="action-icon spin-icon">hourglass_empty</mat-icon>
+                      } @else {
+                      <mat-icon class="action-icon">delete</mat-icon>
+                      }
+                    </button>
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+
+        <!-- Section 5: Upload Results Summary -->
+        @if(resultArray.length > 0){
+        <div class="form-section-header mt-4">
+          <mat-icon class="section-icon">task_alt</mat-icon>
+          <span class="section-title">Upload Results</span>
+        </div>
+
+        <div class="form-section-body">
+          <div class="row g-2">
+            <div class="col-12 col-lg-8">
+              <div class="results-list d-flex flex-column gap-2">
+                @for(file of resultArray; let i = $index; track $index){
+                <div class="result-item p-2 d-flex align-items-center justify-content-between gap-2">
+                  <div class="d-flex align-items-center gap-2">
+                    <mat-icon [class.text-success]="file.isSuccess" [class.text-danger]="!file.isSuccess">
+                      {{ file.isSuccess ? 'check_circle' : 'error' }}
+                    </mat-icon>
+                    <span class="result-file-name">{{ file.name }}</span>
+                  </div>
+                  <div>
+                    @if(file.isSuccess){
+                    <span class="badge bg-success rounded-pill">{{ file.message }}</span>
+                    } @else {
+                    <span class="badge bg-danger rounded-pill">{{ file.message }}</span>
+                    }
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+
+        <!-- Form Footer Actions -->
+        <div class="form-footer-actions mt-4 pt-3 d-flex align-items-center gap-2">
+          <button
+            [dir]="langDir"
+            class="btn-save-main"
+            matButton="filled"
+            (click)="saveFilesAndDocument()"
+            cdkFocusInitial
+          >
+            <mat-icon class="medium-icon">save</mat-icon>
+            <span>{{ "SAVE" | translate }}</span>
+          </button>
+          <button
+            [dir]="langDir"
+            type="button"
+            class="btn-cancel-main"
+            matButton="filled"
+            [routerLink]="['/']"
+          >
+            <mat-icon class="medium-icon">cancel</mat-icon>
+            <span>{{ "CANCEL" | translate }}</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  @if(isLoading){
+  <div class="spinner-container">
+    <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+    </mat-progress-spinner>
+  </div>
+  }
+</section>

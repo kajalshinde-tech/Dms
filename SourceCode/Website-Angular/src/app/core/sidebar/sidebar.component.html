@@ -1,0 +1,81 @@
+<div>
+  <!-- Left Sidebar -->
+  <aside id="leftsidebar" class="sidebar" (mouseenter)="mouseHover()" (mouseleave)="mouseOut()">
+    <!-- Mobile Sidebar Drawer Header (Only visible on mobile screens) -->
+    <div class="mobile-sidebar-header d-flex d-md-none align-items-center justify-content-between px-3 py-3 border-bottom border-secondary border-opacity-25">
+      <div class="d-flex align-items-center gap-2">
+        <span class="brand-title fw-bold text-white fs-6">DOXCRAFT</span>
+      </div>
+      <button
+        type="button"
+        class="btn-close-sidebar bg-transparent border-0 p-1 text-white"
+        (click)="closeMobileSidebar()"
+        aria-label="Close Sidebar"
+      >
+        <mat-icon class="align-middle">close</mat-icon>
+      </button>
+    </div>
+
+    <!-- Menu -->
+    <div class="menu">
+      <ng-scrollbar [style.height]="listMaxHeight + 'px'" visibility="hover">
+        <ul id="sidebarnav" class="list">
+          <!-- Mobile Quick Actions Entry in Sidebar -->
+          <li class="d-md-none mobile-quick-entry">
+            <div class="header">QUICK ACTIONS</div>
+            <a class="menu-top cursor-pointer" (click)="openThemeCustomizer()">
+              <mat-icon class="medium-icon fs-6 align-middle me-1 sidebar-icon">palette</mat-icon>
+              <span class="hide-menu">Theme Customizer</span>
+            </a>
+          </li>
+
+          <!-- Top Most level menu -->
+          @for (sidebarItem of sidebarItems; track $index) {
+          <li [routerLinkActiveOptions]="{ exact: true }" *hasClaim="sidebarItem.hasClaims"
+            [routerLinkActive]="sidebarItem.submenu.length !== 0 ? 'active' : 'active-top'">
+            @if (sidebarItem.groupTitle ) {
+            <div class="header">{{sidebarItem.title | translate}}</div>
+            } @else {
+            <a [routerLink]="sidebarItem.class === '' ? [sidebarItem.path] : null" [ngClass]="[sidebarItem.class]"
+              (click)="callToggleMenu($event, sidebarItem.submenu.length)" class="menu-top">
+              <mat-icon class="medium-icon fs-6 align-middle me-1 sidebar-icon">{{sidebarItem.icon}}</mat-icon>
+              <span class="hide-menu">{{sidebarItem.title | translate}}
+              </span>
+            </a>
+            }
+            <!-- First level menu -->
+            @if (sidebarItem.submenu.length > 0) {
+            <ul class="ml-menu">
+              @for (sidebarSubItem1 of sidebarItem.submenu; track sidebarSubItem1) {
+              <li *hasClaim="sidebarSubItem1.hasClaims"
+                [routerLinkActive]="sidebarSubItem1.submenu.length > 0 ? '' : 'active'">
+                <a [routerLink]="sidebarSubItem1.submenu.length > 0 ? null : [sidebarSubItem1.path]"
+                  (click)="callToggleMenu($event,sidebarSubItem1.submenu.length)" [ngClass]="[sidebarSubItem1.class]">
+                  {{sidebarSubItem1.title | translate}}
+                </a>
+                <!-- Second level menu -->
+                @if (sidebarSubItem1.submenu.length > 0) {
+                <ul class="ml-menu-2">
+                  @for (sidebarSubItem2 of sidebarSubItem1.submenu; track sidebarSubItem2) {
+                  <li [routerLinkActive]="sidebarSubItem2.submenu.length > 0 ? '' : 'active'">
+                    <a [routerLink]="sidebarSubItem2.submenu.length > 0 ? null : [sidebarSubItem2.path]"
+                      (click)="callToggleMenu($event,sidebarSubItem2.submenu.length)"
+                      [ngClass]="[sidebarSubItem2.class]">
+                      {{sidebarSubItem2.title | translate}}
+                    </a>
+                    <!-- Third level menu -->
+                  </li>
+                  }
+                </ul>
+                }
+              </li>
+              }
+            </ul>
+            }
+          </li>
+          }
+        </ul>
+      </ng-scrollbar>
+    </div>
+  </aside>
+</div>

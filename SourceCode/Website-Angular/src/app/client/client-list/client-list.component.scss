@@ -1,0 +1,427 @@
+// -------------------------------------------------------------
+// Client List Component Styles (Datatable, Toolbar & Paginator)
+// -------------------------------------------------------------
+
+.page-header-row {
+  margin-bottom: 0.75rem;
+
+  @media (max-width: 575.98px) {
+    margin-bottom: 0.5rem;
+  }
+
+  .page-title {
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: var(--app-text-color, #0f172a) !important;
+    letter-spacing: -0.01em !important;
+    line-height: 1.25 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+  }
+
+  .page-title-icon {
+    color: var(--app-primary-color, #059669) !important;
+    font-size: 20px !important;
+    width: 20px !important;
+    height: 20px !important;
+    line-height: 20px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-right: 4px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+// -------------------------------------------------------------
+// Action / Add Button
+// -------------------------------------------------------------
+.btn-add-main {
+  height: 34px !important;
+  padding: 0 14px !important;
+  border-radius: 6px !important;
+  background-color: var(--app-primary-color, #059669) !important;
+  color: #ffffff !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  border: none !important;
+  box-shadow: 0 1px 4px rgba(5, 150, 105, 0.25) !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+
+  &:hover {
+    background-color: var(--primary-hover, #047857) !important;
+  }
+
+  mat-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+// -------------------------------------------------------------
+// Integrated Search Toolbar Inside Card
+// -------------------------------------------------------------
+.card-search-toolbar,
+.doc-filter-card {
+  background: #ffffff;
+
+  .filter-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .filter-icon {
+      position: absolute;
+      left: 10px;
+      color: #94a3b8;
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      pointer-events: none;
+    }
+
+    .filter-control {
+      padding-left: 32px;
+      padding-right: 28px;
+    }
+
+    .btn-filter-clear {
+      position: absolute;
+      right: 6px;
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      width: 20px;
+      height: 20px;
+
+      &:hover {
+        color: #ef4444;
+      }
+
+      mat-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+
+  .filter-control {
+    height: 36px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    background-color: #f8fafc;
+    transition: all 0.2s ease;
+    color: #1e293b;
+
+    &:focus {
+      background-color: #ffffff;
+      border-color: var(--app-primary-color, #059669);
+      box-shadow: 0 0 0 2.5px rgba(5, 150, 105, 0.12);
+      outline: none;
+    }
+  }
+
+  .btn-clear-all {
+    height: 36px;
+    padding: 0 12px;
+    background-color: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    color: #64748b;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background-color: #fee2e2;
+      border-color: #fca5a5;
+      color: #dc2626;
+    }
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+// -------------------------------------------------------------
+// Datatable Card & Layout
+// -------------------------------------------------------------
+.doc-table-card {
+  background: #ffffff;
+  border: 1px solid var(--app-border-color, #e2e8f0);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+  .doc-table-wrapper {
+    position: relative;
+    width: 100%;
+
+    .doc-table-scroll-container {
+      overflow-x: auto;
+      overflow-y: visible;
+      width: 100%;
+    }
+  }
+
+  .doc-modern-table {
+    border-collapse: separate;
+    border-spacing: 0;
+
+    .doc-table-header-row {
+      background: #f8fafc;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+
+      th {
+        font-size: 0.76rem !important;
+        font-weight: 700 !important;
+        color: #475569 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.03em !important;
+        padding: 10px 14px !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        white-space: nowrap !important;
+      }
+    }
+
+    .doc-table-row {
+      transition: background-color 0.15s ease;
+
+      &:hover {
+        background-color: #f8fafc !important;
+      }
+
+      td {
+        padding: 9px 14px !important;
+        border-bottom: 1px solid #f1f5f9 !important;
+        font-size: 0.82rem !important;
+        color: #334155;
+        vertical-align: middle !important;
+      }
+    }
+
+    // Column specifics
+    .table-col-action {
+      width: 90px;
+      min-width: 90px;
+    }
+
+    .table-col-name {
+      min-width: 200px;
+
+      .client-avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        background: var(--app-primary-light, rgba(5, 150, 105, 0.1));
+        color: var(--app-primary-color, #059669);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        .avatar-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+        }
+      }
+
+      .client-name-text {
+        font-weight: 600;
+        color: #0f172a;
+        font-size: 0.84rem;
+      }
+    }
+
+    .table-col-person {
+      min-width: 160px;
+
+      .text-person {
+        color: #475569;
+        font-size: 0.82rem;
+
+        .person-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+          color: #64748b;
+          flex-shrink: 0;
+        }
+      }
+    }
+
+    .table-col-email {
+      min-width: 220px;
+
+      .text-email {
+        color: #475569;
+        font-size: 0.82rem;
+
+        .email-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+          color: #0284c7;
+          flex-shrink: 0;
+        }
+
+        .email-link {
+          color: #2563eb;
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+
+    .table-col-phone {
+      min-width: 150px;
+
+      .text-phone {
+        color: #475569;
+        font-size: 0.82rem;
+
+        .phone-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+          color: #10b981;
+          flex-shrink: 0;
+        }
+      }
+    }
+  }
+}
+
+// -------------------------------------------------------------
+// Action Icon Buttons (Edit & Delete)
+// -------------------------------------------------------------
+.btn-action-edit,
+.btn-action-delete {
+  width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  border-radius: 6px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+
+  .action-icon {
+    font-size: 15px !important;
+    width: 15px !important;
+    height: 15px !important;
+    line-height: 15px !important;
+  }
+}
+
+.btn-action-edit {
+  background-color: var(--app-primary-color, #059669) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) !important;
+
+  &:hover {
+    filter: brightness(0.9);
+  }
+}
+
+.btn-action-delete {
+  background-color: #ffffff !important;
+  color: #dc2626 !important;
+  border: 1px solid #fee2e2 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+
+  &:hover {
+    background-color: #fee2e2 !important;
+    color: #b91c1c !important;
+  }
+}
+
+// -------------------------------------------------------------
+// Empty State
+// -------------------------------------------------------------
+.empty-state-wrapper {
+  .empty-state-icon {
+    mat-icon {
+      font-size: 38px;
+      width: 38px;
+      height: 38px;
+      color: #94a3b8;
+    }
+  }
+
+  .empty-state-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #334155;
+  }
+
+  .empty-state-desc {
+    font-size: 0.8rem;
+  }
+}
+
+// -------------------------------------------------------------
+// Custom Mat Paginator
+// -------------------------------------------------------------
+::ng-deep {
+  .doc-custom-paginator {
+    background: #f8fafc !important;
+    border-top: 1px solid #e2e8f0 !important;
+
+    .mat-mdc-paginator-container {
+      padding: 4px 12px !important;
+      min-height: 42px !important;
+      font-size: 0.8rem !important;
+    }
+
+    .mat-mdc-paginator-page-size-select {
+      margin: 0 4px !important;
+    }
+  }
+}
+
+// -------------------------------------------------------------
+// Loading Spinner Overlay
+// -------------------------------------------------------------
+.spinner-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}

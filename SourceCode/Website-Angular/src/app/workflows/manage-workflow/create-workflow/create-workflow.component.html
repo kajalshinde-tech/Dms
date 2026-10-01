@@ -1,0 +1,77 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized Page Header -->
+    <div class="page-header-row mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">account_tree</mat-icon>
+        <span class="mb-0 page-title">
+          {{ (!currentWorkflow?.id ? 'ADD_WORKFLOW' : 'EDIT_WORKFLOW') | translate }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Step 1 Form Card -->
+    <div class="form-container-wrapper">
+      <form [formGroup]="workFormGroup">
+        <div class="doc-form-card compact-card">
+          <!-- Step Indicator -->
+          <div class="step-indicator-bar mb-3 pb-2 border-bottom d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+              <span class="step-badge active">1</span>
+              <span class="step-label font-weight-bold">{{ "WORKFLOW_DETAILS" | translate }}</span>
+            </div>
+            <span class="text-muted fs-7">Step 1 of 3</span>
+          </div>
+
+          <div class="workflow-form-grid">
+            <!-- Workflow Name -->
+            <div class="workflow-field-group">
+              <label for="name" class="form-label">
+                {{ "NAME" | translate }} <span class="text-danger">*</span>
+              </label>
+              <div class="field-input-wrapper">
+                <mat-icon class="field-icon">account_tree</mat-icon>
+                <input id="name" class="form-control field-control" placeholder="{{ 'ENTER_THE_WORKFLOW_NAME' | translate }}"
+                  formControlName="name" type="text" required />
+              </div>
+              @if (workFormGroup.get('name')?.touched && workFormGroup.get('name')?.errors?.['required']) {
+              <div class="text-danger small mt-1">
+                {{ "NAME_IS_REQUIRED" | translate }}
+              </div>
+              }
+            </div>
+
+            <!-- Workflow Description -->
+            <div class="workflow-field-group">
+              <label for="description" class="form-label">
+                {{ "DESCRIPTION" | translate }} <span class="text-danger">*</span>
+              </label>
+              <div class="field-input-wrapper">
+                <mat-icon class="field-icon">description</mat-icon>
+                <input id="description" class="form-control field-control" placeholder="{{ 'ENTER_THE_WORKFLOW_DESCRIPTION' | translate }}"
+                  formControlName="description" type="text" required />
+              </div>
+              @if (workFormGroup.get('description')?.touched && workFormGroup.get('description')?.errors?.['required']) {
+              <div class="text-danger small mt-1">
+                {{ "DESCRIPTION_IS_REQUIRED" | translate }}
+              </div>
+              }
+            </div>
+          </div>
+
+          <!-- Footer Action Buttons -->
+          <div class="form-footer-actions d-flex align-items-center gap-2 mt-3 pt-3">
+            <button class="btn-save-main" matButton="filled" (click)="saveWorkflow()" cdkFocusInitial>
+              <span>{{ "NEXT" | translate }}</span>
+              <mat-icon class="medium-icon fs-5">arrow_forward</mat-icon>
+            </button>
+            <button type="button" class="btn-cancel-main" matButton="filled" [routerLink]="['/workflow-settings']">
+              <mat-icon class="medium-icon">cancel</mat-icon>
+              <span>{{ "CANCEL" | translate }}</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,46 @@
+<section class="content ai-document-generator-page">
+  <div class="container-fluid">
+    <!-- 1. Standardized SaaS Page Header (Matching Document View Format) -->
+    <div class="page-header-row d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="header-left-box">
+        <div class="header-icon-wrapper">
+          <mat-icon class="page-title-icon">auto_awesome</mat-icon>
+        </div>
+        <div>
+          <span class="page-title">
+            {{ "AI_DOCUMENT_GENERATOR" | translate }}
+          </span>
+          <div class="page-subtitle">AI-assisted intelligent document synthesis and template-driven generation</div>
+        </div>
+      </div>
+
+      <!-- Segmented Navigation Button Group -->
+      <div class="d-flex align-items-center gap-2">
+        <div class="modern-btn-group" role="group">
+          <button type="button" class="btn-group-item is-active" [routerLink]="['/ai-document-generator']" [matTooltip]="'AI_DOCUMENT_GENERATOR' | translate">
+            <mat-icon class="btn-group-icon">auto_awesome</mat-icon>
+            <span class="btn-group-text">{{ "AI_DOCUMENT_GENERATOR" | translate }}</span>
+          </button>
+          <button type="button" class="btn-group-item" [routerLink]="['/ai-document-generator-list']" [matTooltip]="'AI_DOCUMENT_GENERATOR_LIST' | translate">
+            <mat-icon class="btn-group-icon">format_list_bulleted</mat-icon>
+            <span class="btn-group-text">{{ "AI_DOCUMENT_GENERATOR_LIST" | translate }}</span>
+          </button>
+          <button type="button" class="btn-group-item" [routerLink]="['/aiprompttemplate']" [matTooltip]="'AI_PROMPT_TEMPLATES' | translate">
+            <mat-icon class="btn-group-icon">smart_toy</mat-icon>
+            <span class="btn-group-text">{{ "AI_PROMPT_TEMPLATES" | translate }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Split Workspace Grid -->
+    <div class="row g-3">
+      <div class="col-lg-6 col-12">
+        <app-ai-document-generator-form></app-ai-document-generator-form>
+      </div>
+      <div class="col-lg-6 col-12">
+        <app-ai-document-generator-preview></app-ai-document-generator-preview>
+      </div>
+    </div>
+  </div>
+</section>

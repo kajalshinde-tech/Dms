@@ -1,0 +1,259 @@
+// -------------------------------------------------------------
+// Manage Storage Setting Dialog Styles (Fully Responsive)
+// -------------------------------------------------------------
+
+.custom-dialog-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  max-height: 90vh;
+  width: 100%;
+}
+
+.dialog-header-strip {
+  background-color: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+  padding: 12px 16px;
+
+  .header-icon-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background-color: #ecfdf5;
+    color: var(--app-primary-color, #059669);
+    flex-shrink: 0;
+  }
+
+  .dialog-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.2;
+  }
+
+  .btn-dialog-close {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      line-height: 18px;
+    }
+
+    &:hover {
+      background-color: #fee2e2;
+      color: #ef4444;
+    }
+  }
+}
+
+.dialog-body-content {
+  overflow-y: auto;
+  max-height: calc(90vh - 60px);
+  padding: 16px 20px;
+  -webkit-overflow-scrolling: touch;
+
+  @media (max-width: 575.98px) {
+    padding: 12px 14px;
+  }
+}
+
+.extra-small {
+  font-size: 0.73rem;
+  color: #64748b;
+  line-height: 1.25;
+}
+
+.field-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 4px;
+}
+
+.form-field-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 38px;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+
+  &:focus-within {
+    border-color: var(--app-primary-color, #059669);
+    box-shadow: 0 0 0 2.5px rgba(5, 150, 105, 0.12);
+  }
+
+  .field-icon {
+    position: absolute;
+    left: 10px;
+    color: #64748b;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .field-input {
+    padding-left: 34px !important;
+    padding-right: 12px !important;
+    font-size: 0.81rem;
+    color: #1e293b;
+    height: 100%;
+    border: none;
+    background: transparent;
+    box-shadow: none !important;
+
+    &::placeholder {
+      color: #94a3b8;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .field-select {
+    display: flex;
+    align-items: center;
+    padding-left: 34px !important;
+    padding-right: 12px !important;
+    font-size: 0.81rem;
+    color: #1e293b;
+    height: 100%;
+    border: none;
+    background: transparent;
+    box-shadow: none !important;
+    cursor: pointer;
+
+    ::ng-deep .mat-mdc-select-trigger {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+// Feature Toggle Card
+.feature-toggle-card {
+  min-height: 38px;
+  border-color: #cbd5e1 !important;
+  background-color: #f8fafc !important;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+
+  &:hover {
+    border-color: #94a3b8 !important;
+    background-color: #f1f5f9 !important;
+  }
+
+  .feature-icon-circle {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background-color: #e2e8f0;
+    color: var(--app-primary-color, #059669);
+    flex-shrink: 0;
+
+    mat-icon {
+      font-size: 15px;
+      width: 15px;
+      height: 15px;
+      line-height: 15px;
+    }
+  }
+}
+
+// Dialog Action Buttons
+.dialog-actions-row {
+  border-color: #e2e8f0 !important;
+
+  .btn-save-action {
+    height: 34px;
+    padding: 0 16px;
+    border-radius: 6px;
+    background-color: var(--app-primary-color, #059669);
+    color: #ffffff;
+    border: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 2px rgba(5, 150, 105, 0.2);
+
+    .btn-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      line-height: 16px;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: var(--primary-hover, #047857);
+      box-shadow: 0 2px 5px rgba(5, 150, 105, 0.3);
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+  }
+
+  .btn-cancel-action {
+    height: 34px;
+    padding: 0 16px;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    font-size: 0.82rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    .btn-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      line-height: 16px;
+      color: #64748b;
+    }
+
+    &:hover {
+      background-color: #f1f5f9;
+      color: #1e293b;
+      border-color: #94a3b8;
+    }
+  }
+}

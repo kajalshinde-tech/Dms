@@ -1,0 +1,117 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Page Header Section -->
+    <div class="table-settings-header-card mb-3">
+      <div class="header-left-group">
+        <button mat-icon-button (click)="onSeetingsClose()" class="back-nav-btn" matTooltip="Back to Document View" type="button">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div class="header-icon-badge">
+          <mat-icon>tune</mat-icon>
+        </div>
+        <div>
+          <h1 class="page-main-title mb-0">{{ "TABLE_SETTINGS" | translate }}</h1>
+          <span class="page-subtitle">Customize column widths, visibility, and display order</span>
+        </div>
+      </div>
+      <div class="header-right-actions">
+        <button type="button" class="btn-cancel-top" (click)="onSeetingsClose()">
+          <mat-icon>close</mat-icon>
+          <span class="d-none d-sm-inline">{{ "CANCEL" | translate }}</span>
+        </button>
+        <button type="button" class="btn-save-top" (click)="saveTableSettings()">
+          <mat-icon>save</mat-icon>
+          <span>{{ "SAVE" | translate }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Settings Card -->
+    <div class="table-settings-main-card">
+      <form [formGroup]="tableSettingsForm">
+        <div class="table-responsive settings-table-container">
+          <table class="settings-table">
+            <thead>
+              <tr>
+                <th class="th-title">{{ 'HEADER_TITLE' | translate }}</th>
+                <th class="th-width text-center">{{ 'WIDTH' | translate }}</th>
+                <th class="th-visible text-center">{{ 'ISVISIBLE' | translate }}</th>
+                <th class="th-order text-center">{{ 'ORDERNUMBER' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody formArrayName="settingsArray">
+              @for (settings of settingsArray.controls; track i; let i=$index) {
+                <tr [formGroupName]="i" class="settings-row" [class.row-hidden]="!settings.get('isVisible')?.value">
+                  <!-- Column Title -->
+                  <td class="td-title">
+                    <div class="col-title-box">
+                      <div class="col-icon-badge">
+                        <mat-icon>view_column</mat-icon>
+                      </div>
+                      <div class="col-text-wrap">
+                        <span class="col-name">{{ settings.get('header')?.value | translate }}</span>
+                        <span class="col-key">{{ settings.get('key')?.value }}</span>
+                      </div>
+                    </div>
+                  </td>
+
+                  <!-- Width -->
+                  <td class="td-width text-center">
+                    <div class="input-unit-wrapper">
+                      <input formControlName="width" class="form-control settings-input width-input" type="number" min="30" max="1000" />
+                      <span class="input-unit-label">px</span>
+                    </div>
+                    @if (settings.get('width')?.touched && settings.get('width')?.errors?.['required']) {
+                      <div class="validation-error-text">
+                        {{ 'WIDTH_IS_REQUIRED' | translate }}
+                      </div>
+                    }
+                  </td>
+
+                  <!-- Is Visible -->
+                  <td class="td-visible text-center">
+                    <div class="checkbox-center-wrap">
+                      <mat-checkbox color="primary" formControlName="isVisible" class="settings-checkbox">
+                      </mat-checkbox>
+                    </div>
+                  </td>
+
+                  <!-- Order Number -->
+                  <td class="td-order text-center">
+                    <div class="order-input-wrapper">
+                      <input formControlName="orderNumber" class="form-control settings-input order-input" type="number" min="1" />
+                    </div>
+                    @if (settings.get('orderNumber')?.touched && settings.get('orderNumber')?.errors?.['required']) {
+                      <div class="validation-error-text">
+                        {{ 'ORDERNUMBER_IS_REQUIRED' | translate }}
+                      </div>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Card Footer -->
+        <div class="settings-card-footer">
+          <div class="footer-info text-muted">
+            <mat-icon class="info-icon">info_outline</mat-icon>
+            <span>Changes will apply immediately across your document table views.</span>
+          </div>
+          <div class="footer-buttons">
+            <button type="button" class="btn-cancel-custom" (click)="onSeetingsClose()">
+              <mat-icon>close</mat-icon>
+              <span>{{ "CANCEL" | translate }}</span>
+            </button>
+            <button type="button" class="btn-save-custom" (click)="saveTableSettings()" cdkFocusInitial>
+              <mat-icon>check_circle</mat-icon>
+              <span>{{ "SAVE" | translate }}</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+

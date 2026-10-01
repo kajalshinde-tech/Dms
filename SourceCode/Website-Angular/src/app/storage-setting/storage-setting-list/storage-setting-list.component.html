@@ -1,0 +1,160 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized Page Header -->
+    <div class="page-header-row mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">cloud_queue</mat-icon>
+        <span class="mb-0 page-title">
+          {{ "STORAGE_SETTINGS" | translate }}
+        </span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button (click)="onCreateStorageSetting()" type="button" class="btn-header-primary" matTooltip="{{ 'ADD_STORAGE_SETTING' | translate }}">
+          <mat-icon class="btn-icon">add</mat-icon>
+          <span class="d-none d-sm-inline">{{ "ADD_STORAGE_SETTING" | translate }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Table Card -->
+    <div class="doc-table-card">
+      <div class="table-responsive">
+        <table class="modern-doc-table w-100" mat-table [dataSource]="storageSettings">
+          
+          <!-- 1. Action Column -->
+          <ng-container matColumnDef="action">
+            <th class="table-column-80" mat-header-cell *matHeaderCellDef>{{ "ACTION" | translate }}</th>
+            <td class="table-column-80" mat-cell *matCellDef="let storageSetting">
+              <button type="button" class="btn-action-edit" (click)="editStorageSetting(storageSetting)"
+                matTooltip="{{ 'EDIT' | translate }}">
+                <mat-icon class="action-icon">edit</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <!-- 2. Storage Type Column -->
+          <ng-container matColumnDef="storageType">
+            <th mat-header-cell *matHeaderCellDef>{{ "STORAGE_TYPE" | translate }}</th>
+            <td mat-cell *matCellDef="let storageSetting">
+              <div class="d-flex align-items-center gap-2">
+                <div class="type-icon-circle" [class.local-type]="storageSetting.storageType.toString() === storageType.LOCAL.toString()">
+                  <mat-icon class="type-icon">{{ storageSetting.storageType.toString() === storageType.LOCAL.toString() ? 'folder' : 'cloud' }}</mat-icon>
+                </div>
+                <span class="font-weight-600 text-dark">{{ storageSetting.storageType | storageType:'' }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- 3. Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>{{ "NAME" | translate }}</th>
+            <td mat-cell *matCellDef="let storageSetting">
+              @if (storageSetting.isEditing) {
+                <div class="table-input-box">
+                  <input [(ngModel)]="storageSetting.name" class="form-control form-control-sm table-input"
+                    placeholder="Enter name" [readonly]="storageSetting.storageType.toString() === storageType.LOCAL.toString()" />
+                </div>
+              } @else {
+                <span class="font-weight-500 text-secondary">{{ storageSetting.name }}</span>
+              }
+            </td>
+          </ng-container>
+
+          <!-- 4. Configuration Column -->
+          <ng-container matColumnDef="jsonValue">
+            <th mat-header-cell *matHeaderCellDef>{{ "CONFIGURATION" | translate }}</th>
+            <td mat-cell *matCellDef="let storageSetting">
+              @if (storageSetting.storageType.toString() !== storageType.LOCAL.toString()) {
+                <span class="badge-config-info" matTooltip="{{ storageSetting.jsonValue }}" matTooltipPosition="above">
+                  <mat-icon class="config-icon">info</mat-icon>
+                  <span>Config Details</span>
+                </span>
+              } @else {
+                <span class="text-muted extra-small">Default Local Disk</span>
+              }
+            </td>
+          </ng-container>
+
+          <!-- 5. Is Default Column -->
+          <ng-container matColumnDef="isDefault">
+            <th mat-header-cell *matHeaderCellDef>{{ "IS_DEFAULT" | translate }}</th>
+            <td mat-cell *matCellDef="let storageSetting">
+              @if (storageSetting.isEditing) {
+                <mat-slide-toggle color="primary" [(ngModel)]="storageSetting.isDefault"
+                  [disabled]="storageSettings.length === 1">
+                </mat-slide-toggle>
+              } @else {
+                @if (storageSetting.isDefault) {
+                  <span class="status-pill status-active">
+                    <mat-icon class="pill-icon">check_circle</mat-icon>
+                    {{ "YES" | translate }}
+                  </span>
+                } @else {
+                  <span class="status-pill status-inactive">
+                    <mat-icon class="pill-icon">cancel</mat-icon>
+                    {{ "NO" | translate }}
+                  </span>
+                }
+              }
+            </td>
+          </ng-container>
+
+          <!-- 6. Enable Encryption Column -->
+          <ng-container matColumnDef="enableEncryption">
+            <th mat-header-cell *matHeaderCellDef>{{ "ENABLE_ENCRYPTION" | translate }}</th>
+            <td mat-cell *matCellDef="let storageSetting">
+              @if (storageSetting.isEditing) {
+                <mat-slide-toggle color="primary" [(ngModel)]="storageSetting.enableEncryption">
+                </mat-slide-toggle>
+              } @else {
+                @if (storageSetting.enableEncryption) {
+                  <span class="status-pill status-active">
+                    <mat-icon class="pill-icon">lock</mat-icon>
+                    {{ "YES" | translate }}
+                  </span>
+                } @else {
+                  <span class="status-pill status-inactive">
+                    <mat-icon class="pill-icon">lock_open</mat-icon>
+                    {{ "NO" | translate }}
+                  </span>
+                }
+              }
+            </td>
+          </ng-container>
+
+          <!-- 7. Update Column (Visible when editing) -->
+          <ng-container matColumnDef="update">
+            <th class="table-column-160" mat-header-cell *matHeaderCellDef>{{ "UPDATE" | translate }}</th>
+            <td class="table-column-160" mat-cell *matCellDef="let storageSetting">
+              @if (storageSetting.isEditing) {
+                <div class="d-flex align-items-center gap-2">
+                  <button type="button" class="btn-save-compact" (click)="saveStorageSetting(storageSetting)"
+                    matTooltip="{{ 'SAVE' | translate }}">
+                    <mat-icon class="btn-icon">save</mat-icon>
+                    <span>{{ "SAVE" | translate }}</span>
+                  </button>
+                  <button type="button" class="btn-cancel-compact" (click)="cancelEditing(storageSetting)"
+                    matTooltip="{{ 'CANCEL' | translate }}">
+                    <mat-icon class="btn-icon">close</mat-icon>
+                    <span>{{ "CANCEL" | translate }}</span>
+                  </button>
+                </div>
+              }
+            </td>
+          </ng-container>
+
+          <tr class="grid-header-row" mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr class="grid-body-row" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <tr *matNoDataRow class="mat-row">
+            <td colspan="7" class="p-4 text-center text-muted">
+              <div class="empty-state d-flex flex-column align-items-center justify-content-center py-3">
+                <mat-icon class="fs-2 text-muted mb-1">cloud_off</mat-icon>
+                <span class="fs-7 font-weight-bold">{{ "NO_DATA_FOUND" | translate }}</span>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

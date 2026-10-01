@@ -1,0 +1,135 @@
+<div class="login-wrapper">
+  <!-- Left Side: Login Form Panel (Compact, No Scroll) -->
+  <div class="auth-panel">
+    <div class="auth-card">
+      
+      <!-- Company Logo Header -->
+      <div class="brand-header">
+        @if (logoUrl) {
+          <img [src]="logoUrl" alt="Logo" class="logo-img" />
+        } @else {
+          <img src="/images/logo-small.png" alt="Logo" class="logo-img" />
+        }
+      </div>
+
+      <!-- Welcome Section -->
+      <div class="welcome-section">
+        <h2 class="welcome-title">Welcome Back</h2>
+        <p class="welcome-desc">Sign in to manage and secure your organizational documents.</p>
+      </div>
+
+      <!-- Form Section -->
+      <form [formGroup]="loginFormGroup" (submit)="onLoginSubmit()" class="login-form">
+        <!-- Email Field -->
+        <div class="form-field-group">
+          <label class="field-label">{{ "EMAIL" | translate }}</label>
+          <div class="input-container" [class.has-error]="loginFormGroup.get('userName')?.touched && loginFormGroup.get('userName')?.invalid">
+            <mat-icon class="input-icon">alternate_email</mat-icon>
+            <input
+              formControlName="userName"
+              class="custom-input"
+              type="email"
+              placeholder="admin@gmail.com"
+              autocomplete="email"
+            />
+          </div>
+
+          @if(loginFormGroup.get('userName')?.touched && loginFormGroup.get('userName')?.errors) {
+            <div class="validation-message">
+              @if(loginFormGroup.get('userName')?.errors?.['required']) {
+                <div class="error-text">
+                  <mat-icon class="error-icon">info</mat-icon>
+                  {{ "EMAIL_IS_REQUIRED" | translate }}
+                </div>
+              }
+              @if(loginFormGroup.get('userName')?.errors?.['email']) {
+                <div class="error-text">
+                  <mat-icon class="error-icon">info</mat-icon>
+                  {{ "PLEASE_ENTER_VALID_EMAIL" | translate }}
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-field-group">
+          <label class="field-label">{{ "PASSWORD" | translate }}</label>
+          <div class="input-container" [class.has-error]="loginFormGroup.get('password')?.touched && loginFormGroup.get('password')?.invalid">
+            <mat-icon class="input-icon">lock_outline</mat-icon>
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              class="custom-input"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+            />
+            <button
+              type="button"
+              class="toggle-password-btn"
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+            >
+              <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
+
+          @if(loginFormGroup.get('password')?.touched && loginFormGroup.get('password')?.errors?.['required']) {
+            <div class="validation-message">
+              <div class="error-text">
+                <mat-icon class="error-icon">info</mat-icon>
+                {{ "PASSWORD_IS_REQUIRED" | translate }}
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Submit CTA Button -->
+        <button
+          type="submit"
+          class="submit-cta-btn"
+          [disabled]="!loginFormGroup.valid || isLoading"
+        >
+          @if (isLoading) {
+            <span class="btn-spinner"></span>
+            <span>Signing in...</span>
+          } @else {
+            <mat-icon class="btn-icon">login</mat-icon>
+            <span>{{ "LOGIN" | translate }}</span>
+          }
+        </button>
+      </form>
+
+      <!-- Trust & Footer Info -->
+      <div class="auth-footer">
+        <div class="security-badge">
+          <mat-icon class="security-icon">verified_user</mat-icon>
+          <span>End-to-End Encrypted &bull; ISO 27001 Certified</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Right Side: Background Image Banner (Cover + Subtle Tagline Glass Card) -->
+  <div class="auth-bg">
+    <div class="bg-overlay"></div>
+    <div class="banner-bottom-overlay">
+      <div class="banner-glass-card">
+        <div class="banner-badge">
+          <span class="dot-live"></span>
+          <span>{{ companyTitle || 'Document Management System' }}</span>
+        </div>
+        <h3 class="banner-tagline-text">INNOVATIVE &bull; SECURE &bull; EFFICIENT</h3>
+        <p class="banner-sub-text">Empowering seamless enterprise document workflows & centralized compliance.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if(isLoading) {
+  <div class="spinner-container">
+    <mat-progress-spinner mode="indeterminate" diameter="56" strokeWidth="4">
+    </mat-progress-spinner>
+  </div>
+}

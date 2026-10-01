@@ -1,0 +1,41 @@
+<div class="custom-dialog-container">
+  <!-- Dialog Header -->
+  <div class="dialog-header-strip d-flex align-items-center justify-content-between p-3 border-bottom bg-light">
+    <div class="d-flex align-items-center gap-2">
+      <div class="dialog-header-icon-box">
+        <mat-icon class="dialog-header-icon">menu_book</mat-icon>
+      </div>
+      <div>
+        <h6 class="mb-0 dialog-title font-weight-700 text-dark">
+          {{ data.name }}
+        </h6>
+        <span class="badge-code-sm">{{ data.code }}</span>
+      </div>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <button *hasClaim="'MANAGE_PAGE_HELPER'" type="button" class="btn-action-edit" (click)="editPageHelper()"
+        matTooltip="{{ 'EDIT' | translate }}">
+        <mat-icon class="action-icon">edit</mat-icon>
+      </button>
+      <button type="button" class="btn-dialog-close" (click)="onCancel()"
+        matTooltip="{{ 'CLOSE' | translate }}">
+        <mat-icon class="close-icon">close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Dialog Body -->
+  <mat-dialog-content class="dialog-body-content p-3 p-md-4 m-0">
+    <div class="preview-content-card border rounded-3 p-3 bg-white">
+      <app-text-editor [hideToolBar]="true" [disabled]="true" [(ngModel)]="data.description"></app-text-editor>
+    </div>
+  </mat-dialog-content>
+
+  <!-- Dialog Footer -->
+  <div class="dialog-footer-strip p-3 border-top bg-light d-flex justify-content-end">
+    <button type="button" class="btn-close-action" (click)="onCancel()">
+      <mat-icon class="btn-icon">close</mat-icon>
+      <span>{{ "CLOSE" | translate }}</span>
+    </button>
+  </div>
+</div>

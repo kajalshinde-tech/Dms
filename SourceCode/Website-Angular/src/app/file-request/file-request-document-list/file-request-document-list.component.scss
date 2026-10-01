@@ -1,0 +1,193 @@
+// -------------------------------------------------------------
+// Nested File Request Document List Styles
+// -------------------------------------------------------------
+
+.nested-documents-section {
+  width: 100%;
+
+  .nested-header {
+    .nested-header-icon {
+      color: var(--app-primary-color, #059669);
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    .nested-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #334155;
+    }
+  }
+}
+
+.doc-nested-table-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.nested-table {
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+
+  .doc-table-header-row {
+    background: #f1f5f9 !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+
+    th {
+      font-size: 0.73rem !important;
+      font-weight: 700 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.03em !important;
+      color: #475569 !important;
+      padding: 10px 12px !important;
+      border-bottom: 1px solid #e2e8f0 !important;
+      background: #f1f5f9 !important;
+    }
+  }
+
+  .doc-table-row {
+    transition: background-color 0.15s ease;
+    border-bottom: 1px solid #f1f5f9;
+
+    &:hover {
+      background-color: #f8fafc !important;
+    }
+
+    td {
+      padding: 8px 12px !important;
+      font-size: 0.8rem !important;
+      color: #334155 !important;
+      vertical-align: middle !important;
+      border-bottom: 1px solid #f1f5f9 !important;
+    }
+  }
+
+  .table-col-action {
+    width: 90px;
+    min-width: 90px;
+  }
+
+  .table-col-file {
+    min-width: 200px;
+  }
+
+  .table-col-status {
+    min-width: 130px;
+  }
+
+  .table-col-date {
+    min-width: 140px;
+  }
+
+  .table-col-reason {
+    min-width: 160px;
+  }
+}
+
+// -------------------------------------------------------------
+// Action Buttons
+// -------------------------------------------------------------
+.btn-action-approve {
+  width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  border-radius: 6px !important;
+  background-color: #10b981 !important;
+  color: #ffffff !important;
+  padding: 0 !important;
+  border: none !important;
+  box-shadow: 0 1px 3px rgba(16, 185, 129, 0.3) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  &:hover {
+    background-color: #059669 !important;
+  }
+
+  .action-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+.btn-action-reject {
+  width: 28px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  border-radius: 6px !important;
+  background-color: #ffffff !important;
+  color: #dc2626 !important;
+  border: 1px solid #fee2e2 !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  &:hover {
+    background-color: #fef2f2 !important;
+    border-color: #fca5a5 !important;
+  }
+
+  .action-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+// -------------------------------------------------------------
+// Links & Badges
+// -------------------------------------------------------------
+.doc-link {
+  color: var(--app-primary-color, #059669);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  .file-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: var(--app-primary-color, #059669);
+  }
+}
+
+.text-date,
+.text-reason {
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.badge-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid currentColor;
+  background: rgba(255, 255, 255, 0.9);
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: currentColor;
+    flex-shrink: 0;
+  }
+}

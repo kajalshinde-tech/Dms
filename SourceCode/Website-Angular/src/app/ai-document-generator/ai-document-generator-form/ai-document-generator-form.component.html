@@ -1,0 +1,236 @@
+<div class="ai-panel-card">
+  <!-- Panel Header -->
+  <div class="ai-panel-header">
+    <div class="d-flex align-items-center gap-2">
+      <div class="ai-header-badge">
+        <mat-icon>tune</mat-icon>
+      </div>
+      <div>
+        <h6 class="ai-panel-title mb-0">Prompt Configuration</h6>
+        <p class="ai-panel-subtitle mb-0">Select template, set parameters & prepare prompt</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel Body -->
+  <div class="ai-panel-body">
+    <form [formGroup]="aiPromtForm">
+      <!-- 1. AI Prompt Template Selection -->
+      <div class="mb-3">
+        <label [dir]="langDir" class="form-label-custom">
+          <mat-icon class="label-icon">smart_toy</mat-icon>
+          <span>{{ 'SELECT_AI_PROMPT_TEMPLATE' | translate }}</span>
+        </label>
+        <mat-select [dir]="langDir" panelClass="mat-select-control" class="form-control doc-form-input"
+          formControlName="aIPromptTemplateId" placeholder="{{ 'SELECT_AI_PROMPT_TEMPLATE' | translate }}"
+          (selectionChange)="onAiPromptTemplateChange($event)">
+          <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
+          @for(aiPromptTemplate of aiPromptTemplates; track aiPromptTemplate.id){
+          <mat-option [value]="aiPromptTemplate.id">
+            {{ aiPromptTemplate.name }}
+          </mat-option>
+          }
+        </mat-select>
+      </div>
+
+      <!-- 2. Dynamic Keywords if present -->
+      @if (keywords.controls.length > 0) {
+      <div class="keywords-container mb-3" formArrayName="keywords">
+        <div class="keywords-header">
+          <mat-icon class="kw-icon">extension</mat-icon>
+          <span>Template Variables</span>
+        </div>
+        <div class="row g-2">
+          @for(keyword of keywords.controls; let i=$index; track i){
+          <div class="col-md-6 col-12" [formGroupName]="i">
+            <label [dir]="langDir" class="kw-label">
+              {{ keyword.get('keyword')?.value | titlecase }}
+            </label>
+            <input [dir]="langDir" formControlName="keywordValue" (input)="onInputChange(i,$event)"
+              class="form-control doc-form-input form-control-sm"
+              placeholder="Enter {{ keyword.get('keyword')?.value }}...">
+          </div>
+          }
+        </div>
+      </div>
+      }
+
+      <!-- 3. Prompt Input -->
+      <div class="mb-3">
+        <div class="d-flex align-items-center justify-content-between mb-1">
+          <label [dir]="langDir" class="form-label-custom mb-0">
+            <mat-icon class="label-icon">edit_note</mat-icon>
+            <span>{{ 'PROMPT_INPUT' | translate }}</span>
+            <span class="required-star">*</span>
+          </label>
+        </div>
+
+        <div class="prompt-hint-box mb-2">
+          <mat-icon class="hint-icon">info_outline</mat-icon>
+          <span class="hint-text">{{ 'REPLACE_WORD' | translate }}</span>
+        </div>
+
+        <textarea [dir]="langDir" formControlName="promptInput" rows="5"
+          class="form-control doc-form-input prompt-textarea"
+          placeholder="Enter prompt instructions for AI document generation..."></textarea>
+
+        @if(aiPromtForm.get('promptInput')?.dirty && aiPromtForm.get('promptInput')?.touched){
+          @if(aiPromtForm.get('promptInput')?.errors?.['required']){
+          <div class="field-error-text mt-1 d-flex align-items-center gap-1">
+            <mat-icon class="err-icon">error_outline</mat-icon>
+            <span>{{ 'REPLACE_WORD' | translate }}</span>
+          </div>
+          }
+          @if(aiPromtForm.get('promptInput')?.errors?.['keywordExists']){
+          <div class="field-error-text mt-1 d-flex align-items-center gap-1">
+            <mat-icon class="err-icon">error_outline</mat-icon>
+            <span>{{ 'REPLACE_WORD' | translate }}</span>
+          </div>
+          }
+        }
+      </div>
+
+      <!-- 4. Generation Settings Grid -->
+      <div class="settings-group-box mb-3">
+        <div class="row g-3">
+          <!-- Language -->
+          <div class="col-sm-6">
+            <label [dir]="langDir" class="form-label-custom">
+              <mat-icon class="label-icon">language</mat-icon>
+              <span>{{ 'AI_LANGUAGE' | translate }}</span>
+            </label>
+            <mat-select [dir]="langDir" panelClass="mat-select-control" class="form-control doc-form-input"
+              formControlName="language" placeholder="{{ 'SELECT_LANGUAGE' | translate }}">
+              <mat-option value="az-AZ">Azerbaijani (Azerbaijan)</mat-option>
+              <mat-option value="ar-AE">Arabic</mat-option>
+              <mat-option value="cmn-CN">Chinese (Mandarin)</mat-option>
+              <mat-option value="hr-HR">Croatian (Croatia)</mat-option>
+              <mat-option value="cs-CZ">Czech (Czech Republic)</mat-option>
+              <mat-option value="da-DK">Danish (Denmark)</mat-option>
+              <mat-option value="nl-NL">Dutch (Netherlands)</mat-option>
+              <mat-option value="en-US">English (USA)</mat-option>
+              <mat-option value="en-GB">English (UK)</mat-option>
+              <mat-option value="et-EE">Estonian (Estonia)</mat-option>
+              <mat-option value="fi-FI">Finnish (Finland)</mat-option>
+              <mat-option value="fr-FR">French (France)</mat-option>
+              <mat-option value="de-DE">German (Germany)</mat-option>
+              <mat-option value="el-GR">Greek (Greece)</mat-option>
+              <mat-option value="he-IL">Hebrew (Israel)</mat-option>
+              <mat-option value="hi-IN">Hindi (India)</mat-option>
+              <mat-option value="hu-HU">Hungarian (Hungary)</mat-option>
+              <mat-option value="is-IS">Icelandic (Iceland)</mat-option>
+              <mat-option value="id-ID">Indonesian (Indonesia)</mat-option>
+              <mat-option value="it-IT">Italian (Italy)</mat-option>
+              <mat-option value="ja-JP">Japanese (Japan)</mat-option>
+              <mat-option value="kk-KZ">Kazakh (Kazakhistan)</mat-option>
+              <mat-option value="ko-KR">Korean (South Korea)</mat-option>
+              <mat-option value="lt-LT">Lithuanian (Lithuania)</mat-option>
+              <mat-option value="ms-MY">Malay (Malaysia)</mat-option>
+              <mat-option value="nb-NO">Norwegian (Norway)</mat-option>
+              <mat-option value="fa_IR">Persian</mat-option>
+              <mat-option value="pl-PL">Polish (Poland)</mat-option>
+              <mat-option value="pt-BR">Portuguese (Brazil)</mat-option>
+              <mat-option value="pt-PT">Portuguese (Portugal)</mat-option>
+              <mat-option value="ro-RO">Romanian (Romania)</mat-option>
+              <mat-option value="ru-RU">Russian (Russia)</mat-option>
+              <mat-option value="sk-SK">Slovak (Slovakia)</mat-option>
+              <mat-option value="sl-SI">Slovenian (Slovenia)</mat-option>
+              <mat-option value="es-ES">Spanish (Spain)</mat-option>
+              <mat-option value="es-MX">Spanish (Mexico)</mat-option>
+              <mat-option value="sw-KE">Swahili (Kenya)</mat-option>
+              <mat-option value="sv-SE">Swedish (Sweden)</mat-option>
+              <mat-option value="tr-TR">Turkish (Turkey)</mat-option>
+              <mat-option value="th-TH">Thai (Thailand)</mat-option>
+              <mat-option value="vi-VN">Vietnamese (Vietnam)</mat-option>
+            </mat-select>
+          </div>
+
+          <!-- Max Length -->
+          <div class="col-sm-6">
+            <label [dir]="langDir" class="form-label-custom">
+              <mat-icon class="label-icon">format_shapes</mat-icon>
+              <span>{{ 'MAXIMUM_LENGTH' | translate }}</span>
+            </label>
+            <input [dir]="langDir" formControlName="maximumLength" class="form-control doc-form-input"
+              type="number" min="50" max="8000" placeholder="1000">
+          </div>
+
+          <!-- Creativity -->
+          <div class="col-sm-6">
+            <label [dir]="langDir" class="form-label-custom">
+              <mat-icon class="label-icon">psychology</mat-icon>
+              <span>{{ 'CREATIVITY' | translate }}</span>
+            </label>
+            <mat-select [dir]="langDir" panelClass="mat-select-control" class="form-control doc-form-input"
+              formControlName="creativity" placeholder="{{ 'CREATIVITY' | translate }}">
+              <mat-option value="0.25">Economic (0.25)</mat-option>
+              <mat-option value="0.5">Average (0.50)</mat-option>
+              <mat-option value="0.75">Good (0.75)</mat-option>
+              <mat-option value="1">Premium (1.00)</mat-option>
+            </mat-select>
+          </div>
+
+          <!-- Tone of Voice -->
+          <div class="col-sm-6">
+            <label [dir]="langDir" class="form-label-custom">
+              <mat-icon class="label-icon">record_voice_over</mat-icon>
+              <span>{{ 'TONE_OF_VOICE' | translate }}</span>
+            </label>
+            <mat-select [dir]="langDir" panelClass="mat-select-control" class="form-control doc-form-input"
+              formControlName="toneOfVoice" placeholder="{{ 'TONE_OF_VOICE' | translate }}">
+              <mat-option value="Professional">Professional</mat-option>
+              <mat-option value="Funny">Funny</mat-option>
+              <mat-option value="Casual">Casual</mat-option>
+              <mat-option value="Excited">Excited</mat-option>
+              <mat-option value="Witty">Witty</mat-option>
+              <mat-option value="Sarcastic">Sarcastic</mat-option>
+              <mat-option value="Feminine">Feminine</mat-option>
+              <mat-option value="Masculine">Masculine</mat-option>
+              <mat-option value="Bold">Bold</mat-option>
+              <mat-option value="Dramatic">Dramatic</mat-option>
+              <mat-option value="Grumpy">Grumpy</mat-option>
+              <mat-option value="Secretive">Secretive</mat-option>
+              <mat-option value="other">Other</mat-option>
+            </mat-select>
+          </div>
+
+          <!-- Model Selection -->
+          <div class="col-12">
+            <label [dir]="langDir" class="form-label-custom">
+              <mat-icon class="label-icon">memory</mat-icon>
+              <span>{{ 'SELECT_MODEL' | translate }}</span>
+            </label>
+            <mat-select [dir]="langDir" panelClass="mat-select-control" class="form-control doc-form-input"
+              formControlName="selectedModel" placeholder="{{ 'SELECT_AI_MODEL' | translate }}">
+              <mat-option value="gemini-2.5-flash">GEMINI-2.5-FLASH</mat-option>
+              <mat-option value="gemini-2.5-flash-lite">GEMINI-2.5-FLASH-LITE</mat-option>
+              <mat-option value="gemini-1.5-flash">GEMINI-1.5-FLASH</mat-option>
+              <mat-option value="gemini-2.5-pro">GEMINI-2.5-PRO</mat-option>
+              <mat-option value="gemini-1.5-pro">GEMINI-1.5-PRO</mat-option>
+              <mat-option value="gpt-3.5-turbo">GPT-3.5-TURBO</mat-option>
+              <mat-option value="gpt-4">GPT-4 (High Capability)</mat-option>
+              <mat-option value="gpt-4o">GPT-4o (Multimodal Flagship)</mat-option>
+              <mat-option value="gpt-4o-mini">GPT-4o-mini (Fast & Intelligent)</mat-option>
+            </mat-select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Submit Button -->
+      <div class="d-flex align-items-center justify-content-start pt-2">
+        <button [dir]="langDir" type="button" class="btn-generate-ai" (click)="generate()" [disabled]="isLoadingResults">
+          <mat-icon class="btn-icon">bolt</mat-icon>
+          <span>{{ "GENERATE" | translate }}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Loading State -->
+  @if(isLoadingResults) {
+  <div class="ai-loading-overlay">
+    <mat-progress-spinner mode="indeterminate" diameter="48" strokeWidth="4"></mat-progress-spinner>
+    <span class="loading-label mt-2">Processing prompt with AI model...</span>
+  </div>
+  }
+</div>

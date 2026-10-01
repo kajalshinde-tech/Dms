@@ -1,0 +1,186 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized SaaS Page Header (No Question Mark Help Icon) -->
+    <div class="page-header-row mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">business</mat-icon>
+        <span class="mb-0 page-title">
+          {{ "CLIENTS" | translate }}
+        </span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button *hasClaim="'ADD_CLIENTS'" [routerLink]="['/client/manage']" class="primary btn-add-main" matButton="filled">
+          <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
+          <span class="d-none d-sm-inline ms-1">{{ "ADD_CLIENT" | translate }}</span>
+          <span class="d-inline d-sm-none ms-1">Add</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Unified Single Card (Integrated Search Toolbar + Datatable) -->
+    <div class="doc-table-card">
+      <!-- Integrated Top Search Toolbar -->
+      <div class="card-search-toolbar p-2 p-sm-3 border-bottom">
+        <div class="row g-2 align-items-center">
+          <div class="col-12 col-md-6 col-lg-5">
+            <div class="filter-input-wrapper">
+              <mat-icon class="filter-icon">search</mat-icon>
+              <input
+                class="form-control filter-control"
+                placeholder="Search clients by name, contact, email, or mobile..."
+                [(ngModel)]="searchFilter"
+                (input)="applyFilter(searchFilter)"
+              />
+              @if (searchFilter) {
+              <button type="button" class="btn-filter-clear" (click)="clearFilter()" matTooltip="Clear search">
+                <mat-icon>close</mat-icon>
+              </button>
+              }
+            </div>
+          </div>
+
+          <!-- Reset Button -->
+          @if (searchFilter) {
+          <div class="col-auto">
+            <button type="button" class="btn btn-clear-all" (click)="clearFilter()" matTooltip="Reset Search">
+              <mat-icon class="align-middle">refresh</mat-icon>
+              <span class="ms-1">Reset</span>
+            </button>
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Datatable Area -->
+      <div class="doc-table-wrapper">
+        <div class="doc-table-scroll-container">
+          <table mat-table [dataSource]="dataSource" matSort matSortActive="companyName" matSortDirection="asc" class="w-100 doc-modern-table">
+            
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+              <th class="table-col-action text-center" mat-header-cell *matHeaderCellDef>
+                {{ "ACTION" | translate }}
+              </th>
+              <td class="table-col-action text-center" mat-cell *matCellDef="let client">
+                <div class="d-flex align-items-center justify-content-center gap-1">
+                  <button mat-icon-button *hasClaim="'EDIT_CLIENTS'" [routerLink]="['/client/manage', client.id]"
+                    class="btn-action-edit" [matTooltip]="'EDIT' | translate">
+                    <mat-icon class="action-icon">edit</mat-icon>
+                  </button>
+                  <button mat-icon-button *hasClaim="'DELETE_CLIENTS'" (click)="deleteClient(client)"
+                    class="btn-action-delete" type="button" [matTooltip]="'DELETE' | translate">
+                    <mat-icon class="action-icon">delete</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Company / Person Name Column -->
+            <ng-container matColumnDef="companyName">
+              <th class="table-col-name" mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "COMPANY_PERSON_NAME" | translate }}
+              </th>
+              <td class="table-col-name" mat-cell *matCellDef="let client">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="client-avatar">
+                    <mat-icon class="avatar-icon">domain</mat-icon>
+                  </div>
+                  <span class="client-name-text">{{ client.companyName }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Contact Person Column -->
+            <ng-container matColumnDef="contactPerson">
+              <th class="table-col-person" mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "CONTACT_PERSON" | translate }}
+              </th>
+              <td class="table-col-person" mat-cell *matCellDef="let client">
+                @if (client.contactPerson) {
+                <div class="d-flex align-items-center gap-1 text-person">
+                  <mat-icon class="person-icon">person_outline</mat-icon>
+                  <span>{{ client.contactPerson }}</span>
+                </div>
+                } @else {
+                <span class="text-muted">-</span>
+                }
+              </td>
+            </ng-container>
+
+            <!-- Email Column -->
+            <ng-container matColumnDef="email">
+              <th class="table-col-email" mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "EMAIL" | translate }}
+              </th>
+              <td class="table-col-email" mat-cell *matCellDef="let client">
+                @if (client.email) {
+                <div class="d-flex align-items-center gap-1 text-email">
+                  <mat-icon class="email-icon">mail_outline</mat-icon>
+                  <a [href]="'mailto:' + client.email" class="email-link">{{ client.email }}</a>
+                </div>
+                } @else {
+                <span class="text-muted">-</span>
+                }
+              </td>
+            </ng-container>
+
+            <!-- Mobile Number Column -->
+            <ng-container matColumnDef="phoneNumber">
+              <th class="table-col-phone" mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "MOBILE_NUMBER" | translate }}
+              </th>
+              <td class="table-col-phone" mat-cell *matCellDef="let client">
+                @if (client.phoneNumber) {
+                <div class="d-flex align-items-center gap-1 text-phone">
+                  <mat-icon class="phone-icon">call</mat-icon>
+                  <span>{{ client.phoneNumber }}</span>
+                </div>
+                } @else {
+                <span class="text-muted">-</span>
+                }
+              </td>
+            </ng-container>
+
+            <!-- Empty Data Row -->
+            <tr *matNoDataRow>
+              <td colspan="5">
+                <div class="empty-state-wrapper py-5 text-center">
+                  <div class="empty-state-icon mb-2">
+                    <mat-icon>people_outline</mat-icon>
+                  </div>
+                  <h6 class="empty-state-title mb-1">{{ 'NO_DATA_FOUND' | translate }}</h6>
+                  <p class="empty-state-desc mb-0 text-muted">No client records match your search criteria.</p>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Header, Data and Footer Rows -->
+            <tr class="grid-header-color doc-table-header-row" mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr class="doc-table-row" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr class="doc-table-footer-row" mat-footer-row *matFooterRowDef="footerToDisplayed; sticky: true"></tr>
+
+            <!-- Footer Paginator -->
+            <ng-container matColumnDef="footer">
+              <td mat-footer-cell colspan="5" *matFooterCellDef class="p-0">
+                <mat-paginator
+                  [pageSizeOptions]="[10, 20, 30]"
+                  [pageSize]="10"
+                  [showFirstLastButtons]="true"
+                  class="doc-custom-paginator"
+                >
+                </mat-paginator>
+              </td>
+            </ng-container>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+@if(clientStore.isLoading()) {
+<div class="spinner-container">
+  <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+  </mat-progress-spinner>
+</div>
+}

@@ -1,0 +1,534 @@
+// -------------------------------------------------------------
+// Manage All Workflows Page Styles
+// -------------------------------------------------------------
+
+.page-header-row {
+  margin-bottom: 0.75rem;
+
+  @media (max-width: 575.98px) {
+    margin-bottom: 0.5rem;
+  }
+
+  .page-title {
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: var(--app-text-color, #0f172a) !important;
+    letter-spacing: -0.01em !important;
+    line-height: 1.25 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+  }
+
+  .page-title-icon {
+    color: var(--app-primary-color, #059669) !important;
+    font-size: 20px !important;
+    width: 20px !important;
+    height: 20px !important;
+    line-height: 20px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-right: 4px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+.btn-add-main {
+  height: 34px !important;
+  padding: 0 14px !important;
+  border-radius: 6px !important;
+  background-color: var(--app-primary-color, #059669) !important;
+  color: #ffffff !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  border: none !important;
+  box-shadow: 0 1px 4px rgba(5, 150, 105, 0.25) !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+
+  &:hover {
+    background-color: var(--primary-hover, #047857) !important;
+  }
+
+  mat-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+// Main Table Card
+.doc-table-card {
+  background: #ffffff;
+  border: 1px solid var(--app-border-color, #e2e8f0);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+// Filter Toolbar
+.table-filter-toolbar {
+  background-color: #f8fafc;
+  border-color: #e2e8f0 !important;
+
+  .filter-bar-container {
+    width: 100%;
+  }
+
+  .filter-inputs-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1 1 auto;
+    min-width: 0;
+
+    .filter-field-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+      flex: 1 1 200px;
+      min-width: 180px;
+      height: 36px;
+      background-color: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+
+      &:focus-within {
+        border-color: var(--app-primary-color, #059669);
+        box-shadow: 0 0 0 2.5px rgba(5, 150, 105, 0.12);
+      }
+
+      .filter-icon {
+        position: absolute;
+        left: 9px;
+        color: #64748b;
+        font-size: 15px;
+        width: 15px;
+        height: 15px;
+        line-height: 15px;
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      .filter-select {
+        display: flex;
+        align-items: center;
+        padding-left: 32px !important;
+        padding-right: 10px !important;
+        width: 100%;
+        height: 100%;
+        font-size: 0.81rem;
+        color: #1e293b;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        cursor: pointer;
+
+        ::ng-deep .mat-mdc-select-trigger {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+  }
+
+  .filter-action-group {
+    flex-shrink: 0;
+
+    @media (max-width: 575.98px) {
+      width: 100%;
+    }
+  }
+
+  .btn-filter-reset {
+    height: 36px;
+    padding: 0 16px;
+    border-radius: 6px;
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    font-size: 0.81rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+
+    @media (max-width: 575.98px) {
+      width: 100%;
+    }
+
+    .reset-icon {
+      font-size: 17px;
+      width: 17px;
+      height: 17px;
+      line-height: 17px;
+      color: #64748b;
+      transition: transform 0.3s ease, color 0.2s ease;
+    }
+
+    &:hover {
+      background-color: #fee2e2;
+      color: #dc2626;
+      border-color: #fca5a5;
+      box-shadow: 0 2px 5px rgba(220, 38, 38, 0.12);
+
+      .reset-icon {
+        transform: rotate(-180deg);
+        color: #dc2626;
+      }
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+// Table Styling
+.modern-doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+
+  .grid-header-row {
+    background-color: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0;
+    height: 42px;
+
+    th {
+      font-size: 0.72rem !important;
+      font-weight: 700 !important;
+      color: #475569 !important;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 6px 12px !important;
+      white-space: nowrap;
+      border-bottom: 1px solid #e2e8f0 !important;
+    }
+  }
+
+  .grid-body-row {
+    height: 46px;
+    border-bottom: 1px solid #f1f5f9;
+    transition: background-color 0.12s ease;
+
+    &:hover {
+      background-color: #f8fafc;
+    }
+
+    td {
+      font-size: 0.81rem !important;
+      color: #334155;
+      padding: 6px 12px !important;
+      border-bottom: 1px solid #f1f5f9 !important;
+    }
+  }
+
+  .cell-date {
+    font-size: 0.77rem;
+    color: #64748b;
+    white-space: nowrap;
+  }
+
+  .user-cell {
+    font-size: 0.8rem;
+    color: #334155;
+    font-weight: 500;
+  }
+
+  .doc-link {
+    color: var(--app-primary-color, #059669);
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.15s ease;
+
+    &:hover {
+      color: var(--primary-hover, #047857);
+      text-decoration: underline;
+    }
+
+    .doc-icon {
+      color: var(--app-primary-color, #059669);
+    }
+  }
+
+  .last-transition-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background-color: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #334155;
+
+    .step-sub {
+      color: #64748b;
+      font-weight: 500;
+      font-size: 0.7rem;
+    }
+  }
+
+  .perform-by-text {
+    font-size: 0.78rem;
+    color: #64748b;
+  }
+}
+
+// Action Buttons
+.action-btn-group {
+  .btn-action-view {
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 6px !important;
+    background-color: #eff6ff !important;
+    color: #2563eb !important;
+    border: 1px solid #dbeafe !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    transition: all 0.15s ease !important;
+
+    &:hover {
+      background-color: #dbeafe !important;
+      color: #1d4ed8 !important;
+    }
+
+    .action-icon {
+      font-size: 16px !important;
+      width: 16px !important;
+      height: 16px !important;
+      line-height: 16px !important;
+    }
+  }
+
+  .btn-action-more {
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 6px !important;
+    background-color: #ecfdf5 !important;
+    color: #059669 !important;
+    border: 1px solid #a7f3d0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    transition: all 0.15s ease !important;
+
+    &:hover {
+      background-color: #d1fae5 !important;
+      color: #047857 !important;
+    }
+
+    .action-icon {
+      font-size: 16px !important;
+      width: 16px !important;
+      height: 16px !important;
+      line-height: 16px !important;
+    }
+  }
+
+  .btn-action-delete {
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 6px !important;
+    background-color: #ffffff !important;
+    color: #dc2626 !important;
+    border: 1px solid #fee2e2 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    transition: all 0.15s ease !important;
+
+    &:hover {
+      background-color: #fee2e2 !important;
+      color: #b91c1c !important;
+    }
+
+    .action-icon {
+      font-size: 16px !important;
+      width: 16px !important;
+      height: 16px !important;
+      line-height: 16px !important;
+    }
+  }
+}
+
+// Transition Menu Dropdown
+::ng-deep .transition-actions-menu {
+  min-width: 220px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid #e2e8f0 !important;
+
+  .transition-menu-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    font-size: 0.77rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s ease;
+    background-color: #f8fafc;
+
+    .btn-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: currentColor;
+      flex-shrink: 0;
+    }
+
+    .step-hint {
+      font-size: 0.7rem;
+      font-weight: 400;
+      opacity: 0.85;
+    }
+
+    &:hover {
+      transform: translateX(2px);
+    }
+
+    &.workflow_approved {
+      color: #15803d;
+      background-color: #f0fdf4;
+      border-color: #bbf7d0;
+      &:hover { background-color: #dcfce7; }
+    }
+    &.workflow_rejected {
+      color: #b91c1c;
+      background-color: #fef2f2;
+      border-color: #fecaca;
+      &:hover { background-color: #fee2e2; }
+    }
+    &.workflow_pending {
+      color: #b45309;
+      background-color: #fffbeb;
+      border-color: #fef08a;
+      &:hover { background-color: #fef9c3; }
+    }
+    &.workflow_inprogress {
+      color: #1d4ed8;
+      background-color: #eff6ff;
+      border-color: #bfdbfe;
+      &:hover { background-color: #dbeafe; }
+    }
+    &.workflow_onhold {
+      color: #475569;
+      background-color: #f1f5f9;
+      border-color: #cbd5e1;
+      &:hover { background-color: #e2e8f0; }
+    }
+    &.workflow_cancelled {
+      color: #334155;
+      background-color: #f1f5f9;
+      border-color: #cbd5e1;
+      &:hover { background-color: #e2e8f0; }
+    }
+    &.workflow_escalated {
+      color: #c2410c;
+      background-color: #fff7ed;
+      border-color: #fed7aa;
+      &:hover { background-color: #ffedd5; }
+    }
+    &.workflow_completed {
+      color: #047857;
+      background-color: #ecfdf5;
+      border-color: #a7f3d0;
+      &:hover { background-color: #d1fae5; }
+    }
+  }
+}
+
+// Status Pills
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  letter-spacing: 0.02em;
+
+  &.status-initiated {
+    background-color: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+  }
+
+  &.status-inprogress {
+    background-color: #fffbeb;
+    color: #b45309;
+    border: 1px solid #fef08a;
+  }
+
+  &.status-completed {
+    background-color: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+  }
+
+  &.status-cancelled {
+    background-color: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+  }
+
+  &.status-default {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+  }
+}
+
+// Column Widths
+.table-column-140 { min-width: 140px; }
+.table-column-150 { min-width: 150px; }
+.table-column-160 { min-width: 160px; }
+.table-column-180 { min-width: 180px; }
+.table-column-250 { min-width: 250px; }
+
+// Paginator
+.custom-paginator {
+  background-color: #ffffff;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+// Spinner
+.spinner-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}

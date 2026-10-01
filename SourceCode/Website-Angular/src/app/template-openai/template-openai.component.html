@@ -1,0 +1,168 @@
+<section class="content prompt-template-page">
+  <div class="container-fluid">
+    <!-- 1. SaaS Page Header & Navigation Group -->
+    <div class="page-header-row mb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">smart_toy</mat-icon>
+        <span class="mb-0 page-title">
+          {{ (aiPromptTemplate ? "EDIT_PROMPT_TEMPLATE" : "ADD_PROMPT_TEMPLATE") | translate }}
+        </span>
+      </div>
+
+      <!-- Navigation & Action Buttons -->
+      <div class="d-flex align-items-center gap-2">
+        <div class="modern-btn-group d-none d-md-inline-flex align-items-center" role="group">
+          <button type="button" class="btn-group-item" [routerLink]="['/ai-document-generator']"
+            [matTooltip]="'AI_DOCUMENT_GENERATOR' | translate">
+            <mat-icon class="btn-group-icon">auto_awesome</mat-icon>
+            <span class="btn-group-text">{{ "AI_DOCUMENT_GENERATOR" | translate }}</span>
+          </button>
+          <button type="button" class="btn-group-item" [routerLink]="['/ai-document-generator-list']"
+            [matTooltip]="'AI_DOCUMENT_GENERATOR_LIST' | translate">
+            <mat-icon class="btn-group-icon">format_list_bulleted</mat-icon>
+            <span class="btn-group-text">{{ "AI_DOCUMENT_GENERATOR_LIST" | translate }}</span>
+          </button>
+          <button type="button" class="btn-group-item is-active" [routerLink]="['/aiprompttemplate']"
+            [matTooltip]="'AI_PROMPT_TEMPLATES' | translate">
+            <mat-icon class="btn-group-icon">smart_toy</mat-icon>
+            <span class="btn-group-text">{{ "AI_PROMPT_TEMPLATES" | translate }}</span>
+          </button>
+        </div>
+
+        <!-- Back to Templates Button -->
+        <button [routerLink]="['/aiprompttemplate']" class="btn-back-outline" type="button"
+          [matTooltip]="'BACK' | translate">
+          <mat-icon class="btn-back-icon">arrow_back</mat-icon>
+          <span class="d-none d-sm-inline">{{ "BACK" | translate }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. Main Form Card -->
+    <div class="row justify-content-center">
+      <div class="col-12 col-xl-10">
+        <mat-card appearance="outlined" class="template-form-card">
+          <!-- Card Header Banner -->
+          <div class="template-card-header">
+            <div class="d-flex align-items-center gap-3">
+              <div class="template-header-badge">
+                <mat-icon>auto_awesome</mat-icon>
+              </div>
+              <div>
+                <h5 class="template-header-title mb-0">
+                  {{ (aiPromptTemplate ? "EDIT_PROMPT_TEMPLATE" : "ADD_PROMPT_TEMPLATE") | translate }}
+                </h5>
+                <p class="template-header-subtitle mb-0">
+                  Configure dynamic AI prompt templates with custom variable placeholders
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Form Content -->
+          <mat-card-content class="template-card-body">
+            <form [formGroup]="aiPromtTemplateForm">
+              
+              <!-- Row 1: Name & Description -->
+              <div class="row g-3 mb-3">
+                <!-- Name -->
+                <div class="col-12 col-md-6">
+                  <div class="form-group mb-0">
+                    <label class="form-label-custom">
+                      <mat-icon class="label-icon">badge</mat-icon>
+                      <span>{{ "NAME" | translate }}</span>
+                      <span class="required-star">*</span>
+                    </label>
+                    <div class="input-with-icon">
+                      <mat-icon class="field-prefix-icon">title</mat-icon>
+                      <input formControlName="name" class="form-control form-control-custom" type="text"
+                        placeholder="e.g. Generate blog post idea" />
+                    </div>
+                    @if(aiPromtTemplateForm.get('name')?.dirty &&
+                    aiPromtTemplateForm.get('name')?.errors &&
+                    aiPromtTemplateForm.get('name')?.errors?.['required']){
+                    <div class="field-error-msg">
+                      <mat-icon class="error-icon">error_outline</mat-icon>
+                      <span>{{ "AI_PROMPT_TEMPLATE_IS_REQUIRED" | translate }}</span>
+                    </div>
+                    }
+                  </div>
+                </div>
+
+                <!-- Description -->
+                <div class="col-12 col-md-6">
+                  <div class="form-group mb-0">
+                    <label class="form-label-custom">
+                      <mat-icon class="label-icon">notes</mat-icon>
+                      <span>{{ "DESCRIPTION" | translate }}</span>
+                    </label>
+                    <div class="input-with-icon">
+                      <mat-icon class="field-prefix-icon">description</mat-icon>
+                      <input formControlName="description" class="form-control form-control-custom" type="text"
+                        placeholder="Brief summary of template purpose" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Row 2: Prompt Input & Dynamic Variables -->
+              <div class="row mb-4">
+                <div class="col-12">
+                  <div class="form-group mb-0">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-1 mb-1">
+                      <label class="form-label-custom mb-0">
+                        <mat-icon class="label-icon">chat</mat-icon>
+                        <span>{{ "PROMPT_INPUT" | translate }}</span>
+                        <span class="required-star">*</span>
+                      </label>
+                    </div>
+
+                    <!-- Variable Tip Callout -->
+                    <div class="prompt-variable-callout mb-2">
+                      <div class="d-flex align-items-start gap-2">
+                        <mat-icon class="tip-icon">lightbulb</mat-icon>
+                        <div class="tip-content">
+                          <span class="tip-title">Dynamic Word Format:</span>
+                          <span class="tip-text">
+                            Enclose dynamic placeholders with double asterisks, e.g.
+                            <code>**description**</code>, <code>**topic**</code>, or <code>**ProductDescription**</code>.
+                            These will automatically convert into input fields during document generation.
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <textarea formControlName="promptInput" rows="5" class="form-control prompt-textarea-custom custom-scroll"
+                      placeholder="Write blog post article ideas about **description**..."></textarea>
+
+                    @if(aiPromtTemplateForm.get('promptInput')?.dirty &&
+                    aiPromtTemplateForm.get('promptInput')?.errors &&
+                    aiPromtTemplateForm.get('promptInput')?.errors?.['required']){
+                    <div class="field-error-msg">
+                      <mat-icon class="error-icon">error_outline</mat-icon>
+                      <span>{{ "PROMPT_INPUT" | translate }} is required</span>
+                    </div>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              <!-- Form Action Buttons -->
+              <div class="template-form-actions">
+                <button type="button" class="btn btn-save-action" (click)="addUpdateAiPromptTemplate()"
+                  [disabled]="aiPromtTemplateForm.invalid" matButton="filled">
+                  <mat-icon class="btn-action-icon">save</mat-icon>
+                  <span>{{ "SAVE" | translate }}</span>
+                </button>
+                <button type="button" class="btn btn-cancel-action" [routerLink]="['/aiprompttemplate']">
+                  <mat-icon class="btn-action-icon">close</mat-icon>
+                  <span>{{ "CANCEL" | translate }}</span>
+                </button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</section>

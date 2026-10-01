@@ -1,0 +1,163 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized SaaS Page Header (No Question Mark Help Icon) -->
+    <div class="page-header-row mb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">document_scanner</mat-icon>
+        <span class="mb-0 page-title">
+          {{ 'OCR_CONTENT_EXTRACTOR' | translate }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Dual-Panel Creative OCR Studio Workspace -->
+    <div class="ocr-workspace-grid">
+      <!-- Left Panel: Document Upload & Extract Action -->
+      <div class="ocr-card upload-card">
+        <div class="ocr-card-header">
+          <h6 class="card-header-title">
+            <mat-icon>cloud_upload</mat-icon>
+            <span>{{ 'DOCUMENT_UPLOAD' | translate }}</span>
+          </h6>
+        </div>
+
+        <div class="ocr-card-body">
+          <form (ngSubmit)="extract()" novalidate>
+            <!-- File Drop / Select Zone -->
+            <div class="ocr-drop-zone" [class.has-file]="!!fileData">
+              <input class="file-hidden-input" #file (change)="upload(file.files)" type="file"
+                accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.png,.jpg,.jpeg,.tiff,.bmp,.txt" />
+
+              <div class="drop-zone-icon-wrap">
+                <mat-icon>{{ fileData ? 'task' : 'upload_file' }}</mat-icon>
+              </div>
+
+              <div class="drop-zone-title">
+                {{ fileData ? fileData.name : ('CHOOSE_FILE' | translate) }}
+              </div>
+              <div class="drop-zone-subtitle">
+                {{ fileData ? formatBytes(fileData.size) : 'PDF, DOCX, PPT, PPTX, Images, Text (Max 10MB)' }}
+              </div>
+
+              @if(!fileData) {
+              <div class="drop-zone-btn">
+                <mat-icon class="fs-6 align-middle">touch_app</mat-icon>
+                <span>Browse File</span>
+              </div>
+              }
+            </div>
+
+            <!-- Selected File Details Pill -->
+            @if(fileData) {
+            <div class="selected-file-box">
+              <mat-icon class="file-type-icon">description</mat-icon>
+              <div class="file-info">
+                <div class="file-name" [matTooltip]="fileData.name">{{ fileData.name }}</div>
+                <div class="file-size">{{ formatBytes(fileData.size) }}</div>
+              </div>
+              <button type="button" class="btn-remove-file" (click)="removeSelectedFile()" matTooltip="Remove file">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+            }
+
+            <!-- Validation / Error Message -->
+            @if(errorMessage) {
+            <div class="error-banner">
+              <mat-icon>error_outline</mat-icon>
+              <span>{{ errorMessage }}</span>
+            </div>
+            }
+
+            <!-- Extract Action Button -->
+            <button class="btn-extract-main" type="button" (click)="extract()" [disabled]="!fileData || isLoading">
+              <mat-icon>auto_awesome</mat-icon>
+              <span>{{ 'EXTRACT' | translate }}</span>
+            </button>
+
+            <!-- Feature Badges -->
+            <div class="ocr-capabilities-list">
+              <div class="capability-item">
+                <mat-icon>check_circle</mat-icon>
+                <span>AI OCR Optical Recognition</span>
+              </div>
+              <div class="capability-item">
+                <mat-icon>check_circle</mat-icon>
+                <span>Multi-Language Text Extraction</span>
+              </div>
+              <div class="capability-item">
+                <mat-icon>check_circle</mat-icon>
+                <span>High-Speed Clean Parsing</span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Panel: Extracted Content Viewer Studio -->
+      <div class="ocr-card output-card">
+        <div class="ocr-card-header">
+          <h6 class="card-header-title">
+            <mat-icon>text_snippet</mat-icon>
+            <span>{{ 'EXTRACTED_TEXT' | translate }}</span>
+          </h6>
+
+          <!-- Quick Actions (Copy, Download, Clear) -->
+          <div class="output-header-actions">
+            <button type="button" class="btn-output-action btn-primary-action" (click)="copyToClipboard()"
+              [disabled]="!extractedText" [matTooltip]="'COPY' | translate">
+              <mat-icon>content_copy</mat-icon>
+              <span class="d-none d-sm-inline">Copy</span>
+            </button>
+
+            <button type="button" class="btn-output-action" (click)="downloadAsTxt()" [disabled]="!extractedText"
+              [matTooltip]="'DOWNLOAD' | translate">
+              <mat-icon>download</mat-icon>
+              <span class="d-none d-sm-inline">Download .txt</span>
+            </button>
+
+            <button type="button" class="btn-output-action" (click)="clearExtractedText()" [disabled]="!extractedText"
+              matTooltip="Clear text">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="ocr-card-body d-flex flex-column flex-fill">
+          <div class="output-editor-wrapper">
+            <textarea name="extractedText" class="ocr-textarea" [(ngModel)]="extractedText"
+              placeholder="{{ 'EXTRACTED_TEXT' | translate }}...">
+            </textarea>
+
+            <!-- Placeholder State when no text extracted yet -->
+            @if(!extractedText && !isLoading) {
+            <div class="empty-output-placeholder">
+              <div class="placeholder-icon">
+                <mat-icon>document_scanner</mat-icon>
+              </div>
+              <div class="placeholder-title">No text extracted yet</div>
+              <div class="placeholder-desc">Upload a document on the left and click "Extract" to generate OCR text.</div>
+            </div>
+            }
+          </div>
+
+          <!-- Bottom Meta Stats -->
+          <div class="output-footer mt-2">
+            <span>
+              Characters: <span class="char-badge">{{ extractedText ? extractedText.length : 0 }}</span>
+            </span>
+            <span>OCR Studio Ready</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  @if (isLoading) {
+  <div class="spinner-container">
+    <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+    </mat-progress-spinner>
+  </div>
+  }
+</section>

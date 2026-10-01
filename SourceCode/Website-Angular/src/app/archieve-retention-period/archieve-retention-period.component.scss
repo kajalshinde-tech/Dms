@@ -1,0 +1,187 @@
+// -------------------------------------------------------------
+// Archive Retention Period Settings Page Styles
+// -------------------------------------------------------------
+
+.page-header-row {
+  margin-bottom: 0.75rem;
+
+  @media (max-width: 575.98px) {
+    margin-bottom: 0.5rem;
+  }
+
+  .page-title {
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    color: var(--app-text-color, #0f172a) !important;
+    letter-spacing: -0.01em !important;
+    line-height: 1.25 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+  }
+
+  .page-title-icon {
+    color: var(--app-primary-color, #059669) !important;
+    font-size: 20px !important;
+    width: 20px !important;
+    height: 20px !important;
+    line-height: 20px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-right: 4px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+// Settings Form Card
+.doc-form-card {
+  background: #ffffff;
+  border: 1px solid var(--app-border-color, #e2e8f0);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  max-width: 860px;
+
+  &.compact-card {
+    .card-header-strip {
+      background-color: #f8fafc !important;
+      border-color: #e2e8f0 !important;
+    }
+  }
+}
+
+.field-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 4px;
+}
+
+.form-field-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 38px;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+
+  &:focus-within {
+    border-color: var(--app-primary-color, #059669);
+    box-shadow: 0 0 0 2.5px rgba(5, 150, 105, 0.12);
+  }
+
+  .field-icon {
+    position: absolute;
+    left: 10px;
+    color: #64748b;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .field-select {
+    display: flex;
+    align-items: center;
+    padding-left: 34px !important;
+    padding-right: 12px !important;
+    font-size: 0.81rem;
+    color: #1e293b;
+    height: 100%;
+    border: none;
+    background: transparent;
+    box-shadow: none !important;
+    cursor: pointer;
+
+    ::ng-deep .mat-mdc-select-trigger {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+// Feature Toggle Card
+.feature-toggle-card {
+  height: 38px;
+  border-color: #cbd5e1 !important;
+  background-color: #f8fafc !important;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+
+  &:hover {
+    border-color: #94a3b8 !important;
+    background-color: #f1f5f9 !important;
+  }
+
+  .feature-icon-circle {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background-color: #e2e8f0;
+    color: var(--app-primary-color, #059669);
+
+    mat-icon {
+      font-size: 15px;
+      width: 15px;
+      height: 15px;
+      line-height: 15px;
+    }
+  }
+
+  .extra-small {
+    font-size: 0.72rem;
+    color: #64748b;
+  }
+}
+
+// Form Action Button
+.form-action-row {
+  border-color: #e2e8f0 !important;
+
+  .btn-save-action {
+    height: 36px;
+    padding: 0 18px;
+    border-radius: 6px;
+    background-color: var(--app-primary-color, #059669);
+    color: #ffffff;
+    border: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 2px rgba(5, 150, 105, 0.2);
+
+    .btn-icon {
+      font-size: 17px;
+      width: 17px;
+      height: 17px;
+      line-height: 17px;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: var(--primary-hover, #047857);
+      box-shadow: 0 2px 5px rgba(5, 150, 105, 0.3);
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+  }
+}

@@ -1,0 +1,178 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized SaaS Page Header (No Question Mark Help Icon) -->
+    <div class="page-header-row mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">account_tree</mat-icon>
+        <span class="mb-0 page-title">
+          {{ "WORKFLOW_SETTINGS" | translate }}
+        </span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button *hasClaim="'ADD_WORKFLOW_SETTINGS'" [routerLink]="['/workflow-settings/manage/add']"
+          class="primary btn-add-main" matButton="filled">
+          <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
+          <span class="d-none d-sm-inline ms-1">{{ "ADD_WORKFLOW" | translate }}</span>
+          <span class="d-inline d-sm-none ms-1">Add</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Unified Single Card (Integrated Search Toolbar + Datatable) -->
+    <div class="doc-table-card">
+      <!-- Integrated Top Search Toolbar -->
+      <div class="card-search-toolbar p-2 p-sm-3 border-bottom">
+        <div class="row g-2 align-items-center">
+          <div class="col-12 col-md-6 col-lg-5">
+            <div class="filter-input-wrapper">
+              <mat-icon class="filter-icon">search</mat-icon>
+              <input
+                class="form-control filter-control"
+                placeholder="Search workflows by name, description, or status..."
+                [(ngModel)]="searchFilter"
+                (input)="applyFilter(searchFilter)"
+              />
+              @if (searchFilter) {
+              <button type="button" class="btn-filter-clear" (click)="clearFilter()" matTooltip="Clear search">
+                <mat-icon>close</mat-icon>
+              </button>
+              }
+            </div>
+          </div>
+
+          <!-- Reset Button -->
+          @if (searchFilter) {
+          <div class="col-auto">
+            <button type="button" class="btn btn-clear-all" (click)="clearFilter()" matTooltip="Reset Search">
+              <mat-icon class="align-middle">refresh</mat-icon>
+              <span class="ms-1">Reset</span>
+            </button>
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Datatable Area -->
+      <div class="doc-table-wrapper">
+        <div class="doc-table-scroll-container">
+          <table mat-table [dataSource]="dataSource" matSort matSortActive="name" matSortDirection="asc" class="w-100 doc-modern-table">
+            
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+              <th class="table-col-action text-center" mat-header-cell *matHeaderCellDef>
+                {{ "ACTION" | translate }}
+              </th>
+              <td class="table-col-action text-center" mat-cell *matCellDef="let workflow">
+                <div class="d-flex align-items-center justify-content-center gap-1">
+                  <!-- Edit Workflow -->
+                  <button mat-icon-button *hasClaim="'EDIT_WORKFLOW_SETTINGS'"
+                    [routerLink]="['/workflow-settings/manage', workflow.id]"
+                    class="btn-action-edit" [matTooltip]="'EDIT' | translate">
+                    <mat-icon class="action-icon">edit</mat-icon>
+                  </button>
+
+                  <!-- Delete Workflow -->
+                  <button mat-icon-button *hasClaim="'DELETE_WORKFLOW_SETTINGS'" (click)="deleteWorkflow(workflow)"
+                    class="btn-action-delete" type="button" [matTooltip]="'DELETE' | translate">
+                    <mat-icon class="action-icon">delete</mat-icon>
+                  </button>
+
+                  <!-- View Graph (if completed setup) -->
+                  @if (workflow.isWorkflowSetup) {
+                  <button mat-icon-button class="btn-action-view" (click)="viewVisualWorkflow(workflow)"
+                    [matTooltip]="'VIEW' | translate">
+                    <mat-icon class="action-icon">visibility</mat-icon>
+                  </button>
+                  }
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th class="table-col-name" mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "NAME" | translate }}
+              </th>
+              <td class="table-col-name" mat-cell *matCellDef="let workflow">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="workflow-avatar">
+                    <mat-icon class="avatar-icon">account_tree</mat-icon>
+                  </div>
+                  <span class="workflow-name-text">{{ workflow.name }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Description Column -->
+            <ng-container matColumnDef="description">
+              <th class="table-col-desc" mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "DESCRIPTION" | translate }}
+              </th>
+              <td class="table-col-desc" mat-cell *matCellDef="let workflow">
+                <span class="text-muted fs-7">{{ workflow.description || '-' }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Setup Status Column -->
+            <ng-container matColumnDef="setupStatus">
+              <th class="table-col-status" mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "SETUP_STATUS" | translate }}
+              </th>
+              <td class="table-col-status" mat-cell *matCellDef="let workflow">
+                @if (workflow.isWorkflowSetup) {
+                <span class="status-pill status-completed">
+                  <mat-icon class="status-icon">check_circle</mat-icon>
+                  <span>{{ "COMPLETED" | translate }}</span>
+                </span>
+                } @else {
+                <span class="status-pill status-draft">
+                  <mat-icon class="status-icon">edit_note</mat-icon>
+                  <span>{{ "DRAFT" | translate }}</span>
+                </span>
+                }
+              </td>
+            </ng-container>
+
+            <!-- Empty Data Row -->
+            <tr *matNoDataRow>
+              <td colspan="4">
+                <div class="empty-state-wrapper py-5 text-center">
+                  <div class="empty-state-icon mb-2">
+                    <mat-icon>account_tree</mat-icon>
+                  </div>
+                  <h6 class="empty-state-title mb-1">{{ 'NO_DATA_FOUND' | translate }}</h6>
+                  <p class="empty-state-desc mb-0 text-muted">No workflows match your search criteria.</p>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Header, Data and Footer Rows -->
+            <tr class="grid-header-color doc-table-header-row" mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr class="doc-table-row" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr class="doc-table-footer-row" mat-footer-row *matFooterRowDef="footerToDisplayed; sticky: true"></tr>
+
+            <!-- Footer Paginator -->
+            <ng-container matColumnDef="footer">
+              <td mat-footer-cell colspan="4" *matFooterCellDef class="p-0">
+                <mat-paginator
+                  [pageSizeOptions]="[10, 20, 30]"
+                  [pageSize]="10"
+                  [showFirstLastButtons]="true"
+                  class="doc-custom-paginator"
+                >
+                </mat-paginator>
+              </td>
+            </ng-container>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+@if(workflowStore.isLoading()) {
+<div class="spinner-container">
+  <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+  </mat-progress-spinner>
+</div>
+}

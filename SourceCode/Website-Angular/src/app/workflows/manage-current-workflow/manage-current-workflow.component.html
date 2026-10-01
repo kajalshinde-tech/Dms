@@ -1,0 +1,203 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized SaaS Page Header (No Question Mark Help Icon) -->
+    <div class="page-header-row mb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">account_tree</mat-icon>
+        <span class="mb-0 page-title">
+          {{ "ASSIGNED_WORKFLOWS" | translate }}
+        </span>
+      </div>
+      @if (workflowInstances.length > 0) {
+      <div class="d-flex align-items-center">
+        <span class="badge-total-count">
+          {{ workflowInstances.length }} {{ workflowInstances.length === 1 ? 'Workflow' : 'Workflows' }}
+        </span>
+      </div>
+      }
+    </div>
+
+    @if (workflowInstances.length === 0) {
+    <!-- Modern SaaS Empty State Card -->
+    <div class="doc-empty-card text-center py-5">
+      <div class="empty-icon-wrapper mb-3">
+        <mat-icon class="empty-main-icon">account_tree</mat-icon>
+      </div>
+      <h5 class="empty-title mb-1">{{ "NO_WORKFLOW_ASSIGNED" | translate }}</h5>
+      <p class="empty-subtitle text-muted mb-0">
+        You currently have no pending workflow review or transition tasks assigned to you.
+      </p>
+    </div>
+    } @else {
+    <!-- Workflow Cards Container -->
+    <div class="workflow-cards-list d-flex flex-column gap-3">
+      @for(workflowinstance of workflowInstances; track $index; let i = $index) {
+      <div class="workflow-item-card">
+        <!-- Workflow Card Header -->
+        <div class="workflow-card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <span class="workflow-index-badge">#{{ i + 1 }}</span>
+            <div class="d-flex align-items-center gap-1">
+              <mat-icon class="workflow-header-icon">lan</mat-icon>
+              <span class="workflow-header-title">{{ workflowinstance?.workflowName }}</span>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center gap-2">
+            <span class="badge-status-pill" [workflowstatuscolor]="workflowinstance.workflowInstanceStatus">
+              <span class="status-dot"></span>
+              {{ workflowinstance?.workflowInstanceStatus | workflowInstanceStatus }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Workflow Card Body -->
+        <div class="workflow-card-body">
+          <!-- Primary Info Grid -->
+          <div class="row g-3">
+            <!-- Document Info -->
+            <div class="col-12 col-md-6 col-lg-4">
+              <div class="info-block">
+                <span class="info-label">{{ "DOCUMENT" | translate }}</span>
+                <div class="info-value">
+                  <a class="doc-link" (click)="onDocumentView(workflowinstance)" [matTooltip]="workflowinstance?.documentName">
+                    <mat-icon class="doc-icon">description</mat-icon>
+                    <span class="doc-text">
+                      <span class="doc-num">{{ workflowinstance?.documentNumber }}</span>
+                      @if(workflowinstance?.documentNumber) { - }
+                      {{ workflowinstance?.documentName }}
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Initiated By -->
+            <div class="col-12 col-sm-6 col-md-3 col-lg-4">
+              <div class="info-block">
+                <span class="info-label">{{ "INITIATED_BY" | translate }}</span>
+                <div class="info-value">
+                  <div class="d-flex align-items-center gap-1">
+                    <mat-icon class="info-icon">person_outline</mat-icon>
+                    <span class="fw-medium text-dark">{{ workflowinstance?.initiatedUser || '-' }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Initiated At -->
+            <div class="col-12 col-sm-6 col-md-3 col-lg-4">
+              <div class="info-block">
+                <span class="info-label">{{ "WORKFLOW_INITIATED_AT" | translate }}</span>
+                <div class="info-value">
+                  <div class="d-flex align-items-center gap-1">
+                    <mat-icon class="info-icon">schedule</mat-icon>
+                    <span class="text-muted">{{ workflowinstance?.workflowInitiatedDate | utcToLocalTime : "short" }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Last Transition Section (if available) -->
+          @if (workflowinstance?.lastTransition) {
+          <div class="last-transition-card mt-3">
+            <div class="last-transition-header d-flex align-items-center gap-2 mb-2">
+              <mat-icon class="transition-icon">history</mat-icon>
+              <span class="transition-title">{{ "LAST_PERFORM_TRANSITION" | translate }}</span>
+            </div>
+
+            <div class="row g-2">
+              <div class="col-12 col-md-4">
+                <div class="info-mini">
+                  <span class="mini-label">Transition:</span>
+                  <span class="badge-transition">
+                    {{ workflowinstance?.lastTransition }}
+                    @if (workflowinstance?.lastTransitionSteps) {
+                    ({{ workflowinstance?.lastTransitionSteps }})
+                    }
+                  </span>
+                </div>
+              </div>
+
+              <div class="col-12 col-sm-6 col-md-4">
+                <div class="info-mini">
+                  <span class="mini-label">{{ "UPDATEDAT" | translate }}:</span>
+                  <span class="mini-value">{{ workflowinstance?.updatedAt | utcToLocalTime : "short" }}</span>
+                </div>
+              </div>
+
+              @if(workflowinstance?.performBy) {
+              <div class="col-12 col-sm-6 col-md-4">
+                <div class="info-mini">
+                  <span class="mini-label">{{ "PERFORM_BY" | translate }}:</span>
+                  <span class="mini-value fw-medium">{{ workflowinstance?.performBy }}</span>
+                </div>
+              </div>
+              }
+
+              @if(workflowinstance?.lastTransitionComment) {
+              <div class="col-12 mt-2">
+                <div class="comment-box">
+                  <mat-icon class="comment-icon">chat_bubble_outline</mat-icon>
+                  <div class="comment-content">
+                    <span class="comment-label">{{ "LAST_TRANSITION_COMMENT" | translate }}:</span>
+                    <span class="comment-text">{{ workflowinstance?.lastTransitionComment }}</span>
+                  </div>
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+          }
+
+          <!-- Perform Transition Actions Section -->
+          <div class="workflow-actions-section mt-3 pt-3">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                <span class="actions-heading">
+                  <mat-icon class="actions-icon">bolt</mat-icon>
+                  {{ "PERFORM_TRANSITION" | translate }}
+                </span>
+
+                <!-- Diagram View Button -->
+                <button mat-icon-button class="btn-visual-diagram" matTooltip="{{'VIEW_WORKFLOW_DETAIL' | translate}}"
+                  [matTooltipPosition]="positionOptions[0]" (click)="viewVisualWorkflow(workflowinstance)">
+                  <mat-icon class="action-icon">account_tree</mat-icon>
+                </button>
+
+                <!-- Transition Buttons -->
+                @if (workflowinstance.workflowInstanceStatus !== WorkflowInstanceStatus.Cancelled) {
+                <div class="d-flex align-items-center flex-wrap gap-2">
+                  @for (transition of workflowinstance.workflowTransitions; track $index) {
+                  @if (transition.allowRoleToPerformTransition || transition.allowUserToPerformTransition) {
+                  <button type="button" class="btn-transition" [ngClass]="'workflow_' + transition.color"
+                    matTooltip="{{ transition?.comment || transition.name }}" [matTooltipPosition]="positionOptions[0]"
+                    (click)="performTransition(transition, workflowinstance)">
+                    <mat-icon class="btn-trans-icon">arrow_forward</mat-icon>
+                    <span>{{ transition.name }}</span>
+                    @if (transition.fromToStepName) {
+                    <span class="step-tag">({{ transition.fromToStepName }})</span>
+                    }
+                  </button>
+                  }
+                  }
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+    }
+  </div>
+</section>
+
+@if(isLoadingResults) {
+<div class="spinner-container">
+  <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+  </mat-progress-spinner>
+</div>
+}

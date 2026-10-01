@@ -1,0 +1,135 @@
+.ai-document-generator-page {
+  padding: 0.5rem 0 2rem 0;
+}
+
+// -------------------------------------------------------------
+// 1. Page Header & Toolbar (Matches Reference SaaS Style)
+// -------------------------------------------------------------
+.page-header-row {
+  margin-bottom: 1.25rem;
+
+  .header-left-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .header-icon-wrapper {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    background: var(--primary-light, rgba(5, 150, 105, 0.12));
+    color: var(--app-primary-color, #059669);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    .page-title-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      color: var(--app-primary-color, #059669);
+    }
+  }
+
+  .page-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .page-subtitle {
+    font-size: 0.775rem;
+    color: #64748b;
+    margin-top: 2px;
+  }
+}
+
+// Modern Segmented Toolbar (Ref: /assign/list-view)
+.modern-btn-group {
+  display: inline-flex;
+  align-items: stretch;
+  background-color: #ffffff;
+  border: 1px solid var(--app-border-color, #cbd5e1);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  height: 36px;
+  padding: 0;
+  margin: 0;
+
+  @media (max-width: 767.98px) {
+    display: none !important;
+  }
+
+  .btn-group-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 100%;
+    padding: 0 14px;
+    margin: 0;
+    background: #ffffff;
+    border: none;
+    border-right: 1px solid var(--app-border-color, #e2e8f0);
+    color: #475569;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    white-space: nowrap;
+    outline: none;
+    box-shadow: none;
+    border-radius: 0;
+    text-decoration: none;
+
+    &:last-child {
+      border-right: none;
+    }
+
+    .btn-group-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      line-height: 16px;
+      color: #64748b;
+      transition: color 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-group-text {
+      font-size: 0.78rem;
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    &:hover {
+      background-color: #f8fafc;
+      color: var(--app-primary-color, #059669);
+
+      .btn-group-icon {
+        color: var(--app-primary-color, #059669);
+      }
+    }
+
+    &.is-active {
+      background-color: var(--primary-light, rgba(5, 150, 105, 0.1));
+      color: var(--app-primary-color, #059669);
+      font-weight: 600;
+
+      .btn-group-icon {
+        color: var(--app-primary-color, #059669);
+      }
+    }
+  }
+}

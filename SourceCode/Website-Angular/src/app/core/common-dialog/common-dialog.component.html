@@ -1,0 +1,30 @@
+<div class="xintra-modal-card">
+  <!-- Modal Header -->
+  <div class="modal-header">
+    <h6 class="modal-title">Confirmation</h6>
+    <button type="button" class="btn-close-modal" (click)="clickHandler(false)" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Modal Body -->
+  <mat-dialog-content class="modal-body">
+    <p class="modal-text mb-0">{{ primaryMessage }}</p>
+    @if(note) {
+      <div class="alert alert-warning mt-2 mb-0 py-2 px-3 fs-12">
+        <mat-icon class="align-middle me-1 fs-6">warning</mat-icon>
+        <span>{{ note }}</span>
+      </div>
+    }
+  </mat-dialog-content>
+
+  <!-- Modal Footer -->
+  <div class="modal-footer">
+    <button type="button" class="btn btn-cancel-xintra" (click)="clickHandler(false)">
+      {{ 'CANCEL' | translate }}
+    </button>
+    <button type="button" class="btn btn-primary-xintra" (click)="clickHandler(true)" cdkFocusInitial>
+      {{ 'YES' | translate }}
+    </button>
+  </div>
+</div>

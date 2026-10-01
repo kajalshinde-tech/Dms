@@ -1,0 +1,251 @@
+<div class="saas-dialog-container">
+  <!-- 1. SaaS Modal Header -->
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge">
+        <mat-icon>auto_awesome</mat-icon>
+      </div>
+      <div>
+        <div class="d-flex align-items-center gap-1">
+          <h5 class="dialog-title mb-0">{{ "AI_DOCUMENT_GENERATOR_DETAILS" | translate }}</h5>
+        </div>
+        <p class="dialog-subtitle mb-0">Prompt Configuration & Generated Document Details</p>
+      </div>
+    </div>
+    <button type="button" class="dialog-close-btn" (click)="closeDialog()" [attr.aria-label]="'CANCEL' | translate">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- 2. Modal Body with Scroll -->
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <form [formGroup]="aiEditorForm">
+      
+      <!-- Configuration Overview Card -->
+      <div class="detail-section-card mb-3">
+        <div class="section-card-header">
+          <mat-icon class="section-icon">tune</mat-icon>
+          <span class="section-title">Prompt Configuration</span>
+        </div>
+
+        <div class="section-card-body">
+          <div class="row g-3">
+            <!-- AI Prompt Template -->
+            <div class="col-md-6 col-12">
+              <div class="form-group mb-0">
+                <label [dir]="langDir" class="form-label-custom">
+                  <mat-icon class="label-icon">smart_toy</mat-icon>
+                  {{ "SELECT_AI_PROMPT_TEMPLATE" | translate }}
+                </label>
+                <mat-select [dir]="langDir" panelClass="mat-select-control" class="form-control form-control-custom"
+                  formControlName="aIPromptTemplateId" placeholder="{{ 'SELECT_AI_PROMPT_TEMPLATE' | translate }}"
+                  (selectionChange)="onAiPromptTemplateChange($event)">
+                  <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
+                  @for(aiPromptTemplate of aiPromptTemplates; track aiPromptTemplate.id){
+                  <mat-option [value]="aiPromptTemplate.name">
+                    {{ aiPromptTemplate.name }}
+                  </mat-option>
+                  }
+                </mat-select>
+              </div>
+            </div>
+
+            <!-- Model Selection -->
+            <div class="col-md-6 col-12">
+              <div class="form-group mb-0">
+                <label [dir]="langDir" class="form-label-custom">
+                  <mat-icon class="label-icon">psychology</mat-icon>
+                  {{ "SELECT_MODEL" | translate }}
+                </label>
+                <mat-select [dir]="langDir" panelClass="mat-select-control" class="form-control form-control-custom"
+                  formControlName="selectedModel" placeholder="{{ 'SELECT_AI_MODEL' | translate }}">
+                  <mat-option value="gpt-3.5-turbo">GPT-3.5-TURBO</mat-option>
+                  <mat-option value="gpt-4">GPT-4</mat-option>
+                  <mat-option value="gpt-4o">GPT-4o (Flagship Model)</mat-option>
+                  <mat-option value="gpt-4o-mini">GPT-4o mini</mat-option>
+                </mat-select>
+              </div>
+            </div>
+
+            <!-- Language -->
+            <div class="col-md-6 col-12">
+              <div class="form-group mb-0">
+                <label [dir]="langDir" class="form-label-custom">
+                  <mat-icon class="label-icon">language</mat-icon>
+                  {{ "AI_LANGUAGE" | translate }}
+                </label>
+                <mat-select [dir]="langDir" panelClass="mat-select-control" class="form-control form-control-custom"
+                  formControlName="language" placeholder="{{ 'SELECT_LANGUAGE' | translate }}">
+                  <mat-option value="az-AZ">Azerbaijani (Azerbaijan)</mat-option>
+                  <mat-option value="ar-AE">Arabic</mat-option>
+                  <mat-option value="cmn-CN">Chinese (Mandarin)</mat-option>
+                  <mat-option value="hr-HR">Croatian (Croatia)</mat-option>
+                  <mat-option value="cs-CZ">Czech (Czech Republic)</mat-option>
+                  <mat-option value="da-DK">Danish (Denmark)</mat-option>
+                  <mat-option value="nl-NL">Dutch (Netherlands)</mat-option>
+                  <mat-option value="en-US">English (USA)</mat-option>
+                  <mat-option value="en-GB">English (UK)</mat-option>
+                  <mat-option value="et-EE">Estonian (Estonia)</mat-option>
+                  <mat-option value="fi-FI">Finnish (Finland)</mat-option>
+                  <mat-option value="fr-FR">French (France)</mat-option>
+                  <mat-option value="de-DE">German (Germany)</mat-option>
+                  <mat-option value="el-GR">Greek (Greece)</mat-option>
+                  <mat-option value="he-IL">Hebrew (Israel)</mat-option>
+                  <mat-option value="hi-IN">Hindi (India)</mat-option>
+                  <mat-option value="hu-HU">Hungarian (Hungary)</mat-option>
+                  <mat-option value="is-IS">Icelandic (Iceland)</mat-option>
+                  <mat-option value="id-ID">Indonesian (Indonesia)</mat-option>
+                  <mat-option value="it-IT">Italian (Italy)</mat-option>
+                  <mat-option value="ja-JP">Japanese (Japan)</mat-option>
+                  <mat-option value="kk-KZ">Kazakh (Kazakhistan)</mat-option>
+                  <mat-option value="ko-KR">Korean (South Korea)</mat-option>
+                  <mat-option value="lt-LT">Lithuanian (Lithuania)</mat-option>
+                  <mat-option value="ms-MY">Malay (Malaysia)</mat-option>
+                  <mat-option value="nb-NO">Norwegian (Norway)</mat-option>
+                  <mat-option value="fa_IR">Persian</mat-option>
+                  <mat-option value="pl-PL">Polish (Poland)</mat-option>
+                  <mat-option value="pt-BR">Portuguese (Brazil)</mat-option>
+                  <mat-option value="pt-PT">Portuguese (Portugal)</mat-option>
+                  <mat-option value="ro-RO">Romanian (Romania)</mat-option>
+                  <mat-option value="ru-RU">Russian (Russia)</mat-option>
+                  <mat-option value="sk-SK">Slovak (Slovakia)</mat-option>
+                  <mat-option value="sl-SI">Slovenian (Slovenia)</mat-option>
+                  <mat-option value="es-ES">Spanish (Spain)</mat-option>
+                  <mat-option value="es-MX">Spanish (Mexico)</mat-option>
+                  <mat-option value="sw-KE">Swahili (Kenya)</mat-option>
+                  <mat-option value="sv-SE">Swedish (Sweden)</mat-option>
+                  <mat-option value="tr-TR">Turkish (Turkey)</mat-option>
+                  <mat-option value="th-TH">Thai (Thailand)</mat-option>
+                  <mat-option value="vi-VN">Vietnamese (Vietnam)</mat-option>
+                </mat-select>
+              </div>
+            </div>
+
+            <!-- Maximum Length -->
+            <div class="col-md-6 col-12">
+              <div class="form-group mb-0">
+                <label [dir]="langDir" class="form-label-custom">
+                  <mat-icon class="label-icon">straighten</mat-icon>
+                  {{ "MAXIMUM_LENGTH" | translate }}
+                </label>
+                <input [dir]="langDir" readonly formControlName="maximumLength" class="form-control form-control-custom"
+                  type="number" />
+              </div>
+            </div>
+
+            <!-- Creativity -->
+            <div class="col-md-6 col-12">
+              <div class="form-group mb-0">
+                <label [dir]="langDir" class="form-label-custom">
+                  <mat-icon class="label-icon">brush</mat-icon>
+                  {{ "CREATIVITY" | translate }}
+                </label>
+                <mat-select [dir]="langDir" panelClass="mat-select-control" class="form-control form-control-custom"
+                  formControlName="creativity" placeholder="{{ 'CREATIVITY' | translate }}">
+                  <mat-option value="0.25">Economic (0.25)</mat-option>
+                  <mat-option value="0.5">Average (0.5)</mat-option>
+                  <mat-option value="0.75">Good (0.75)</mat-option>
+                  <mat-option value="1">Premium (1.0)</mat-option>
+                </mat-select>
+              </div>
+            </div>
+
+            <!-- Tone of Voice -->
+            <div class="col-md-6 col-12">
+              <div class="form-group mb-0">
+                <label [dir]="langDir" class="form-label-custom">
+                  <mat-icon class="label-icon">record_voice_over</mat-icon>
+                  {{ "TONE_OF_VOICE" | translate }}
+                </label>
+                <mat-select [dir]="langDir" panelClass="mat-select-control" class="form-control form-control-custom"
+                  formControlName="toneOfVoice" placeholder="{{ 'TONE_OF_VOICE' | translate }}">
+                  <mat-option value="Professional">Professional</mat-option>
+                  <mat-option value="Funny">Funny</mat-option>
+                  <mat-option value="Casual">Casual</mat-option>
+                  <mat-option value="Excited">Excited</mat-option>
+                  <mat-option value="Witty">Witty</mat-option>
+                  <mat-option value="Sarcastic">Sarcastic</mat-option>
+                  <mat-option value="Feminine">Feminine</mat-option>
+                  <mat-option value="Masculine">Masculine</mat-option>
+                  <mat-option value="Bold">Bold</mat-option>
+                  <mat-option value="Dramatic">Dramatic</mat-option>
+                  <mat-option value="Grumpy">Grumpy</mat-option>
+                  <mat-option value="Secretive">Secretive</mat-option>
+                  <mat-option value="other">Other</mat-option>
+                </mat-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Keywords (if any) -->
+      @if (keywords.controls.length > 0) {
+      <div class="detail-section-card mb-3">
+        <div class="section-card-header">
+          <mat-icon class="section-icon">label</mat-icon>
+          <span class="section-title">Keywords</span>
+        </div>
+        <div class="section-card-body">
+          <div class="row g-2" formArrayName="keywords">
+            @for(keyword of keywords.controls; let i = $index; track i) {
+            <div class="col-md-6 col-12" [formGroupName]="i">
+              <div class="form-group mb-0">
+                <label class="form-label-custom">{{ keyword.get("keyword")?.value | titlecase }}</label>
+                <input formControlName="keywordValue" readonly class="form-control form-control-custom" />
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+      }
+
+      <!-- Prompt Input Card -->
+      <div class="detail-section-card mb-3">
+        <div class="section-card-header justify-content-between">
+          <div class="d-flex align-items-center gap-2">
+            <mat-icon class="section-icon">chat</mat-icon>
+            <span class="section-title">{{ "PROMPT_INPUT" | translate }}</span>
+          </div>
+        </div>
+        <div class="section-card-body">
+          <textarea [dir]="langDir" readonly formControlName="promptInput" rows="3"
+            class="form-control prompt-textarea-custom custom-scroll"></textarea>
+        </div>
+      </div>
+
+      <!-- Generated Document Summary / Editor -->
+      <div class="detail-section-card mb-0">
+        <div class="section-card-header">
+          <mat-icon class="section-icon text-primary">description</mat-icon>
+          <span class="section-title">{{ "DOCUMENT_SUMMARY" | translate }}</span>
+        </div>
+        <div class="section-card-body p-2">
+          <div class="NgxEditor__Wrapper editor-preview-wrapper">
+            <app-text-editor formControlName="editorData"></app-text-editor>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hidden PDF helper (intact for export support) -->
+      <div style="position: absolute; left: -15420px">
+        <div style="width: 100%; display: flex">
+          <div id="pdfDocument">
+            <div class="container" style="width: 95%; margin-right: auto; margin-left: auto">
+              <div [innerHTML]="aiEditorForm.get('editorData')?.value"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <!-- 3. Modal Footer Actions -->
+  <mat-dialog-actions class="saas-dialog-footer">
+    <button type="button" class="btn btn-saas-cancel" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+      <span>{{ "CLOSE" | translate }}</span>
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -1,0 +1,60 @@
+@import '../../shared/dialog-styles.scss';
+
+.attachment-pill-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 14px;
+}
+
+.attachment-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: var(--app-primary-color, #1976d2);
+  flex-shrink: 0;
+}
+
+.attachment-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.attachment-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.editor-shell {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  overflow: hidden;
+
+  ::ng-deep .ck-editor__editable_inline {
+    min-height: 140px;
+    max-height: 260px;
+  }
+}
+
+.dialog-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(2px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+
+  .loading-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+  }
+}

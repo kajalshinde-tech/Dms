@@ -1,0 +1,69 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized Page Header -->
+    <div class="page-header-row mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">menu_book</mat-icon>
+        <span class="mb-0 page-title">
+          {{ "PAGE_HELPER" | translate }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Main Table Card -->
+    <div class="doc-table-card">
+      <div class="table-responsive">
+        @if(pageHelpers && pageHelpers.length > 0) {
+          <table class="modern-doc-table w-100" mat-table [dataSource]="pageHelpers" multiTemplateDataRows>
+            
+            <!-- 1. Action Column -->
+            <ng-container matColumnDef="action">
+              <th class="table-column-100" mat-header-cell *matHeaderCellDef>{{ "ACTION" | translate }}</th>
+              <td class="table-column-100" mat-cell *matCellDef="let element">
+                <div class="d-flex align-items-center gap-2">
+                  <button type="button" class="btn-action-edit" (click)="managePageHelper(element)"
+                    matTooltip="{{ 'EDIT' | translate }}">
+                    <mat-icon class="action-icon">edit</mat-icon>
+                  </button>
+                  <button type="button" class="btn-action-view" (click)="viewPageHelper(element)"
+                    matTooltip="Preview Guide">
+                    <mat-icon class="action-icon">visibility</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- 2. Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>{{ "NAME" | translate }}</th>
+              <td mat-cell *matCellDef="let element">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="item-icon-circle">
+                    <mat-icon class="item-icon">description</mat-icon>
+                  </div>
+                  <span class="font-weight-600 text-dark">{{ element.name }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- 3. Code Column -->
+            <ng-container matColumnDef="code">
+              <th mat-header-cell *matHeaderCellDef>{{ "CODE" | translate }}</th>
+              <td mat-cell *matCellDef="let element">
+                <span class="badge-code">{{ element.code }}</span>
+              </td>
+            </ng-container>
+
+            <tr class="grid-header-row" mat-header-row *matHeaderRowDef="columnsToDisplay; sticky: true"></tr>
+            <tr class="grid-body-row" mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
+          </table>
+        } @else {
+          <div class="empty-state d-flex flex-column align-items-center justify-content-center p-5 text-muted">
+            <mat-icon class="fs-2 text-muted mb-2">menu_book</mat-icon>
+            <span class="fs-7 font-weight-bold">{{ "NO_DATA_FOUND" | translate }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>

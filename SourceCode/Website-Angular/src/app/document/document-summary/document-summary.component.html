@@ -1,0 +1,55 @@
+<div class="saas-dialog-container">
+  <!-- Header -->
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge purple-badge">
+        <mat-icon>smart_toy</mat-icon>
+      </div>
+      <div>
+        <h5 class="dialog-title mb-0">{{ "DOCUMENT_SUMMARY" | translate }}</h5>
+        <p class="dialog-subtitle mb-0">AI-Powered Overview & Key Insights</p>
+      </div>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <button type="button" class="dialog-action-header-btn" (click)="copyToClipboard()" [matTooltip]="'Copy to clipboard'">
+        <mat-icon>{{ isCopied ? 'check' : 'content_copy' }}</mat-icon>
+      </button>
+      <button type="button" class="dialog-close-btn" (click)="onDocumentCancel()" [attr.aria-label]="'CANCEL' | translate">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <div class="ai-summary-card">
+      <div class="ai-card-header">
+        <div class="d-flex align-items-center gap-2">
+          <mat-icon class="ai-sparkle-icon">auto_awesome</mat-icon>
+          <span class="ai-badge-text">Generated Summary</span>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-secondary copy-chip-btn" (click)="copyToClipboard()">
+          <mat-icon class="sm-icon">{{ isCopied ? 'check' : 'content_copy' }}</mat-icon>
+          <span>{{ isCopied ? 'Copied' : 'Copy Text' }}</span>
+        </button>
+      </div>
+      <div class="ai-content-area custom-scroll">
+        <textarea rows="11" class="summary-textarea" readonly [(ngModel)]="documentSummary"
+          placeholder="{{'DOCUMENT_SUMMARY' | translate}}">
+        </textarea>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <!-- Footer -->
+  <mat-dialog-actions class="saas-dialog-footer">
+    <button type="button" class="btn btn-saas-cancel" (click)="onDocumentCancel()">
+      <mat-icon>close</mat-icon>
+      <span>{{'CANCEL' | translate}}</span>
+    </button>
+    <button type="button" class="btn btn-primary-custom" (click)="copyToClipboard()">
+      <mat-icon>{{ isCopied ? 'check' : 'content_copy' }}</mat-icon>
+      <span>{{ isCopied ? 'Copied to Clipboard' : 'Copy Summary' }}</span>
+    </button>
+  </mat-dialog-actions>
+</div>

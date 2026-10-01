@@ -1,0 +1,149 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized Page Header -->
+    <div class="page-header-row mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">receipt_long</mat-icon>
+        <span class="mb-0 page-title">
+          {{ "LOG_DETAIL" | translate }}
+        </span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button [routerLink]="['/logs']" class="btn-back-action" type="button">
+          <mat-icon class="btn-icon">arrow_back</mat-icon>
+          <span>{{ "BACK_TO_LIST" | translate }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Detail Card -->
+    @if(log) {
+      <div class="doc-form-card w-100 mb-4">
+        <div class="card-header-strip p-3 border-bottom bg-light d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div class="d-flex align-items-center gap-2">
+            <mat-icon class="text-primary fs-5">info</mat-icon>
+            <div>
+              <h6 class="mb-0 font-weight-700 text-dark">
+                {{ "LOG_DETAIL" | translate }}
+              </h6>
+              <span class="text-muted extra-small">
+                System execution event snapshot and exception trace.
+              </span>
+            </div>
+          </div>
+          <span class="status-pill" [ngClass]="getLevelPillClass(log.level)">
+            <span class="status-dot"></span>
+            <span>{{ log.level }}</span>
+          </span>
+        </div>
+
+        <div class="card-body p-3 p-md-4">
+          <!-- Summary Meta Grid -->
+          <div class="row g-3 mb-4">
+            
+            <!-- 1. Date Time -->
+            <div class="col-12 col-sm-6 col-lg-3">
+              <div class="meta-info-card p-3 rounded-3 border bg-light h-100">
+                <span class="meta-label text-muted extra-small d-block mb-1">
+                  {{ "DATE_TIME" | translate }}
+                </span>
+                <div class="d-flex align-items-center gap-2">
+                  <mat-icon class="meta-icon text-secondary">schedule</mat-icon>
+                  <span class="meta-value font-weight-700 text-dark">{{ log.logged | utcToLocalTime : "full" }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Log Level -->
+            <div class="col-12 col-sm-6 col-lg-3">
+              <div class="meta-info-card p-3 rounded-3 border bg-light h-100">
+                <span class="meta-label text-muted extra-small d-block mb-1">
+                  {{ "LEVEL" | translate }}
+                </span>
+                <div class="d-flex align-items-center gap-2">
+                  <mat-icon class="meta-icon text-secondary">flag</mat-icon>
+                  <span class="meta-value font-weight-700 text-dark">{{ log.level }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Logger -->
+            @if(log.logger) {
+              <div class="col-12 col-sm-6 col-lg-3">
+                <div class="meta-info-card p-3 rounded-3 border bg-light h-100">
+                  <span class="meta-label text-muted extra-small d-block mb-1">
+                    {{ "LOGGER" | translate }}
+                  </span>
+                  <div class="d-flex align-items-center gap-2">
+                    <mat-icon class="meta-icon text-secondary">hub</mat-icon>
+                    <span class="meta-value font-weight-600 text-dark font-monospace small text-truncate" [title]="log.logger">
+                      {{ log.logger }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            }
+
+            <!-- 4. Callsite -->
+            @if(log.callsite) {
+              <div class="col-12 col-sm-6 col-lg-3">
+                <div class="meta-info-card p-3 rounded-3 border bg-light h-100">
+                  <span class="meta-label text-muted extra-small d-block mb-1">
+                    {{ "CALLSITE" | translate }}
+                  </span>
+                  <div class="d-flex align-items-center gap-2">
+                    <mat-icon class="meta-icon text-secondary">code</mat-icon>
+                    <span class="meta-value font-weight-600 text-dark font-monospace small text-truncate" [title]="log.callsite">
+                      {{ log.callsite }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            }
+
+          </div>
+
+          <!-- Log Message Section -->
+          @if(log.message) {
+            <div class="section-block mb-4">
+              <label class="field-label d-flex align-items-center gap-1 mb-2">
+                <mat-icon class="fs-6 text-muted">chat</mat-icon>
+                <span>{{ "MESSAGE" | translate }}</span>
+              </label>
+              <div class="content-display-box p-3 rounded-3 border bg-light">
+                <p class="mb-0 text-dark font-monospace small">{{ log.message }}</p>
+              </div>
+            </div>
+          }
+
+          <!-- Properties Section -->
+          @if(log.properties) {
+            <div class="section-block mb-4">
+              <label class="field-label d-flex align-items-center gap-1 mb-2">
+                <mat-icon class="fs-6 text-muted">tune</mat-icon>
+                <span>{{ "PROPERTIES" | translate }}</span>
+              </label>
+              <div class="content-display-box p-3 rounded-3 border bg-light">
+                <pre class="mb-0 text-dark font-monospace small m-0">{{ log.properties }}</pre>
+              </div>
+            </div>
+          }
+
+          <!-- Exception Stack Trace -->
+          @if(log.exception) {
+            <div class="section-block mb-3">
+              <label class="field-label d-flex align-items-center gap-1 mb-2">
+                <mat-icon class="fs-6 text-danger">terminal</mat-icon>
+                <span class="text-danger font-weight-700">{{ "EXCEPTION" | translate }} Stack Trace</span>
+              </label>
+              <div class="exception-console p-3 rounded-3">
+                <pre class="exception-code-text mb-0">{{ log.exception }}</pre>
+              </div>
+            </div>
+          }
+
+        </div>
+      </div>
+    }
+  </div>
+</section>

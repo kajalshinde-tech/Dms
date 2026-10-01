@@ -1,0 +1,151 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized Page Header (No Question Mark) -->
+    <div class="page-header-row mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">schema</mat-icon>
+        <span class="mb-0 page-title">
+          {{ "REQUEST_DOCUMENT_THROUGH_WORKFLOW" | translate }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Main Form Card -->
+    <form [formGroup]="reqDocumentWorkflowForm">
+      <div class="doc-form-card compact-card">
+        
+        <!-- Row 1: Workflow, Folder/Category, Storage -->
+        <div class="row g-3">
+          <!-- 1. Workflow Select -->
+          <div class="col-12 col-md-4">
+            <div class="field-group">
+              <label class="form-label">
+                {{ "SELECT_WORKFLOW" | translate }} <span class="text-danger">*</span>
+              </label>
+              <div class="field-input-wrapper">
+                <mat-icon class="field-icon">schema</mat-icon>
+                <mat-select panelClass="mat-select-control custom-select-panel" class="form-control field-control field-select"
+                  formControlName="workflowId" placeholder="{{ 'SELECT_WORKFLOW' | translate }}">
+                  @for (workflow of workflows; track workflow.id) {
+                  <mat-option [value]="workflow.id">
+                    {{ workflow.name }}
+                  </mat-option>
+                  }
+                </mat-select>
+              </div>
+              @if (reqDocumentWorkflowForm.get('workflowId')?.touched && reqDocumentWorkflowForm.get('workflowId')?.errors?.['required']) {
+              <div class="text-danger small mt-1">
+                {{ "WORKFLOW_IS_REQUIRED" | translate }}
+              </div>
+              }
+            </div>
+          </div>
+
+          <!-- 2. Requested Document Category / Folder -->
+          <div class="col-12 col-md-4">
+            <div class="field-group">
+              <label class="form-label">
+                {{ "REQUESTED_DOCUMENT_CATEGORY" | translate }} <span class="text-danger">*</span>
+              </label>
+              <div class="field-input-wrapper">
+                <mat-icon class="field-icon">folder</mat-icon>
+                <mat-select panelClass="mat-select-control custom-select-panel" class="form-control field-control field-select"
+                  formControlName="categoryId" placeholder="{{ 'REQUESTED_DOCUMENT_CATEGORY' | translate }}">
+                  <mat-option value="">-- {{ "NONE" | translate }} --</mat-option>
+                  @for (category of allCategories; track $index) {
+                  <mat-option [value]="category">
+                    <div class="country-item d-flex align-items-center"
+                      [ngStyle]="{ 'margin-left.px': (category.deafLevel ?? 0) * 16 }">
+                      @if(category.deafLevel == 0) {
+                      <mat-icon class="text-warning me-1 fs-6">folder</mat-icon>
+                      <span class="font-weight-600">{{ category.name }}</span>
+                      } @else {
+                      <mat-icon class="text-warning me-1 fs-6">folder_open</mat-icon>
+                      <span>{{ category.name }}</span>
+                      }
+                    </div>
+                  </mat-option>
+                  }
+                </mat-select>
+              </div>
+              @if (reqDocumentWorkflowForm.get('categoryId')?.touched && reqDocumentWorkflowForm.get('categoryId')?.errors?.['required']) {
+              <div class="text-danger small mt-1">
+                {{ "CATEGORY_IS_REQUIRED" | translate }}
+              </div>
+              }
+            </div>
+          </div>
+
+          <!-- 3. Storage Location -->
+          <div class="col-12 col-md-4">
+            <div class="field-group">
+              <label class="form-label">
+                {{ "SELECT_STORAGE" | translate }}
+              </label>
+              <div class="field-input-wrapper">
+                <mat-icon class="field-icon">cloud_queue</mat-icon>
+                <mat-select panelClass="mat-select-control custom-select-panel" class="form-control field-control field-select"
+                  formControlName="storageSettingId" placeholder="{{ 'SELECT_STORAGE' | translate }}">
+                  @for (storageSetting of storageSettings; track $index) {
+                  <mat-option [value]="storageSetting.id">
+                    {{ storageSetting.storageType | storageType : storageSetting.name }}
+                  </mat-option>
+                  }
+                </mat-select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: Requested Document Name -->
+        <div class="row g-3 mt-1">
+          <div class="col-12">
+            <div class="field-group">
+              <label class="form-label">
+                {{ "REQUESTED_DOCUMENT_NAME" | translate }} <span class="text-danger">*</span>
+              </label>
+              <div class="field-input-wrapper">
+                <mat-icon class="field-icon">label</mat-icon>
+                <input formControlName="name" name="name" type="text" class="form-control field-control"
+                  placeholder="{{ 'ENTER_THE_DOCUMENT_NAME' | translate }}" />
+              </div>
+              @if (reqDocumentWorkflowForm.get('name')?.touched && reqDocumentWorkflowForm.get('name')?.errors?.['required']) {
+              <div class="text-danger small mt-1">
+                {{ "DOCUMENT_NAME_IS_REQUIRED" | translate }}
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 3: Instruction to Upload Document -->
+        <div class="row g-3 mt-1">
+          <div class="col-12">
+            <div class="field-group">
+              <label class="form-label">
+                {{ "INSTRUCTION_TO_UPLOAD_DOCUMENT" | translate }}
+              </label>
+              <div class="field-textarea-wrapper">
+                <mat-icon class="field-icon">notes</mat-icon>
+                <textarea formControlName="comment" name="comment" class="form-control field-textarea" rows="3"
+                  placeholder="{{ 'ENTER_INSTRUCTION_HERE' | translate }}"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="form-footer-actions d-flex align-items-center flex-wrap gap-2 mt-4 pt-3 border-top">
+          <button class="btn-save-main" matButton="filled" (click)="createReqDocumentWorkflow()">
+            <mat-icon class="medium-icon fs-5">save</mat-icon>
+            <span>{{ "SAVE" | translate }}</span>
+          </button>
+          <button type="button" class="btn-cancel-main" matButton="filled" [routerLink]="['/workflows']">
+            <mat-icon class="medium-icon fs-5">arrow_back</mat-icon>
+            <span>{{ "CANCEL" | translate }}</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>

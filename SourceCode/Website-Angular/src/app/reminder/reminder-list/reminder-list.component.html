@@ -1,0 +1,211 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Standardized SaaS Page Header (No Question Mark Help Icon) -->
+    <div class="page-header-row mb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="page-title-icon align-middle">notifications_active</mat-icon>
+        <span class="mb-0 page-title">
+          {{ "REMINDERS" | translate }}
+        </span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button *hasClaim="'CREATE_REMINDER'" [routerLink]="['/reminders/add']" class="primary btn-add-main" matButton="filled">
+          <mat-icon class="medium-icon fs-5 align-middle">add</mat-icon>
+          <span class="d-none d-sm-inline ms-1">{{ "ADD_REMINDER" | translate }}</span>
+          <span class="d-inline d-sm-none ms-1">Add</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Modern Filter Toolbar Card -->
+    <div class="doc-filter-card mb-3">
+      <div class="row g-2 align-items-center">
+        <!-- Subject Filter -->
+        <div class="col-12 col-sm-6 col-lg-4">
+          <div class="filter-input-wrapper">
+            <mat-icon class="filter-icon">search</mat-icon>
+            <input placeholder="{{'SEARCH_SUBJECT' | translate}}..." type="text"
+              class="form-control filter-control" [(ngModel)]="SubjectFilter" />
+            @if (SubjectFilter) {
+            <button type="button" class="btn-filter-clear" (click)="SubjectFilter = ''">
+              <mat-icon>close</mat-icon>
+            </button>
+            }
+          </div>
+        </div>
+
+        <!-- Message Filter -->
+        <div class="col-12 col-sm-6 col-lg-4">
+          <div class="filter-input-wrapper">
+            <mat-icon class="filter-icon">chat_bubble_outline</mat-icon>
+            <input placeholder="{{'SEARCH_MESSAGE' | translate}}..." type="text"
+              class="form-control filter-control" [(ngModel)]="MessageFilter" />
+            @if (MessageFilter) {
+            <button type="button" class="btn-filter-clear" (click)="MessageFilter = ''">
+              <mat-icon>close</mat-icon>
+            </button>
+            }
+          </div>
+        </div>
+
+        <!-- Frequency Filter -->
+        <div class="col-12 col-sm-6 col-lg-3">
+          <mat-select panelClass="mat-select-control" placeholder="{{'FREQUENCY' | translate}}"
+            [(ngModel)]="FrequencyFilter" class="form-control filter-control">
+            <mat-option [value]="">-- {{'ALL_FREQUENCIES' | translate}} --</mat-option>
+            @for(frequency of reminderFrequencies; track frequency?.id) {
+            <mat-option [value]="frequency?.id">
+              {{ frequency?.name?.toUpperCase() | translate }}
+            </mat-option>
+            }
+          </mat-select>
+        </div>
+
+        <!-- Reset Filters Button -->
+        @if (SubjectFilter || MessageFilter || FrequencyFilter) {
+        <div class="col-12 col-sm-6 col-lg-1 d-flex align-items-center">
+          <button type="button" class="btn btn-clear-all w-100" (click)="clearFilters()" matTooltip="Reset Filters">
+            <mat-icon class="align-middle">refresh</mat-icon>
+            <span class="d-lg-none ms-1">Reset</span>
+          </button>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- Modern Datatable Card -->
+    <div class="doc-table-card">
+      <div class="doc-table-wrapper">
+        <div class="doc-table-scroll-container">
+          <table mat-table [dataSource]="dataSource" matSort matSortActive="createdDate" matSortDirection="desc" class="w-100 doc-modern-table">
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+              <th class="table-col-action text-center" mat-header-cell *matHeaderCellDef>
+                {{ "ACTION" | translate }}
+              </th>
+              <td class="table-col-action text-center" mat-cell *matCellDef="let reminder">
+                <div class="d-flex align-items-center justify-content-center gap-1">
+                  <button mat-icon-button class="btn-action-edit" *hasClaim="'EDIT_REMINDER'"
+                    [routerLink]="['/reminders/manage/', reminder.id]" [matTooltip]="'EDIT' | translate">
+                    <mat-icon class="action-icon">edit</mat-icon>
+                  </button>
+                  <button mat-icon-button class="btn-action-delete" *hasClaim="'DELETE_REMINDER'"
+                    (click)="deleteReminder(reminder)" type="button" [matTooltip]="'DELETE' | translate">
+                    <mat-icon class="action-icon">delete</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Start Date Column -->
+            <ng-container matColumnDef="startDate">
+              <th class="table-col-date" mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "START_DATE" | translate }}
+              </th>
+              <td class="table-col-date" mat-cell *matCellDef="let reminder">
+                <span class="text-date">{{ reminder.startDate | utcToLocalTime:'full' }}</span>
+              </td>
+            </ng-container>
+
+            <!-- End Date Column -->
+            <ng-container matColumnDef="endDate">
+              <th class="table-col-date" mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "END_DATE" | translate }}
+              </th>
+              <td class="table-col-date" mat-cell *matCellDef="let reminder">
+                @if (reminder.endDate) {
+                <span class="text-date">{{ reminder.endDate | utcToLocalTime:'full' }}</span>
+                } @else {
+                <span class="text-muted">-</span>
+                }
+              </td>
+            </ng-container>
+
+            <!-- Subject Column -->
+            <ng-container matColumnDef="subject">
+              <th class="table-col-subject" mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "SUBJECT" | translate }}
+              </th>
+              <td class="table-col-subject" mat-cell *matCellDef="let reminder">
+                <span class="text-subject" [matTooltip]="reminder.subject">{{ reminder.subject | limitTo: '100' }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Message Column -->
+            <ng-container matColumnDef="message">
+              <th class="table-col-message" mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "MESSAGE" | translate }}
+              </th>
+              <td class="table-col-message" mat-cell *matCellDef="let reminder">
+                <span class="text-message" [matTooltip]="reminder.message">{{ reminder.message | limitTo: '150' }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Frequency Column -->
+            <ng-container matColumnDef="frequency">
+              <th class="table-col-frequency" mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "FREQUENCY" | translate }}
+              </th>
+              <td class="table-col-frequency" mat-cell *matCellDef="let reminder">
+                <span class="badge-frequency">
+                  {{ reminder.frequency | frequency | translate }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Document Name Column -->
+            <ng-container matColumnDef="documentName">
+              <th class="table-col-document" mat-header-cell *matHeaderCellDef mat-sort-header>
+                {{ "DOCUMENT" | translate }}
+              </th>
+              <td class="table-col-document" mat-cell *matCellDef="let reminder">
+                @if (reminder.documentName) {
+                <div class="d-flex align-items-center gap-1 text-document" [matTooltip]="reminder.documentName">
+                  <mat-icon class="doc-icon">description</mat-icon>
+                  <span>{{ reminder.documentName }}</span>
+                </div>
+                } @else {
+                <span class="text-muted">-</span>
+                }
+              </td>
+            </ng-container>
+
+            <!-- Empty Data Row -->
+            <tr *matNoDataRow>
+              <td colspan="7">
+                <div class="empty-state-wrapper py-5 text-center">
+                  <div class="empty-state-icon mb-2">
+                    <mat-icon>notifications_off</mat-icon>
+                  </div>
+                  <h6 class="empty-state-title mb-1">{{ 'NO_DATA_FOUND' | translate }}</h6>
+                  <p class="empty-state-desc mb-0 text-muted">No reminder records match your search criteria.</p>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Header and Data Rows -->
+            <tr class="grid-header-color doc-table-header-row" mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr class="doc-table-row" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr class="doc-table-footer-row" mat-footer-row *matFooterRowDef="footerToDisplayed; sticky: true"></tr>
+
+            <!-- Footer with Paginator -->
+            <ng-container matColumnDef="footer">
+              <td mat-footer-cell colspan="7" *matFooterCellDef class="p-0">
+                <mat-paginator [length]="reminderResource.totalCount" [pageSize]="reminderResource.pageSize"
+                  [pageSizeOptions]="[10, 20, 30]" [showFirstLastButtons]="true" class="doc-custom-paginator">
+                </mat-paginator>
+              </td>
+            </ng-container>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+@if(dataSource.loading$ | async) {
+<div class="spinner-container">
+  <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
+  </mat-progress-spinner>
+</div>
+}
