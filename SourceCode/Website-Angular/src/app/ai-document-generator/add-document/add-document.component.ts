@@ -44,7 +44,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { StorageTypePipe } from '../../storage-setting/storage-type.pipe';
 import { PageHelpTextComponent } from '@shared/page-help-text/page-help-text.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { NgStyle } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { ToastrService } from '@core/services/toastr-service';
 import { retentionValidator } from '@shared/retention-validator';
@@ -62,9 +62,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatDialogModule,
     MatButtonModule,
     StorageTypePipe,
-    PageHelpTextComponent,
     MatDatepickerModule,
-    NgStyle,
+    CommonModule,
     MatCardModule,
     MatProgressSpinnerModule,
     MatTooltipModule

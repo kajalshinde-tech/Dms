@@ -19,7 +19,6 @@ import SignaturePad from 'signature_pad';
     ReactiveFormsModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    PageHelpTextComponent,
     TranslateModule,
     MatCardModule,
     MatIconModule

@@ -1,20 +1,6 @@
-.signature-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  
-    canvas {
-        border: 1px solid #ccc;
-        width: 100%; 
-        max-width: 60vw; 
-        max-height: 70vh;
-      }
+@use '../../shared/dialog-styles.scss';
 
-    .controls {
-      margin-top: 10px;
-      display: flex;
-      gap: 10px;
-  
-    }
-  }
+:host {
+  display: block;
+  width: 100%;
+}

@@ -1,25 +1,25 @@
-<section class="content">
+<section class="content table-settings-page">
   <div class="container-fluid">
     <!-- Page Header Section -->
-    <div class="table-settings-header-card mb-3">
-      <div class="header-left-group">
+    <div class="page-header-row mb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
         <button mat-icon-button (click)="onSeetingsClose()" class="back-nav-btn" matTooltip="Back to Document View" type="button">
           <mat-icon>arrow_back</mat-icon>
         </button>
-        <div class="header-icon-badge">
-          <mat-icon>tune</mat-icon>
-        </div>
+        <mat-icon class="page-title-icon align-middle">tune</mat-icon>
         <div>
-          <h1 class="page-main-title mb-0">{{ "TABLE_SETTINGS" | translate }}</h1>
-          <span class="page-subtitle">Customize column widths, visibility, and display order</span>
+          <span class="mb-0 page-title">
+            {{ "TABLE_SETTINGS" | translate }}
+          </span>
+          <span class="page-subtitle text-muted d-block fs-xs">Customize column widths, visibility, and display order</span>
         </div>
       </div>
-      <div class="header-right-actions">
-        <button type="button" class="btn-cancel-top" (click)="onSeetingsClose()">
+      <div class="d-flex align-items-center gap-2">
+        <button type="button" class="btn btn-cancel-top" (click)="onSeetingsClose()">
           <mat-icon>close</mat-icon>
           <span class="d-none d-sm-inline">{{ "CANCEL" | translate }}</span>
         </button>
-        <button type="button" class="btn-save-top" (click)="saveTableSettings()">
+        <button type="button" class="btn btn-save-top" (click)="saveTableSettings()">
           <mat-icon>save</mat-icon>
           <span>{{ "SAVE" | translate }}</span>
         </button>
@@ -27,23 +27,24 @@
     </div>
 
     <!-- Main Settings Card -->
-    <div class="table-settings-main-card">
+    <div class="doc-table-card">
       <form [formGroup]="tableSettingsForm">
         <div class="table-responsive settings-table-container">
-          <table class="settings-table">
+          <table class="doc-modern-table settings-table w-100">
             <thead>
-              <tr>
-                <th class="th-title">{{ 'HEADER_TITLE' | translate }}</th>
-                <th class="th-width text-center">{{ 'WIDTH' | translate }}</th>
-                <th class="th-visible text-center">{{ 'ISVISIBLE' | translate }}</th>
-                <th class="th-order text-center">{{ 'ORDERNUMBER' | translate }}</th>
+              <tr class="doc-table-header-row">
+                <th class="th-title ps-3">{{ 'HEADER_TITLE' | translate }}</th>
+                <th class="th-width text-center" style="width: 150px;">{{ 'WIDTH' | translate }}</th>
+                <th class="th-visible text-center" style="width: 120px;">{{ 'ISVISIBLE' | translate }}</th>
+                <th class="th-order text-center pe-3" style="width: 140px;">{{ 'ORDERNUMBER' | translate }}</th>
               </tr>
             </thead>
             <tbody formArrayName="settingsArray">
               @for (settings of settingsArray.controls; track i; let i=$index) {
-                <tr [formGroupName]="i" class="settings-row" [class.row-hidden]="!settings.get('isVisible')?.value">
+                <tr [formGroupName]="i" class="doc-table-row settings-row"
+                  [ngClass]="{ 'odd-row': i % 2 === 0, 'even-row': i % 2 === 1, 'row-hidden': !settings.get('isVisible')?.value }">
                   <!-- Column Title -->
-                  <td class="td-title">
+                  <td class="td-title ps-3">
                     <div class="col-title-box">
                       <div class="col-icon-badge">
                         <mat-icon>view_column</mat-icon>
@@ -77,7 +78,7 @@
                   </td>
 
                   <!-- Order Number -->
-                  <td class="td-order text-center">
+                  <td class="td-order text-center pe-3">
                     <div class="order-input-wrapper">
                       <input formControlName="orderNumber" class="form-control settings-input order-input" type="number" min="1" />
                     </div>
@@ -100,11 +101,11 @@
             <span>Changes will apply immediately across your document table views.</span>
           </div>
           <div class="footer-buttons">
-            <button type="button" class="btn-cancel-custom" (click)="onSeetingsClose()">
+            <button type="button" class="btn btn-cancel-custom" (click)="onSeetingsClose()">
               <mat-icon>close</mat-icon>
               <span>{{ "CANCEL" | translate }}</span>
             </button>
-            <button type="button" class="btn-save-custom" (click)="saveTableSettings()" cdkFocusInitial>
+            <button type="button" class="btn btn-save-custom" (click)="saveTableSettings()" cdkFocusInitial>
               <mat-icon>check_circle</mat-icon>
               <span>{{ "SAVE" | translate }}</span>
             </button>
@@ -114,4 +115,3 @@
     </div>
   </div>
 </section>
-

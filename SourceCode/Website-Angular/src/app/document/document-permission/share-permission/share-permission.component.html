@@ -1,34 +1,31 @@
-<mat-dialog-content class="share-permission-modal">
+<div class="saas-dialog-container position-relative">
   <!-- 1. Modal Header -->
-  <div class="modal-header d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
-    <div class="d-flex align-items-center gap-2">
-      <div class="modal-header-icon">
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge primary-badge">
         <mat-icon>share</mat-icon>
       </div>
       <div>
-        <h6 class="modal-title mb-0">
-          {{ "SHARE_PERMISSIONS" | translate }}
-        </h6>
-        <span class="text-muted fs-11">
+        <h5 class="dialog-title mb-0">{{ "SHARE_PERMISSIONS" | translate }}</h5>
+        <p class="dialog-subtitle mb-0">
           Manage user and role access permissions for this document and folder
-        </span>
+        </p>
       </div>
     </div>
-    <button mat-icon-button (click)="closeDialog()" class="modal-close-btn" type="button" aria-label="Close">
+    <button type="button" class="dialog-close-btn" (click)="closeDialog()" aria-label="Close">
       <mat-icon>close</mat-icon>
     </button>
   </div>
 
-  <div class="modal-body-scrollable">
-    <!-- 2. Section 1: Folder / Category Permissions -->
+  <!-- 2. Scrollable Modal Body -->
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <!-- Section 1: Folder / Category Permissions -->
     @if (document.categoryName) {
-      <div class="permission-section-card mb-3">
-        <div class="section-card-header d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2 pb-2 border-bottom">
-          <div class="d-flex align-items-center gap-2">
-            <mat-icon class="folder-header-icon">folder</mat-icon>
-            <span class="section-card-title">
-              <b>{{ "FOLDER_OR_CATEGORY" | translate }}:</b> {{ document.categoryName }}
-            </span>
+      <div class="doc-card-section mb-3">
+        <div class="doc-section-header flex-wrap gap-2">
+          <div class="doc-section-title">
+            <mat-icon>folder</mat-icon>
+            <span><b>{{ "FOLDER_OR_CATEGORY" | translate }}:</b> {{ document.categoryName }}</span>
           </div>
           <div class="d-flex align-items-center gap-2 flex-wrap">
             <button (click)="addCategoryUserPermission()" class="btn btn-assign-user" type="button">
@@ -45,7 +42,7 @@
         <!-- Filter Search -->
         <div class="input-with-icon mb-2">
           <mat-icon class="field-icon">search</mat-icon>
-          <input class="form-control doc-form-input" (keyup)="applyCategoryPermissionFilter($event)"
+          <input class="form-control doc-form-input search-input-styled" (keyup)="applyCategoryPermissionFilter($event)"
             placeholder="{{ 'SEARCH_BY_USER_ROLE_NAME_AND_EMAIL' | translate }}" #inputCategoryFilter />
         </div>
 
@@ -166,16 +163,14 @@
       </div>
     }
 
-    <!-- 3. Section 2: Document Specific Permissions -->
+    <!-- Section 2: Document Specific Permissions -->
     @if (document) {
-      <div class="permission-section-card mb-2">
-        <div class="section-card-header d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2 pb-2 border-bottom">
-          <div class="d-flex align-items-center gap-2">
-            <mat-icon class="doc-header-icon">description</mat-icon>
+      <div class="doc-card-section mb-0">
+        <div class="doc-section-header flex-wrap gap-2">
+          <div class="doc-section-title">
+            <mat-icon>description</mat-icon>
             <div>
-              <span class="section-card-title">
-                <b>{{ "DOCUMENT_NAME" | translate }}:</b> {{ document.name }}
-              </span>
+              <span><b>{{ "DOCUMENT_NAME" | translate }}:</b> {{ document.name }}</span>
               @if (document.description) {
                 <span class="d-block text-muted fs-11 mt-1">
                   {{ document.description }}
@@ -198,7 +193,7 @@
         <!-- Filter Search -->
         <div class="input-with-icon mb-2">
           <mat-icon class="field-icon">search</mat-icon>
-          <input class="form-control doc-form-input" (keyup)="applyDocumentPermissionFilter($event)"
+          <input class="form-control doc-form-input search-input-styled" (keyup)="applyDocumentPermissionFilter($event)"
             placeholder="{{ 'SEARCH_BY_USER_ROLE_NAME_AND_EMAIL' | translate }}" #inputDocFilter />
         </div>
 
@@ -318,12 +313,13 @@
         </div>
       </div>
     }
-  </div>
+  </mat-dialog-content>
 
-  <!-- 4. Modal Footer -->
-  <div class="modal-footer-actions d-flex align-items-center justify-content-end gap-2 mt-3 pt-2 border-top">
-    <button type="button" class="btn-modal-cancel" (click)="closeDialog()">
-      {{ "CLOSE" | translate }}
+  <!-- 3. Modal Actions Footer -->
+  <mat-dialog-actions class="saas-dialog-footer">
+    <button type="button" class="btn btn-saas-cancel" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+      <span>{{ "CLOSE" | translate }}</span>
     </button>
-  </div>
-</mat-dialog-content>
+  </mat-dialog-actions>
+</div>

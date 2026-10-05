@@ -1,126 +1,130 @@
-<mat-dialog-content class="manage-submodal">
+<div class="saas-dialog-container position-relative">
   <!-- Header -->
-  <div class="modal-header d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
-    <div class="d-flex align-items-center gap-2">
-      <div class="modal-header-icon">
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge purple-badge">
         <mat-icon>admin_panel_settings</mat-icon>
       </div>
       <div>
-        <h6 class="modal-title mb-0">
-          {{ "ROLE_PERMISSION" | translate }}
-        </h6>
-        <span class="text-muted fs-11">
-          Assign document access permissions to specific user roles
-        </span>
+        <h5 class="dialog-title mb-0">{{ "ROLE_PERMISSION" | translate }}</h5>
+        <p class="dialog-subtitle mb-0">Assign document access permissions to specific user roles</p>
       </div>
     </div>
-    <button type="button" (click)="onNoClick()" class="modal-close-btn" aria-label="Close">
+    <button type="button" (click)="onNoClick()" class="dialog-close-btn" aria-label="Close">
       <mat-icon>close</mat-icon>
     </button>
   </div>
 
-  <form [formGroup]="permissionForm" class="modal-form-body">
-    <div class="row g-2">
-      <div class="col-12">
-        <div class="form-group mb-2">
-          <label class="form-label">{{'ROLES' | translate}} <span class="text-danger">*</span></label>
-          <mat-select panelClass="mat-select-control" placeholder="{{'SELECT_ROLES' | translate}}" class="form-control"
-            [(value)]="selectedRoles" multiple>
-            <mat-select-trigger>
-              @if (selectedRoles.length > 0) {
-                <span>{{selectedRoles[0].name}}</span>
-              }
-              @if (selectedRoles.length > 1) {
-                <span class="example-additional-selection text-muted ms-1">
-                  (+{{selectedRoles.length - 1}} {{selectedRoles.length === 2 ? 'other' : 'others'}})
-                </span>
-              }
-            </mat-select-trigger>
-            @for (role of data.roles; track role) {
-              <mat-option [value]="role">
-                {{role.name}}
-              </mat-option>
-            }
-          </mat-select>
-        </div>
-      </div>
-
-      <div class="col-12">
-        <mat-checkbox (change)="timeBoundChange($event)" color="primary" formControlName="isTimeBound">
-          <span class="fs-12">{{'SPACIFY_THE_PERIOD' | translate}}</span>
-        </mat-checkbox>
-      </div>
-
-      @if (permissionForm.get('isTimeBound')?.value) {
-        <div class="col-sm-12 col-md-6">
-          <div class="form-group mb-2">
-            <label class="form-label">{{'CHOOSE_A_START_DATE' | translate}}</label>
-            <div class="input-group input-group-sm">
-              <input formControlName="startDate" placeholder="{{'START_DATE' | translate}}" class="form-control"
-                [min]="minDate" [matDatepicker]="startDatePicker">
-              <button class="btn btn-outline-secondary calendar-trigger-btn" type="button" (click)="startDatePicker.open()">
-                <mat-icon class="calendar-icon">calendar_today</mat-icon>
-              </button>
-              <mat-datepicker #startDatePicker></mat-datepicker>
-            </div>
-            @if (permissionForm.get('startDate')?.touched && permissionForm.get('startDate')?.errors?.['required']) {
-              <div class="text-danger small mt-1">
-                {{'START_DATE_IS_REQURED' | translate}}
-              </div>
-            }
-          </div>
-        </div>
-
-        <div class="col-sm-12 col-md-6">
-          <div class="form-group mb-2">
-            <label class="form-label">{{'CHOOSE_A_END_DATE' | translate}}</label>
-            <div class="input-group input-group-sm">
-              <input formControlName="endDate" placeholder="{{'END_DATE' | translate}}" class="form-control"
-                [min]="permissionForm.get('startDate')?.value" [matDatepicker]="endDatePicker">
-              <button class="btn btn-outline-secondary calendar-trigger-btn" type="button" (click)="endDatePicker.open()">
-                <mat-icon class="calendar-icon">calendar_today</mat-icon>
-              </button>
-              <mat-datepicker #endDatePicker></mat-datepicker>
-            </div>
-            @if (permissionForm.get('startDate')?.touched && permissionForm.get('endDate')?.errors?.['required']) {
-              <div class="text-danger small mt-1">
-                {{'END_DATE_IS_REQURED' | translate}}
-              </div>
-            }
-          </div>
-        </div>
-      }
-
-      <div class="col-12">
-        <mat-checkbox color="primary" formControlName="isAllowDownload">
-          <span class="fs-12">{{'ALLOW_DOWNLOAD' | translate}}</span>
-        </mat-checkbox>
-      </div>
-
-      <div class="col-12">
-        <mat-checkbox color="primary" formControlName="isAllowEmailNotification">
-          <span class="fs-12">{{'IS_ALLOW_NOTIFICATION' | translate}}</span>
-        </mat-checkbox>
-      </div>
-
-      @if (permissionForm.get('isAllowEmailNotification')?.value && !smtpConfigured) {
+  <!-- Form Body -->
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <form [formGroup]="permissionForm" id="rolePermissionForm">
+      <div class="row g-3">
+        <!-- Roles Selection -->
         <div class="col-12">
-          <div class="alert alert-warning py-1 px-2 mb-2 fs-12">
-            {{ 'PLEASE_CONFIGURE_EMAIL_SMTP_SETTINGS' | translate }}
+          <div class="form-group mb-0">
+            <label class="form-label-custom">{{'ROLES' | translate}} <span class="required-star">*</span></label>
+            <mat-select panelClass="mat-select-control" placeholder="{{'SELECT_ROLES' | translate}}" class="form-control doc-form-input"
+              [(value)]="selectedRoles" multiple>
+              <mat-select-trigger>
+                @if (selectedRoles.length > 0) {
+                  <span>{{selectedRoles[0].name}}</span>
+                }
+                @if (selectedRoles.length > 1) {
+                  <span class="example-additional-selection text-muted ms-1">
+                    (+{{selectedRoles.length - 1}} {{selectedRoles.length === 2 ? 'other' : 'others'}})
+                  </span>
+                }
+              </mat-select-trigger>
+              @for (role of data.roles; track role) {
+                <mat-option [value]="role">
+                  {{role.name}}
+                </mat-option>
+              }
+            </mat-select>
           </div>
         </div>
-      }
-    </div>
 
-    <!-- Footer -->
-    <div class="modal-footer-actions d-flex align-items-center justify-content-end gap-2 mt-3 pt-2 border-top">
-      <button type="button" class="btn-modal-cancel" (click)="onNoClick()">
-        {{'CANCEL' | translate}}
-      </button>
-      <button type="button" class="btn-modal-primary" (click)="saveDocumentRolePermission()" cdkFocusInitial>
-        <mat-icon class="btn-icon-save">save</mat-icon>
-        {{'SAVE' | translate}}
-      </button>
-    </div>
-  </form>
-</mat-dialog-content>
+        <!-- Specify Period Toggle -->
+        <div class="col-12">
+          <mat-checkbox (change)="timeBoundChange($event)" color="primary" formControlName="isTimeBound">
+            <span class="fs-13 fw-semibold text-dark">{{'SPACIFY_THE_PERIOD' | translate}}</span>
+          </mat-checkbox>
+        </div>
+
+        @if (permissionForm.get('isTimeBound')?.value) {
+          <div class="col-12 col-md-6">
+            <div class="form-group mb-0">
+              <label class="form-label-custom">{{'CHOOSE_A_START_DATE' | translate}}</label>
+              <div class="input-group-addon-wrapper">
+                <input formControlName="startDate" placeholder="{{'START_DATE' | translate}}" class="form-control doc-form-input"
+                  [min]="minDate" [matDatepicker]="startDatePicker">
+                <button class="calendar-trigger-btn" type="button" (click)="startDatePicker.open()">
+                  <mat-icon class="calendar-icon">calendar_today</mat-icon>
+                </button>
+                <mat-datepicker #startDatePicker></mat-datepicker>
+              </div>
+              @if (permissionForm.get('startDate')?.touched && permissionForm.get('startDate')?.errors?.['required']) {
+                <div class="field-error-text">
+                  {{'START_DATE_IS_REQURED' | translate}}
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <div class="form-group mb-0">
+              <label class="form-label-custom">{{'CHOOSE_A_END_DATE' | translate}}</label>
+              <div class="input-group-addon-wrapper">
+                <input formControlName="endDate" placeholder="{{'END_DATE' | translate}}" class="form-control doc-form-input"
+                  [min]="permissionForm.get('startDate')?.value" [matDatepicker]="endDatePicker">
+                <button class="calendar-trigger-btn" type="button" (click)="endDatePicker.open()">
+                  <mat-icon class="calendar-icon">calendar_today</mat-icon>
+                </button>
+                <mat-datepicker #endDatePicker></mat-datepicker>
+              </div>
+              @if (permissionForm.get('startDate')?.touched && permissionForm.get('endDate')?.errors?.['required']) {
+                <div class="field-error-text">
+                  {{'END_DATE_IS_REQURED' | translate}}
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Permissions Checkboxes -->
+        <div class="col-12">
+          <div class="d-flex flex-column gap-2 p-3 bg-light rounded-3 border">
+            <mat-checkbox color="primary" formControlName="isAllowDownload">
+              <span class="fs-13 fw-semibold text-dark">{{'ALLOW_DOWNLOAD' | translate}}</span>
+            </mat-checkbox>
+
+            <mat-checkbox color="primary" formControlName="isAllowEmailNotification">
+              <span class="fs-13 fw-semibold text-dark">{{'IS_ALLOW_NOTIFICATION' | translate}}</span>
+            </mat-checkbox>
+          </div>
+        </div>
+
+        @if (permissionForm.get('isAllowEmailNotification')?.value && !smtpConfigured) {
+          <div class="col-12">
+            <div class="alert alert-warning py-2 px-3 mb-0 d-flex align-items-center gap-2 small">
+              <mat-icon class="text-warning fs-5">warning</mat-icon>
+              <span>{{ 'PLEASE_CONFIGURE_EMAIL_SMTP_SETTINGS' | translate }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <!-- Footer Actions -->
+  <mat-dialog-actions class="saas-dialog-footer">
+    <button type="button" class="btn btn-saas-cancel" (click)="onNoClick()">
+      <mat-icon>close</mat-icon>
+      <span>{{'CANCEL' | translate}}</span>
+    </button>
+    <button type="button" class="btn btn-primary-custom" (click)="saveDocumentRolePermission()" cdkFocusInitial>
+      <mat-icon>save</mat-icon>
+      <span>{{'SAVE' | translate}}</span>
+    </button>
+  </mat-dialog-actions>
+</div>

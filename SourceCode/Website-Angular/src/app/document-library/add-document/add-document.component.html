@@ -1,302 +1,329 @@
-<mat-dialog-content class="add-document-modal">
+<div class="saas-dialog-container position-relative">
   <!-- 1. Modal Header -->
-  <div class="modal-header d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
-    <div class="d-flex align-items-center gap-2">
-      <div class="modal-header-icon">
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge primary-badge">
         <mat-icon>post_add</mat-icon>
       </div>
       <div>
-        <h6 class="modal-title mb-0">
-          {{ "ADD_DOCUMENT" | translate }}
-        </h6>
-        <span class="text-muted fs-11">
-          Upload and configure document properties
-        </span>
+        <h5 class="dialog-title mb-0">{{ "ADD_DOCUMENT" | translate }}</h5>
+        <p class="dialog-subtitle mb-0">Upload and configure document properties, category, and metadata</p>
       </div>
     </div>
-    <button mat-icon-button (click)="closeDialog()" class="modal-close-btn" type="button" aria-label="Close">
+    <button type="button" class="dialog-close-btn" (click)="closeDialog()" aria-label="Close">
       <mat-icon>close</mat-icon>
     </button>
   </div>
 
-  <!-- 2. Form Body -->
-  <form [formGroup]="documentForm" class="modal-form-body">
-    <div class="row g-2">
-      <!-- File Upload -->
-      <div class="col-sm-12 col-md-6">
-        <div class="form-group mb-2">
-          <label class="form-label">{{ "DOCUMENT_UPLOAD" | translate }} <span class="text-danger">*</span></label>
-          <input class="form-control doc-file-input" #file (change)="upload(file.files)" type="file" />
+  <!-- 2. Scrollable Modal Form Body -->
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <form [formGroup]="documentForm">
+      <!-- Section 1: General Info Card -->
+      <div class="doc-card-section mb-3">
+        <div class="doc-section-header">
+          <div class="doc-section-title">
+            <mat-icon>info</mat-icon>
+            <span>General Information</span>
+          </div>
+        </div>
 
-          @if((documentForm.get('url')?.touched || documentForm.get('url')?.dirty) && documentForm.get('url')?.errors) {
-            @if(documentForm.get('url')?.errors?.['required']) {
-              <div class="text-danger small mt-1">
-                {{ "DOCUMENT_IS_REQUIRED" | translate }}
+        <div class="row g-3">
+          <!-- File Upload -->
+          <div class="col-12 col-md-6">
+            <div class="form-group mb-0">
+              <label class="form-label-custom">{{ "DOCUMENT_UPLOAD" | translate }} <span class="required-star">*</span></label>
+              <input class="form-control doc-form-input doc-file-input" #file (change)="upload(file.files)" type="file" />
+
+              @if((documentForm.get('url')?.touched || documentForm.get('url')?.dirty) && documentForm.get('url')?.errors) {
+                @if(documentForm.get('url')?.errors?.['required']) {
+                  <div class="field-error-text">
+                    {{ "DOCUMENT_IS_REQUIRED" | translate }}
+                  </div>
+                }
+              }
+              @if((documentForm.get('extension')?.touched || documentForm.get('extension')?.dirty) && documentForm.get('url')?.errors) {
+                @if(documentForm.get('extension')?.errors?.['required']) {
+                  <div class="field-error-text">
+                    {{ "DOCUMENT_TYPE_IS_NOT_ALLOW" | translate }}
+                  </div>
+                }
+              }
+            </div>
+          </div>
+
+          <!-- Name -->
+          <div class="col-12 col-md-6">
+            <div class="form-group mb-0">
+              <label class="form-label-custom">{{ "NAME" | translate }} <span class="required-star">*</span></label>
+              <input formControlName="name" class="form-control doc-form-input" type="text" placeholder="{{ 'NAME' | translate }}" />
+
+              @if(documentForm.get('name')?.touched && documentForm.get('name')?.errors) {
+                @if(documentForm.get('name')?.errors?.['required']) {
+                  <div class="field-error-text">
+                    {{ "NAME_IS_REQUIRED" | translate }}
+                  </div>
+                }
+              }
+            </div>
+          </div>
+
+          <!-- Category / Folder -->
+          <div class="col-12 col-md-6">
+            <div class="form-group mb-0">
+              <label class="form-label-custom">{{ "CATEGORY" | translate }} <span class="required-star">*</span></label>
+              <div class="input-group-addon-wrapper">
+                <mat-select panelClass="mat-select-control doc-select-panel" class="form-control doc-form-input" formControlName="categoryId"
+                  placeholder="{{ 'SELECT_CATEGORY' | translate }}" (selectionChange)="onCategoryChange($event)">
+                  <mat-select-trigger>
+                    <span [matTooltip]="selectedCategory?.displayName" class="select-text-truncate">
+                      {{ selectedCategory?.displayName || ("NONE" | translate) }}
+                    </span>
+                  </mat-select-trigger>
+                  <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
+                  @for (category of allCategories; track $index) {
+                  <mat-option [value]="category.id">
+                    <div class="category-tree-option" [ngStyle]="{
+                        'margin-left.px': (category.deafLevel ?? 0) * 16
+                      }">
+                      @if(category.deafLevel == 0) {
+                        <div class="d-flex align-items-center">
+                          <mat-icon class="folder-option-icon me-1">folder</mat-icon>
+                          <b>{{ category.name }}</b>
+                        </div>
+                      } @else {
+                        <div [matTooltip]="category.name" class="d-flex align-items-center">
+                          <mat-icon class="folder-option-icon me-1">folder_open</mat-icon>
+                          {{ category.name }}
+                        </div>
+                      }
+                    </div>
+                  </mat-option>
+                  }
+                </mat-select>
+                <button type="button" class="btn-addon-primary" *hasClaim="'CREATE_CATEGORY'" (click)="addFolder()" [matTooltip]="'Add Category'">
+                  <mat-icon class="addon-icon">add</mat-icon>
+                </button>
               </div>
-            }
-          }
-          @if((documentForm.get('extension')?.touched || documentForm.get('extension')?.dirty) && documentForm.get('url')?.errors) {
-            @if(documentForm.get('extension')?.errors?.['required']) {
-              <div class="text-danger small mt-1">
-                {{ "DOCUMENT_TYPE_IS_NOT_ALLOW" | translate }}
+              @if(documentForm.get('categoryId')?.touched && documentForm.get('categoryId')?.errors) {
+                @if(documentForm.get('categoryId')?.errors?.['required']) {
+                  <div class="field-error-text">
+                    {{ "CATEGORY_IS_REQUIRED" | translate }}
+                  </div>
+                }
+              }
+            </div>
+          </div>
+
+          <!-- Storage -->
+          <div class="col-12 col-md-6">
+            <div class="form-group mb-0">
+              <label class="form-label-custom">{{ "STORAGE" | translate }}</label>
+              <mat-select panelClass="mat-select-control doc-select-panel" class="form-control doc-form-input" formControlName="storageSettingId">
+                @for (storageSetting of allStorageSetting; track storageSetting.id) {
+                  <mat-option [value]="storageSetting.id">
+                    {{ storageSetting.storageType | storageType : storageSetting.name }}
+                  </mat-option>
+                }
+              </mat-select>
+            </div>
+          </div>
+
+          <!-- Document Status -->
+          <div class="col-12 col-md-6">
+            <div class="form-group mb-0">
+              <label class="form-label-custom">{{ "DOCUMENT_STATUS" | translate }}</label>
+              <div class="input-group-addon-wrapper">
+                <mat-select panelClass="mat-select-control doc-select-panel" class="form-control doc-form-input" formControlName="documentStatusId" placeholder="{{ 'SELECT_DOCUMENT_STATUS' | translate }}">
+                  <mat-option>-- {{ "NONE" | translate }} --</mat-option>
+                  @for (documentStatus of allDocumentStatus; track documentStatus.id) {
+                    <mat-option [value]="documentStatus.id">
+                      <span [ngStyle]="{ color: documentStatus?.colorCode }">
+                        ● {{ documentStatus.name }}
+                      </span>
+                    </mat-option>
+                  }
+                </mat-select>
+                <button type="button" class="btn-addon-primary" *hasClaim="'MANAGE_DOCUMENT_STATUS'" (click)="addDocumentStatus()" [matTooltip]="'Add Status'">
+                  <mat-icon class="addon-icon">add</mat-icon>
+                </button>
               </div>
-            }
-          }
+            </div>
+          </div>
+
+          <!-- Client -->
+          <div class="col-12 col-md-6">
+            <div class="form-group mb-0">
+              <label class="form-label-custom">{{ "CLIENT" | translate }}</label>
+              <div class="input-group-addon-wrapper">
+                <mat-select panelClass="mat-select-control doc-select-panel" class="form-control doc-form-input" formControlName="clientId" placeholder="{{ 'SELECT_CLIENT' | translate }}">
+                  <mat-option>-- {{ "NONE" | translate }} --</mat-option>
+                  @for (client of clientStore.clients(); track client.id) {
+                    <mat-option [value]="client.id">
+                      <span>{{ client.companyName }}</span>
+                    </mat-option>
+                  }
+                </mat-select>
+                <button type="button" class="btn-addon-primary" (click)="addClient()" [matTooltip]="'Add Client'">
+                  <mat-icon class="addon-icon">add</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="col-12">
+            <div class="form-group mb-0">
+              <label class="form-label-custom">{{ "DESCRIPTION" | translate }}</label>
+              <textarea formControlName="description" class="form-control doc-form-input" rows="2" placeholder="{{ 'DESCRIPTION' | translate }}"></textarea>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Name -->
-      <div class="col-sm-12 col-md-6">
-        <div class="form-group mb-2">
-          <label class="form-label">{{ "NAME" | translate }} <span class="text-danger">*</span></label>
-          <input formControlName="name" class="form-control" type="text" placeholder="{{ 'NAME' | translate }}" />
-
-          @if(documentForm.get('name')?.touched && documentForm.get('name')?.errors) {
-            @if(documentForm.get('name')?.errors?.['required']) {
-              <div class="text-danger small mt-1">
-                {{ "NAME_IS_REQUIRED" | translate }}
-              </div>
-            }
-          }
+      <!-- Section 2: Meta Tags Section Card -->
+      <div class="doc-card-section subtle-bg mb-3">
+        <div class="doc-section-header">
+          <div class="doc-section-title">
+            <mat-icon>local_offer</mat-icon>
+            <span>{{ "META_TAGS" | translate }}</span>
+          </div>
+          <button (click)="onAddAnotherMetaTag()" class="btn-tag-add" type="button" [matTooltip]="'Add Tag'">
+            <mat-icon>add</mat-icon>
+          </button>
         </div>
-      </div>
 
-      <!-- Category / Folder -->
-      <div class="col-sm-12 col-md-6">
-        <div class="form-group mb-2">
-          <label class="form-label">{{ "CATEGORY" | translate }} <span class="text-danger">*</span></label>
-          <div class="input-group input-group-addon-wrapper">
-            <mat-select panelClass="mat-select-control doc-select-panel" class="form-control" formControlName="categoryId"
-              placeholder="{{ 'SELECT_CATEGORY' | translate }}" (selectionChange)="onCategoryChange($event)">
-              <mat-select-trigger>
-                <span [matTooltip]="selectedCategory?.displayName" class="select-text-truncate">
-                  {{ selectedCategory?.displayName || ("NONE" | translate) }}
-                </span>
-              </mat-select-trigger>
-              <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
-              @for (category of allCategories; track $index) {
-              <mat-option [value]="category.id">
-                <div class="category-tree-option" [ngStyle]="{
-                    'margin-left.px': (category.deafLevel ?? 0) * 16
-                  }">
-                  @if(category.deafLevel == 0) {
-                    <div class="d-flex align-items-center">
-                      <mat-icon class="folder-option-icon me-1">folder</mat-icon>
-                      <b>{{ category.name }}</b>
+        <div formArrayName="documentMetaTags">
+          @for (documentmetatag of documentMetaTagsArray.controls; track $index; let i = $index) {
+            <div [formGroupName]="i" class="meta-tag-row">
+              <div class="row g-2 align-items-center">
+                <!-- MetaTag Select -->
+                <div class="col-12 col-md-5">
+                  <mat-select panelClass="mat-select-control doc-select-panel" (selectionChange)="onMetaTagKeyChange($event, i)"
+                    class="form-control doc-form-input" formControlName="documentMetaTagId"
+                    placeholder="{{ 'SELECT_META_TAG' | translate }}">
+                    <mat-option>-- {{ "NONE" | translate }} --</mat-option>
+                    @for (metaTag of metaTags(); track metaTag.id) {
+                      <mat-option [value]="metaTag.id">{{ metaTag.name }}</mat-option>
+                    }
+                  </mat-select>
+                </div>
+
+                <!-- MetaTag Value -->
+                <div class="col-10 col-md-6">
+                  <!-- Text MetaTag -->
+                  @if (documentmetatag.get('metaTagType')?.value == 0) {
+                    <input formControlName="metatag" class="form-control doc-form-input" type="text" placeholder="Enter meta tag value" />
+                    @if (documentmetatag.get('metatag')?.hasError('required') && documentmetatag.get('metatag')?.touched) {
+                      <div class="field-error-text">
+                        {{ "META_TAG_VALUE_REQUIRED" | translate }}
+                      </div>
+                    }
+                  }
+
+                  <!-- Date MetaTag -->
+                  @if (documentmetatag.get('metaTagType')?.value == 1) {
+                    <div class="input-group-addon-wrapper">
+                      <input #ref class="form-control doc-form-input" placeholder="{{ 'CHOOSE_A_DATE' | translate }}"
+                        formControlName="metaTagDate" [matDatepicker]="picker" />
+                      <button class="calendar-trigger-btn" type="button" (click)="picker.open()">
+                        <mat-icon class="calendar-icon">calendar_today</mat-icon>
+                      </button>
+                      <mat-datepicker #picker></mat-datepicker>
                     </div>
-                  } @else {
-                    <div [matTooltip]="category.name" class="d-flex align-items-center">
-                      <mat-icon class="folder-option-icon me-1">folder_open</mat-icon>
-                      {{ category.name }}
-                    </div>
+                    @if (documentmetatag.get('metaTagDate')?.hasError('required') && documentmetatag.get('metaTagDate')?.touched) {
+                      <div class="field-error-text">
+                        {{ "META_TAG_VALUE_REQUIRED" | translate }}
+                      </div>
+                    }
                   }
                 </div>
-              </mat-option>
-              }
-            </mat-select>
-            <button type="button" class="btn btn-addon-primary" *hasClaim="'CREATE_CATEGORY'" (click)="addFolder()" [matTooltip]="'Add Category'">
-              <mat-icon class="addon-icon">add</mat-icon>
-            </button>
-          </div>
-          @if(documentForm.get('categoryId')?.touched && documentForm.get('categoryId')?.errors) {
-            @if(documentForm.get('categoryId')?.errors?.['required']) {
-              <div class="text-danger small mt-1">
-                {{ "CATEGORY_IS_REQUIRED" | translate }}
-              </div>
-            }
-          }
-        </div>
-      </div>
 
-      <!-- Storage -->
-      <div class="col-sm-12 col-md-6">
-        <div class="form-group mb-2">
-          <label class="form-label">{{ "STORAGE" | translate }}</label>
-          <mat-select panelClass="mat-select-control doc-select-panel" class="form-control" formControlName="storageSettingId">
-            @for (storageSetting of allStorageSetting; track storageSetting.id) {
-              <mat-option [value]="storageSetting.id">
-                {{ storageSetting.storageType | storageType : storageSetting.name }}
-              </mat-option>
-            }
-          </mat-select>
-        </div>
-      </div>
-
-      <!-- Document Status -->
-      <div class="col-sm-12 col-md-6">
-        <div class="form-group mb-2">
-          <label class="form-label">{{ "DOCUMENT_STATUS" | translate }}</label>
-          <div class="input-group input-group-addon-wrapper">
-            <mat-select panelClass="mat-select-control doc-select-panel" class="form-control" formControlName="documentStatusId" placeholder="{{ 'SELECT_DOCUMENT_STATUS' | translate }}">
-              <mat-option>-- {{ "NONE" | translate }} --</mat-option>
-              @for (documentStatus of allDocumentStatus; track documentStatus.id) {
-                <mat-option [value]="documentStatus.id">
-                  <span [ngStyle]="{ color: documentStatus?.colorCode }">
-                    ● {{ documentStatus.name }}
-                  </span>
-                </mat-option>
-              }
-            </mat-select>
-            <button type="button" class="btn btn-addon-primary" *hasClaim="'MANAGE_DOCUMENT_STATUS'" (click)="addDocumentStatus()" [matTooltip]="'Add Status'">
-              <mat-icon class="addon-icon">add</mat-icon>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Client -->
-      <div class="col-sm-12 col-md-6">
-        <div class="form-group mb-2">
-          <label class="form-label">{{ "CLIENT" | translate }}</label>
-          <div class="input-group input-group-addon-wrapper">
-            <mat-select panelClass="mat-select-control doc-select-panel" class="form-control" formControlName="clientId" placeholder="{{ 'SELECT_CLIENT' | translate }}">
-              <mat-option>-- {{ "NONE" | translate }} --</mat-option>
-              @for (client of clientStore.clients(); track client.id) {
-                <mat-option [value]="client.id">
-                  <span>{{ client.companyName }}</span>
-                </mat-option>
-              }
-            </mat-select>
-            <button type="button" class="btn btn-addon-primary" (click)="addClient()" [matTooltip]="'Add Client'">
-              <mat-icon class="addon-icon">add</mat-icon>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Description -->
-      <div class="col-12">
-        <div class="form-group mb-2">
-          <label class="form-label">{{ "DESCRIPTION" | translate }}</label>
-          <textarea formControlName="description" class="form-control" rows="2" placeholder="{{ 'DESCRIPTION' | translate }}"></textarea>
-        </div>
-      </div>
-
-      <!-- Meta Tags Container -->
-      <div class="col-12">
-        <div class="meta-tags-section p-2 border rounded-2 mb-2 bg-light-subtle">
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <label class="form-label mb-0 fw-bold">{{ "META_TAGS" | translate }}</label>
-          </div>
-
-          <div formArrayName="documentMetaTags">
-            @for (documentmetatag of documentMetaTagsArray.controls; track $index; let i = $index) {
-              <div [formGroupName]="i" class="meta-tag-row mb-2">
-                <div class="row g-1 align-items-center">
-                  <!-- MetaTag Select -->
-                  <div class="col-12 col-md-5">
-                    <mat-select panelClass="mat-select-control doc-select-panel" (selectionChange)="onMetaTagKeyChange($event, i)"
-                      class="form-control" formControlName="documentMetaTagId"
-                      placeholder="{{ 'SELECT_META_TAG' | translate }}">
-                      <mat-option>-- {{ "NONE" | translate }} --</mat-option>
-                      @for (metaTag of metaTags(); track metaTag.id) {
-                        <mat-option [value]="metaTag.id">{{ metaTag.name }}</mat-option>
-                      }
-                    </mat-select>
-                  </div>
-
-                  <!-- MetaTag Value -->
-                  <div class="col-10 col-md-6">
-                    <!-- Text MetaTag -->
-                    @if (documentmetatag.get('metaTagType')?.value == 0) {
-                      <input formControlName="metatag" class="form-control" type="text" placeholder="Enter meta tag value" />
-                      @if (documentmetatag.get('metatag')?.hasError('required') && documentmetatag.get('metatag')?.touched) {
-                        <div class="text-danger small mt-1">
-                          {{ "META_TAG_VALUE_REQUIRED" | translate }}
-                        </div>
-                      }
-                    }
-
-                    <!-- Date MetaTag -->
-                    @if (documentmetatag.get('metaTagType')?.value == 1) {
-                      <div class="input-group input-group-sm">
-                        <input #ref class="form-control" placeholder="{{ 'CHOOSE_A_DATE' | translate }}"
-                          formControlName="metaTagDate" [matDatepicker]="picker" />
-                        <button class="btn btn-outline-secondary calendar-btn-addon" type="button" (click)="picker.open()">
-                          <mat-icon class="calendar-icon">calendar_today</mat-icon>
-                        </button>
-                        <mat-datepicker #picker></mat-datepicker>
-                      </div>
-                      @if (documentmetatag.get('metaTagDate')?.hasError('required') && documentmetatag.get('metaTagDate')?.touched) {
-                        <div class="text-danger small mt-1">
-                          {{ "META_TAG_VALUE_REQUIRED" | translate }}
-                        </div>
-                      }
-                    }
-                  </div>
-
-                  <!-- Add / Delete Action Button -->
-                  <div class="col-2 col-md-1 text-end">
-                    @if (i == 0) {
-                      <button (click)="onAddAnotherMetaTag()" class="btn btn-tag-add" type="button" [matTooltip]="'Add Tag'">
-                        <mat-icon>add</mat-icon>
-                      </button>
-                    } @else {
-                      <button (click)="onDeleteMetaTag(i)" class="btn btn-tag-delete" type="button" [matTooltip]="'Remove Tag'">
-                        <mat-icon>delete_outline</mat-icon>
-                      </button>
-                    }
-                  </div>
+                <!-- Add / Delete Action Button -->
+                <div class="col-2 col-md-1 text-end">
+                  @if (i == 0) {
+                    <button (click)="onAddAnotherMetaTag()" class="btn-tag-add" type="button" [matTooltip]="'Add Tag'">
+                      <mat-icon>add</mat-icon>
+                    </button>
+                  } @else {
+                    <button (click)="onDeleteMetaTag(i)" class="btn-tag-delete" type="button" [matTooltip]="'Remove Tag'">
+                      <mat-icon>delete_outline</mat-icon>
+                    </button>
+                  }
                 </div>
               </div>
-            }
-          </div>
-        </div>
-      </div>
-
-      <!-- Retention Period Row -->
-      <div class="col-sm-12 col-md-6">
-        <div class="form-group mb-2">
-          <label class="form-label">{{ "RETENTION_PERIOD" | translate }}</label>
-          <mat-select panelClass="mat-select-control doc-select-panel" class="form-control" formControlName="retentionPeriodInDays"
-            placeholder="{{ 'RETENTION_PERIOD' | translate }}">
-            <mat-option value="0">-- {{ "NONE" | translate }} --</mat-option>
-            <mat-option value="30">{{ "30_DAYS" | translate }}</mat-option>
-            <mat-option value="60">{{ "60_DAYS" | translate }}</mat-option>
-            <mat-option value="90">{{ "90_DAYS" | translate }}</mat-option>
-            <mat-option value="180">{{ "180_DAYS" | translate }}</mat-option>
-            <mat-option value="365">{{ "365_DAYS" | translate }}</mat-option>
-            <mat-option value="730">{{ "2_YEARS" | translate }}</mat-option>
-            <mat-option value="1095">{{ "3_YEARS" | translate }}</mat-option>
-            <mat-option value="1825">{{ "5_YEARS" | translate }}</mat-option>
-          </mat-select>
-        </div>
-      </div>
-
-      <div class="col-sm-12 col-md-6">
-        <div class="form-group mb-2">
-          <label class="form-label">{{ "RETENTION_PERIOD_ACTION" | translate }}</label>
-          <mat-select panelClass="mat-select-control doc-select-panel" class="form-control" formControlName="onExpiryAction"
-            placeholder="{{ 'RETENTION_PERIOD_ACTION' | translate }}">
-            <mat-option value="0">-- {{ "NONE" | translate }} --</mat-option>
-            <mat-option value="1">{{ "ARCHIVE" | translate }}</mat-option>
-            <mat-option value="2">{{ "DELETE" | translate }}</mat-option>
-          </mat-select>
-          @if((documentForm.get('retentionPeriodInDays')?.touched || documentForm.get('retentionPeriodInDays')?.dirty || documentForm.get('onExpiryAction')?.touched || documentForm.get('onExpiryAction')?.dirty) && documentForm.errors?.['retentionPeriodAndAction']) {
-            <div class="text-danger small mt-1">
-              {{ "SELECT_RETENTION_PERIOD" | translate }}
             </div>
           }
         </div>
       </div>
-    </div>
 
-    <!-- 3. Modal Footer Actions -->
-    <div class="modal-footer-actions d-flex align-items-center justify-content-end gap-2 mt-3 pt-2 border-top">
-      <button type="button" class="btn-modal-cancel" (click)="closeDialog()">
-        {{ "CANCEL" | translate }}
-      </button>
-      <button type="button" class="btn-modal-primary" (click)="saveDocument()" cdkFocusInitial>
-        <mat-icon class="btn-icon-save">save</mat-icon>
-        {{ "SAVE" | translate }}
-      </button>
-    </div>
-  </form>
+      <!-- Section 3: Retention & Policy Settings Card -->
+      <div class="doc-card-section mb-0">
+        <div class="doc-section-header">
+          <div class="doc-section-title">
+            <mat-icon>schedule</mat-icon>
+            <span>Retention & Expiry Policy</span>
+          </div>
+        </div>
 
-  <!-- Loading Overlay -->
+        <div class="row g-3">
+          <!-- Retention Period -->
+          <div class="col-12 col-md-6">
+            <div class="form-group mb-0">
+              <label class="form-label-custom">{{ "RETENTION_PERIOD" | translate }}</label>
+              <mat-select panelClass="mat-select-control doc-select-panel" class="form-control doc-form-input" formControlName="retentionPeriodInDays"
+                placeholder="{{ 'RETENTION_PERIOD' | translate }}">
+                <mat-option value="0">-- {{ "NONE" | translate }} --</mat-option>
+                <mat-option value="30">{{ "30_DAYS" | translate }}</mat-option>
+                <mat-option value="60">{{ "60_DAYS" | translate }}</mat-option>
+                <mat-option value="90">{{ "90_DAYS" | translate }}</mat-option>
+                <mat-option value="180">{{ "180_DAYS" | translate }}</mat-option>
+                <mat-option value="365">{{ "365_DAYS" | translate }}</mat-option>
+                <mat-option value="730">{{ "2_YEARS" | translate }}</mat-option>
+                <mat-option value="1095">{{ "3_YEARS" | translate }}</mat-option>
+                <mat-option value="1825">{{ "5_YEARS" | translate }}</mat-option>
+              </mat-select>
+            </div>
+          </div>
+
+          <!-- Retention Period Action -->
+          <div class="col-12 col-md-6">
+            <div class="form-group mb-0">
+              <label class="form-label-custom">{{ "RETENTION_PERIOD_ACTION" | translate }}</label>
+              <mat-select panelClass="mat-select-control doc-select-panel" class="form-control doc-form-input" formControlName="onExpiryAction"
+                placeholder="{{ 'RETENTION_PERIOD_ACTION' | translate }}">
+                <mat-option value="0">-- {{ "NONE" | translate }} --</mat-option>
+                <mat-option value="1">{{ "ARCHIVE" | translate }}</mat-option>
+                <mat-option value="2">{{ "DELETE" | translate }}</mat-option>
+              </mat-select>
+              @if((documentForm.get('retentionPeriodInDays')?.touched || documentForm.get('retentionPeriodInDays')?.dirty || documentForm.get('onExpiryAction')?.touched || documentForm.get('onExpiryAction')?.dirty) && documentForm.errors?.['retentionPeriodAndAction']) {
+                <div class="field-error-text">
+                  {{ "SELECT_RETENTION_PERIOD" | translate }}
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <!-- 3. Fixed Footer Actions -->
+  <mat-dialog-actions class="saas-dialog-footer">
+    <button type="button" class="btn btn-saas-cancel" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+      <span>{{ "CANCEL" | translate }}</span>
+    </button>
+    <button type="button" class="btn btn-primary-custom" (click)="saveDocument()" [disabled]="isLoading" cdkFocusInitial>
+      <mat-icon>save</mat-icon>
+      <span>{{ "SAVE" | translate }}</span>
+    </button>
+  </mat-dialog-actions>
+
+  <!-- 4. Loading Overlay -->
   @if (isLoading) {
-    <div class="spinner-overlay">
-      <mat-progress-spinner mode="indeterminate" diameter="48" strokeWidth="4"></mat-progress-spinner>
+    <div class="dialog-loading-overlay">
+      <mat-progress-spinner mode="indeterminate" diameter="42" strokeWidth="4"></mat-progress-spinner>
+      <span class="loading-text">Saving document...</span>
     </div>
   }
-</mat-dialog-content>
+</div>

@@ -90,94 +90,92 @@
   </section>
 } @else {
   <!-- Modal Mode -->
-  <mat-dialog-content class="manage-submodal">
-    <div class="modal-header d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
-      <div class="d-flex align-items-center gap-2">
-        <div class="modal-header-icon">
+  <div class="saas-dialog-container position-relative">
+    <div class="saas-dialog-header">
+      <div class="header-info-box">
+        <div class="dialog-icon-badge primary-badge">
           <mat-icon>business</mat-icon>
         </div>
         <div>
-          <h6 class="modal-title mb-0">
+          <h5 class="dialog-title mb-0">
             {{ (isEditMode ? 'EDIT_CLIENT' : 'ADD_CLIENT') | translate }}
-          </h6>
-          <span class="text-muted fs-11">
+          </h5>
+          <p class="dialog-subtitle mb-0">
             Configure client organization and contact details
-          </span>
+          </p>
         </div>
       </div>
-      <button mat-icon-button (click)="onCancel()" class="modal-close-btn" type="button" aria-label="Close">
+      <button type="button" class="dialog-close-btn" (click)="onCancel()" aria-label="Close">
         <mat-icon>close</mat-icon>
       </button>
     </div>
 
-    <form [formGroup]="clientForm" (ngSubmit)="saveClient()" class="modal-form-body">
-      <div class="client-form-grid">
-        <!-- 1. Company / Person Name -->
-        <div class="client-field-group">
-          <label class="form-label">{{ "COMPANY_PERSON_NAME" | translate }} <span class="text-danger">*</span></label>
-          <div class="field-input-wrapper">
-            <mat-icon class="field-icon">domain</mat-icon>
-            <input formControlName="companyName" class="form-control field-control" type="text" placeholder="{{ 'COMPANY_PERSON_NAME' | translate }}" />
-          </div>
-          @if(clientForm.get('companyName')?.touched && clientForm.get('companyName')?.errors && clientForm.get('companyName')?.errors?.['required'] ){
-            <div class="text-danger small mt-1">
-              {{ "COMPANY_PERSON_NAME_IS_REQUIRED" | translate }}
+    <mat-dialog-content class="saas-dialog-body custom-scroll">
+      <form [formGroup]="clientForm" (ngSubmit)="saveClient()" id="clientDialogForm">
+        <div class="row g-3">
+          <!-- 1. Company / Person Name -->
+          <div class="col-12 col-md-6">
+            <div class="form-group mb-0">
+              <label class="form-label-custom">{{ "COMPANY_PERSON_NAME" | translate }} <span class="required-star">*</span></label>
+              <input formControlName="companyName" class="form-control doc-form-input" type="text" placeholder="{{ 'COMPANY_PERSON_NAME' | translate }}" />
+              @if(clientForm.get('companyName')?.touched && clientForm.get('companyName')?.errors && clientForm.get('companyName')?.errors?.['required'] ){
+                <div class="field-error-text">
+                  {{ "COMPANY_PERSON_NAME_IS_REQUIRED" | translate }}
+                </div>
+              }
             </div>
-          }
-        </div>
-
-        <!-- 2. Contact Person -->
-        <div class="client-field-group">
-          <label class="form-label">{{ "CONTACT_PERSON" | translate }}</label>
-          <div class="field-input-wrapper">
-            <mat-icon class="field-icon">person_outline</mat-icon>
-            <input formControlName="contactPerson" class="form-control field-control" type="text" placeholder="{{ 'CONTACT_PERSON' | translate }}" />
           </div>
-        </div>
 
-        <!-- 3. Email -->
-        <div class="client-field-group">
-          <label class="form-label">{{ "EMAIL" | translate }}</label>
-          <div class="field-input-wrapper">
-            <mat-icon class="field-icon">mail_outline</mat-icon>
-            <input formControlName="email" class="form-control field-control" type="email" placeholder="{{ 'EMAIL' | translate }}" />
-          </div>
-          @if(clientForm.get('email')?.touched && clientForm.get('email')?.errors && clientForm.get('email')?.errors?.['email']){
-            <div class="text-danger small mt-1">
-              {{ "PLEASE_ENTER_VALID_EMAIL" | translate }}
+          <!-- 2. Contact Person -->
+          <div class="col-12 col-md-6">
+            <div class="form-group mb-0">
+              <label class="form-label-custom">{{ "CONTACT_PERSON" | translate }}</label>
+              <input formControlName="contactPerson" class="form-control doc-form-input" type="text" placeholder="{{ 'CONTACT_PERSON' | translate }}" />
             </div>
-          }
-        </div>
+          </div>
 
-        <!-- 4. Mobile Number -->
-        <div class="client-field-group">
-          <label class="form-label">{{ "MOBILE_NUMBER" | translate }}</label>
-          <div class="field-input-wrapper">
-            <mat-icon class="field-icon">call</mat-icon>
-            <input formControlName="phoneNumber" class="form-control field-control" type="text" placeholder="{{ 'MOBILE_NUMBER' | translate }}" />
+          <!-- 3. Email -->
+          <div class="col-12 col-md-6">
+            <div class="form-group mb-0">
+              <label class="form-label-custom">{{ "EMAIL" | translate }}</label>
+              <input formControlName="email" class="form-control doc-form-input" type="email" placeholder="{{ 'EMAIL' | translate }}" />
+              @if(clientForm.get('email')?.touched && clientForm.get('email')?.errors && clientForm.get('email')?.errors?.['email']){
+                <div class="field-error-text">
+                  {{ "PLEASE_ENTER_VALID_EMAIL" | translate }}
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- 4. Mobile Number -->
+          <div class="col-12 col-md-6">
+            <div class="form-group mb-0">
+              <label class="form-label-custom">{{ "MOBILE_NUMBER" | translate }}</label>
+              <input formControlName="phoneNumber" class="form-control doc-form-input" type="text" placeholder="{{ 'MOBILE_NUMBER' | translate }}" />
+            </div>
+          </div>
+
+          <!-- 5. Address -->
+          <div class="col-12">
+            <div class="form-group mb-0">
+              <label class="form-label-custom">{{ "ADDRESS" | translate }}</label>
+              <textarea formControlName="address" class="form-control doc-form-input" rows="3" placeholder="{{ 'ADDRESS' | translate }}"></textarea>
+            </div>
           </div>
         </div>
+      </form>
+    </mat-dialog-content>
 
-        <!-- 5. Address (Full Width Grid Span) -->
-        <div class="client-field-group grid-span-full">
-          <label class="form-label">{{ "ADDRESS" | translate }}</label>
-          <div class="field-input-wrapper textarea-wrapper">
-            <mat-icon class="field-icon field-icon-top">location_on</mat-icon>
-            <textarea formControlName="address" class="form-control field-control field-textarea" rows="3" placeholder="{{ 'ADDRESS' | translate }}"></textarea>
-          </div>
-        </div>
-      </div>
-
-      <!-- Footer -->
-      <div class="modal-footer-actions d-flex align-items-center justify-content-end gap-2 mt-3 pt-2 border-top">
-        <button type="button" class="btn-modal-cancel" (click)="onCancel()">
-          {{ "CANCEL" | translate }}
-        </button>
-        <button type="submit" class="btn-modal-primary" cdkFocusInitial>
-          <mat-icon class="btn-icon-save">save</mat-icon>
-          {{ "SAVE" | translate }}
-        </button>
-      </div>
-    </form>
-  </mat-dialog-content>
+    <!-- Footer Actions -->
+    <mat-dialog-actions class="saas-dialog-footer">
+      <button type="button" class="btn btn-saas-cancel" (click)="onCancel()">
+        <mat-icon>close</mat-icon>
+        <span>{{ "CANCEL" | translate }}</span>
+      </button>
+      <button type="button" (click)="saveClient()" class="btn btn-primary-custom" cdkFocusInitial>
+        <mat-icon>save</mat-icon>
+        <span>{{ "SAVE" | translate }}</span>
+      </button>
+    </mat-dialog-actions>
+  </div>
 }

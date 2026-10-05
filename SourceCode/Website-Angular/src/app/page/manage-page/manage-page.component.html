@@ -1,52 +1,62 @@
-<mat-dialog-content>
-  <div class="d-flex">
-    <div class="me-auto p-2">
-      <span class="mb-3 page-title">
-        {{ "PAGE" | translate }}
-      </span>
+<div class="saas-dialog-container position-relative">
+  <!-- Header -->
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge primary-badge">
+        <mat-icon>auto_stories</mat-icon>
+      </div>
+      <div>
+        <h5 class="dialog-title mb-0">{{ "PAGE" | translate }}</h5>
+        <p class="dialog-subtitle mb-0">Configure navigation page and display sequence</p>
+      </div>
     </div>
-    <div class="d-flex justify-content-end mb-2">
-      <mat-icon class="close-icon text-danger cursor-pointer " (click)="onNoClick()">cancel</mat-icon>
-    </div>
+    <button type="button" class="dialog-close-btn" (click)="onNoClick()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
   </div>
 
-  <form [formGroup]="pageForm">
-    <div class="modal-body">
-      <div class="row">
-        <div class="col-md-12 mb-3">
-          <label class="text-danger" for="pageName">{{'NAME' | translate}} *</label>
-          <input formControlName="name" type="text" class="form-control" id="pageName">
-          @if (pageForm.get('name')?.touched && pageForm.get('name')?.errors?.['required']) {
-          <div class="text-danger">
-            {{'NAME_IS_REQUIRED' | translate}}
+  <!-- Form Body -->
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <form [formGroup]="pageForm" id="pageForm">
+      <div class="row g-3">
+        <!-- Page Name -->
+        <div class="col-12">
+          <div class="form-group mb-0">
+            <label class="form-label-custom" for="pageName">{{'NAME' | translate}} <span class="required-star">*</span></label>
+            <input formControlName="name" type="text" class="form-control doc-form-input" id="pageName" placeholder="Page Name">
+            @if (pageForm.get('name')?.touched && pageForm.get('name')?.errors?.['required']) {
+              <div class="field-error-text">
+                {{'NAME_IS_REQUIRED' | translate}}
+              </div>
+            }
           </div>
-          }
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12 mb-3">
-          <label class="text-danger" for="order"> {{'ORDER_NUMBER' | translate}}*</label>
-          <input formControlName="order" type="number" class="form-control" id="order">
-          @if (pageForm.get('order')?.touched && pageForm.get('order')?.errors?.['required']) {
-          <div class="text-danger">
-            {{'ORDER_IS_REQUIRED' | translate}}
-          </div>
-          }
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12 mt-2">
-        <button class="success me-2" matButton="filled" (click)="savePage()" cdkFocusInitial>
-          <mat-icon class="medium-icon align-middle">save</mat-icon>
-          {{this.data.id ? ('UPDATE' | translate) : ('SAVE' | translate)}}
-        </button>
-        <button class="error" matButton="filled" (click)="onNoClick()">
-          <mat-icon class="medium-icon align-middle">cancel</mat-icon>
-          {{'CANCEL' | translate}}
-        </button>
-      </div>
-    </div>
-  </form>
 
-</mat-dialog-content>
+        <!-- Order Number -->
+        <div class="col-12">
+          <div class="form-group mb-0">
+            <label class="form-label-custom" for="order">{{'ORDER_NUMBER' | translate}} <span class="required-star">*</span></label>
+            <input formControlName="order" type="number" class="form-control doc-form-input" id="order" placeholder="Display Order">
+            @if (pageForm.get('order')?.touched && pageForm.get('order')?.errors?.['required']) {
+              <div class="field-error-text">
+                {{'ORDER_IS_REQUIRED' | translate}}
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <!-- Footer Actions -->
+  <mat-dialog-actions class="saas-dialog-footer">
+    <button type="button" class="btn btn-saas-cancel" (click)="onNoClick()">
+      <mat-icon>close</mat-icon>
+      <span>{{'CANCEL' | translate}}</span>
+    </button>
+    <button type="button" class="btn btn-primary-custom" (click)="savePage()" cdkFocusInitial>
+      <mat-icon>save</mat-icon>
+      <span>{{this.data.id ? ('UPDATE' | translate) : ('SAVE' | translate)}}</span>
+    </button>
+  </mat-dialog-actions>
+</div>

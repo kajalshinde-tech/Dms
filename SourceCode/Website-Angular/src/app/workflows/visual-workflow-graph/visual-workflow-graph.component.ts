@@ -30,7 +30,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatDialogModule,
     TranslateModule,
     WorkflowInstanceStatusPipe,
-    UTCToLocalTime,
     NgClass,
     LimitToPipe,
     MatCardModule,

@@ -1,58 +1,56 @@
-<div class="custom-dialog-container">
+<div class="saas-dialog-container position-relative">
   <!-- Dialog Header -->
-  <div class="dialog-header-strip d-flex align-items-center justify-content-between p-3 border-bottom">
-    <div class="d-flex align-items-center gap-2">
-      <div class="header-icon-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center">
-        <mat-icon class="fs-5">forward_to_inbox</mat-icon>
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge info-badge">
+        <mat-icon>forward_to_inbox</mat-icon>
       </div>
       <div>
-        <h6 class="dialog-title mb-0 font-weight-700 text-dark">{{ "SEND_EMAIL" | translate }}</h6>
-        <span class="text-muted extra-small">Send a test email to verify SMTP configuration</span>
+        <h5 class="dialog-title mb-0">{{ "SEND_EMAIL" | translate }}</h5>
+        <p class="dialog-subtitle mb-0">Send a test email to verify SMTP configuration</p>
       </div>
     </div>
-    <button type="button" class="btn-dialog-close" (click)="onCancel()" matTooltip="Close">
+    <button type="button" class="dialog-close-btn" (click)="onCancel()" matTooltip="Close">
       <mat-icon>close</mat-icon>
     </button>
   </div>
 
   <!-- Dialog Body -->
-  <div class="dialog-body-content p-3 p-sm-4">
-    <form name="form" [formGroup]="smtpForm" (ngSubmit)="test()" novalidate>
-      <div class="mb-3">
-        <label class="field-label d-flex align-items-center gap-1 mb-1" for="toEmail">
-          <span>{{ "EMAIL" | translate }}</span>
-          <span class="text-danger">*</span>
-        </label>
-        <div class="form-field-box">
-          <mat-icon class="field-icon">email</mat-icon>
-          <input required formControlName="toEmail" type="email" name="toEmail" class="form-control field-input"
-            id="toEmail" placeholder="recipient@domain.com" />
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <form name="form" [formGroup]="smtpForm" (ngSubmit)="test()" novalidate id="testSmtpForm">
+      <div class="row g-3">
+        <div class="col-12">
+          <div class="form-group mb-0">
+            <label class="form-label-custom" for="toEmail">
+              {{ "EMAIL" | translate }} <span class="required-star">*</span>
+            </label>
+            <input required formControlName="toEmail" type="email" name="toEmail" class="form-control doc-form-input"
+              id="toEmail" placeholder="recipient@domain.com" />
+            @if (smtpForm.get('toEmail')?.touched && smtpForm.get('toEmail')?.errors) {
+              <div class="field-error-text">
+                @if (smtpForm.get('toEmail')?.hasError('required')) {
+                  <span>{{ "EMAIL_IS_REQUIRED" | translate }}</span>
+                }
+                @if (smtpForm.get('toEmail')?.hasError('email')) {
+                  <span>{{ "INVALID_EMAIL" | translate }}</span>
+                }
+              </div>
+            }
+          </div>
         </div>
-        @if (smtpForm.get('toEmail')?.touched && smtpForm.get('toEmail')?.errors) {
-          @if (smtpForm.get('toEmail')?.hasError('required')) {
-          <div class="text-danger small mt-1">
-            {{ "EMAIL_IS_REQUIRED" | translate }}
-          </div>
-          }
-          @if (smtpForm.get('toEmail')?.hasError('email')) {
-          <div class="text-danger small mt-1">
-            {{ "INVALID_EMAIL" | translate }}
-          </div>
-          }
-        }
-      </div>
-
-      <!-- Dialog Actions -->
-      <div class="dialog-actions-row pt-3 border-top d-flex justify-content-end gap-2">
-        <button type="button" class="btn-cancel-action" (click)="onCancel()">
-          <mat-icon class="btn-icon">close</mat-icon>
-          <span>{{ "CANCEL" | translate }}</span>
-        </button>
-        <button type="submit" class="btn-save-action" [disabled]="!smtpForm.valid">
-          <mat-icon class="btn-icon">send</mat-icon>
-          <span>{{ "SEND" | translate }}</span>
-        </button>
       </div>
     </form>
-  </div>
+  </mat-dialog-content>
+
+  <!-- Dialog Actions Footer -->
+  <mat-dialog-actions class="saas-dialog-footer">
+    <button type="button" class="btn btn-saas-cancel" (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+      <span>{{ "CANCEL" | translate }}</span>
+    </button>
+    <button type="button" (click)="test()" class="btn btn-primary-custom" [disabled]="!smtpForm.valid">
+      <mat-icon>send</mat-icon>
+      <span>{{ "SEND" | translate }}</span>
+    </button>
+  </mat-dialog-actions>
 </div>

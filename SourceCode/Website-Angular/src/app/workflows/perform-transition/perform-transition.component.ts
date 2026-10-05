@@ -58,7 +58,6 @@ import { MatButtonModule } from '@angular/material/button';
     MatProgressSpinnerModule,
     OverlayModule,
     TranslateModule,
-    PageHelpTextComponent,
     MatIconModule,
     MatCardModule,
     MatButtonModule

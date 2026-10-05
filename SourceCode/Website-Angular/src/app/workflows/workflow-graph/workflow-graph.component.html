@@ -1,120 +1,131 @@
-<mat-dialog-content class="workflow-graph-modal">
-  <!-- Modal Header -->
-  <div class="modal-header d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
-    <div class="d-flex align-items-center gap-2 text-truncate">
-      <div class="modal-header-icon">
+<div class="saas-dialog-container position-relative">
+  <!-- Dialog Header -->
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge primary-badge">
         <mat-icon>schema</mat-icon>
       </div>
-      <div class="text-truncate">
-        <h6 class="modal-title mb-0 text-truncate" [matTooltip]="data.workflowName">
+      <div>
+        <h5 class="dialog-title mb-0 text-truncate" [matTooltip]="data.workflowName">
           {{ data.workflowName }}
-        </h6>
-        <span class="text-muted fs-11">Visual representation of workflow steps and transitions</span>
+        </h5>
+        <p class="dialog-subtitle mb-0">Visual representation of workflow steps and transitions</p>
       </div>
     </div>
-    <button mat-icon-button (click)="onDocumentCancel()" class="modal-close-btn" type="button" aria-label="Close">
+    <button type="button" class="dialog-close-btn" (click)="onDocumentCancel()" aria-label="Close" [matTooltip]="'CLOSE' | translate">
       <mat-icon>close</mat-icon>
     </button>
   </div>
 
-  <!-- Graph Section -->
-  <div class="graph-viewport-box mb-3 border rounded">
-    <div class="graph-inner-scroll">
-      <ngx-graph [nodes]="nodes" [links]="links" [view]="[900, 280]" [autoCenter]="true"
-        [customColors]="customColors" [curve]="curve" [layout]="'dagreCluster'" class="ngx-graph-container">
-        <ng-template #defsTemplate>
-          <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4"
-            orient="auto">
-            <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
-          </svg:marker>
-        </ng-template>
-        <ng-template #nodeTemplate let-node>
-          <svg:g class="node">
-            <svg:rect [attr.width]="node.dimension?.width || 120" [attr.height]="node.dimension?.height || 45"
-              [attr.fill]="node.data?.color || '#059669'" rx="6" ry="6">
-            </svg:rect>
-            <svg:text alignment-baseline="central" [attr.fill]="'#fff'" [attr.x]="12"
-              [attr.y]="(node.dimension?.height || 45) / 2" font-size="11" font-weight="bold">
-              {{node.label}}
-            </svg:text>
-          </svg:g>
-        </ng-template>
+  <!-- Dialog Body -->
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <!-- Graph Section -->
+    <div class="graph-viewport-box mb-3 border rounded">
+      <div class="graph-inner-scroll">
+        <ngx-graph [nodes]="nodes" [links]="links" [view]="[900, 280]" [autoCenter]="true"
+          [customColors]="customColors" [curve]="curve" [layout]="'dagreCluster'" class="ngx-graph-container">
+          <ng-template #defsTemplate>
+            <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4"
+              orient="auto">
+              <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
+            </svg:marker>
+          </ng-template>
+          <ng-template #nodeTemplate let-node>
+            <svg:g class="node">
+              <svg:rect [attr.width]="node.dimension?.width || 120" [attr.height]="node.dimension?.height || 45"
+                [attr.fill]="node.data?.color || '#059669'" rx="6" ry="6">
+              </svg:rect>
+              <svg:text alignment-baseline="central" [attr.fill]="'#fff'" [attr.x]="12"
+                [attr.y]="(node.dimension?.height || 45) / 2" font-size="11" font-weight="bold">
+                {{node.label}}
+              </svg:text>
+            </svg:g>
+          </ng-template>
 
-        <ng-template #linkTemplate let-link>
-          @if(link.source && link.target) {
-          <svg:g class="edge">
-            <svg:path class="line" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"></svg:path>
-            <svg:text class="edge-label" text-anchor="middle" font-size="10" fill="#334155">
-              <textPath [attr.fill]="link.status === 1 ? '#16a34a' : '#334155'" class="text-path"
-                [attr.href]="'#' + link.id" [style.dominant-baseline]="link.dominantBaseline" startOffset="50%">
-                {{ link.label }}
-              </textPath>
-            </svg:text>
-          </svg:g>
-          }
-        </ng-template>
-      </ngx-graph>
-    </div>
-  </div>
-
-  <!-- Workflow Details & Transitions Cards -->
-  <div class="row g-3">
-    <!-- Workflow Details -->
-    <div class="col-12 col-md-6">
-      <div class="detail-card p-3 border rounded bg-white">
-        <div class="d-flex align-items-center gap-2 mb-2 pb-2 border-bottom">
-          <mat-icon class="text-primary fs-5">info</mat-icon>
-          <span class="font-weight-bold fs-7">{{ "WORKFLOW_DETAILS" | translate }}</span>
-        </div>
-        <div class="detail-content">
-          <div class="mb-2">
-            <span class="text-muted fs-8 d-block">{{ "NAME" | translate }}</span>
-            <span class="font-weight-bold fs-7">{{ data.workflowName }}</span>
-          </div>
-          @if(data.workflowDescription) {
-          <div>
-            <span class="text-muted fs-8 d-block">{{ "DESCRIPTION" | translate }}</span>
-            <span class="fs-7">{{ data.workflowDescription }}</span>
-          </div>
-          }
-        </div>
+          <ng-template #linkTemplate let-link>
+            @if(link.source && link.target) {
+            <svg:g class="edge">
+              <svg:path class="line" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"></svg:path>
+              <svg:text class="edge-label" text-anchor="middle" font-size="10" fill="#334155">
+                <textPath [attr.fill]="link.status === 1 ? '#16a34a' : '#334155'" class="text-path"
+                  [attr.href]="'#' + link.id" [style.dominant-baseline]="link.dominantBaseline" startOffset="50%">
+                  {{ link.label }}
+                </textPath>
+              </svg:text>
+            </svg:g>
+            }
+          </ng-template>
+        </ngx-graph>
       </div>
     </div>
 
-    <!-- Workflow Transitions -->
-    @if(data && data.pendingWorkflowTransitions && data.pendingWorkflowTransitions.length > 0) {
-    <div class="col-12 col-md-6">
-      <div class="detail-card p-3 border rounded bg-white">
-        <div class="d-flex align-items-center gap-2 mb-2 pb-2 border-bottom">
-          <mat-icon class="text-primary fs-5">alt_route</mat-icon>
-          <span class="font-weight-bold fs-7">{{ "TRANSITIONS" | translate }}</span>
-        </div>
-        <div class="transitions-mini-list d-flex flex-column gap-2">
-          @for (transition of data.pendingWorkflowTransitions; track transition) {
-          <div class="transition-mini-item p-2 border rounded bg-light">
-            <div class="d-flex align-items-center justify-content-between mb-1">
-              <span class="font-weight-bold fs-8 text-primary">{{ transition.name }}</span>
+    <!-- Workflow Details & Transitions Cards -->
+    <div class="row g-3">
+      <!-- Workflow Details -->
+      <div class="col-12 col-md-6">
+        <div class="detail-card p-3 border rounded bg-white">
+          <div class="d-flex align-items-center gap-2 mb-2 pb-2 border-bottom">
+            <mat-icon class="text-primary fs-5">info</mat-icon>
+            <span class="font-weight-bold fs-7">{{ "WORKFLOW_DETAILS" | translate }}</span>
+          </div>
+          <div class="detail-content">
+            <div class="mb-2">
+              <span class="text-muted fs-8 d-block">{{ "NAME" | translate }}</span>
+              <span class="font-weight-bold fs-7">{{ data.workflowName }}</span>
             </div>
-            <div class="d-flex align-items-center gap-1 fs-8 text-muted mb-1">
-              <span class="badge bg-secondary-subtle text-secondary-emphasis">{{ transition.fromStepName }}</span>
-              <mat-icon class="fs-6">arrow_forward</mat-icon>
-              <span class="badge bg-primary-subtle text-primary-emphasis">{{ transition.toStepName }}</span>
-            </div>
-            @if(transition?.assignRoles) {
-            <div class="fs-8 text-muted">
-              <strong>Roles:</strong> {{ transition.assignRoles }}
-            </div>
-            }
-            @if(transition?.assignUsers) {
-            <div class="fs-8 text-muted">
-              <strong>Users:</strong> {{ transition.assignUsers }}
+            @if(data.workflowDescription) {
+            <div>
+              <span class="text-muted fs-8 d-block">{{ "DESCRIPTION" | translate }}</span>
+              <span class="fs-7">{{ data.workflowDescription }}</span>
             </div>
             }
           </div>
-          }
         </div>
       </div>
+
+      <!-- Workflow Transitions -->
+      @if(data && data.pendingWorkflowTransitions && data.pendingWorkflowTransitions.length > 0) {
+      <div class="col-12 col-md-6">
+        <div class="detail-card p-3 border rounded bg-white">
+          <div class="d-flex align-items-center gap-2 mb-2 pb-2 border-bottom">
+            <mat-icon class="text-primary fs-5">alt_route</mat-icon>
+            <span class="font-weight-bold fs-7">{{ "TRANSITIONS" | translate }}</span>
+          </div>
+          <div class="transitions-mini-list d-flex flex-column gap-2">
+            @for (transition of data.pendingWorkflowTransitions; track transition) {
+            <div class="transition-mini-item p-2 border rounded bg-light">
+              <div class="d-flex align-items-center justify-content-between mb-1">
+                <span class="font-weight-bold fs-8 text-primary">{{ transition.name }}</span>
+              </div>
+              <div class="d-flex align-items-center gap-1 fs-8 text-muted mb-1">
+                <span class="badge bg-secondary-subtle text-secondary-emphasis">{{ transition.fromStepName }}</span>
+                <mat-icon class="fs-6">arrow_forward</mat-icon>
+                <span class="badge bg-primary-subtle text-primary-emphasis">{{ transition.toStepName }}</span>
+              </div>
+              @if(transition?.assignRoles) {
+              <div class="fs-8 text-muted">
+                <strong>Roles:</strong> {{ transition.assignRoles }}
+              </div>
+              }
+              @if(transition?.assignUsers) {
+              <div class="fs-8 text-muted">
+                <strong>Users:</strong> {{ transition.assignUsers }}
+              </div>
+              }
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+      }
     </div>
-    }
-  </div>
-</mat-dialog-content>
+  </mat-dialog-content>
+
+  <!-- Modal Footer -->
+  <mat-dialog-actions class="saas-dialog-footer">
+    <button type="button" class="btn btn-saas-cancel" (click)="onDocumentCancel()">
+      <mat-icon>close</mat-icon>
+      <span>{{ "CLOSE" | translate }}</span>
+    </button>
+  </mat-dialog-actions>
+</div>

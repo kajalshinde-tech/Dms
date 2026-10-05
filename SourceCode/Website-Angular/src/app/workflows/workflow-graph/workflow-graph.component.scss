@@ -1,88 +1,37 @@
+@use '../../shared/dialog-styles.scss';
+
 // -------------------------------------------------------------
 // Workflow Visual Graph Modal Styles
 // -------------------------------------------------------------
 
-.workflow-graph-modal {
-  padding: 1.15rem 1.35rem !important;
-  max-width: 100%;
+.graph-viewport-box {
+  background-color: #f8fafc;
+  border-color: #cbd5e1 !important;
+  padding: 8px;
+  overflow: hidden;
 
-  .modal-header-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-    background: var(--app-primary-light, rgba(5, 150, 105, 0.1));
-    color: var(--app-primary-color, #059669);
+  .graph-inner-scroll {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
     display: flex;
-    align-items: center;
     justify-content: center;
-    flex-shrink: 0;
-
-    mat-icon {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
-      line-height: 18px;
-    }
   }
+}
 
-  .modal-title {
-    font-size: 0.92rem;
-    font-weight: 700;
-    color: var(--app-text-color, #0f172a);
-  }
+.detail-card {
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
 
-  .fs-11 {
-    font-size: 11px;
-  }
+.transition-mini-item {
+  border-color: #e2e8f0 !important;
+}
 
-  .modal-close-btn {
-    width: 26px !important;
-    height: 26px !important;
-    padding: 0 !important;
-    color: #94a3b8;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
+.fs-8 {
+  font-size: 0.78rem;
+}
 
-    mat-icon {
-      font-size: 15px;
-      width: 15px;
-      height: 15px;
-      line-height: 15px;
-    }
-
-    &:hover {
-      color: #475569;
-      background-color: var(--app-hover-bg, #f1f5f9);
-    }
-  }
-
-  .graph-viewport-box {
-    background-color: #f8fafc;
-    border-color: #cbd5e1 !important;
-    padding: 8px;
-    overflow: hidden;
-
-    .graph-inner-scroll {
-      width: 100%;
-      overflow-x: auto;
-      overflow-y: hidden;
-      display: flex;
-      justify-content: center;
-    }
-  }
-
-  .detail-card {
-    border-color: #e2e8f0 !important;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-  }
-
-  .transition-mini-item {
-    border-color: #e2e8f0 !important;
-  }
-
-  .fs-8 {
-    font-size: 0.78rem;
-  }
+.fs-7 {
+  font-size: 0.88rem;
 }

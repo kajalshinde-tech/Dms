@@ -3,16 +3,8 @@
   display: absolute !important;
 }
 
-@for $index from 0 through 300 {
-  $size: $index * 1;
-
-  .table-column-#{$size} {
-    min-width: #{$size}#{"px"};
-  }
-}
-
 .document-view-page {
-  padding-bottom: 2rem;
+  padding-bottom: 0.5rem;
 }
 
 // -------------------------------------------------------------
@@ -162,105 +154,317 @@
 }
 
 // -------------------------------------------------------------
-// 2. Compact Direct Filter Toolbar
+// 2. Compact Structured Filter Toolbar & Controls Inside Main Card
 // -------------------------------------------------------------
-.doc-filter-card {
+.doc-main-card,
+.doc-filter-card,
+.doc-table-card {
   background: var(--app-card-bg, #ffffff) !important;
   border: 1px solid var(--app-border-color, #e2e8f0) !important;
   border-radius: 8px !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
   overflow: hidden !important;
 }
 
-.doc-filter-body {
-  padding: 8px 10px !important;
-
-  @media (min-width: 768px) {
-    padding: 10px 12px !important;
-  }
+.doc-filter-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--app-border-color, #e2e8f0);
 }
 
-.doc-filter-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  gap: 6px;
+.filter-row-top {
+  display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 100%;
+}
 
-  @media (max-width: 767.98px) {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 6px;
+.filter-row-bottom {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  width: 100%;
+
+  @media (max-width: 991.98px) {
+    grid-template-columns: repeat(3, 1fr);
   }
 
-  @media (max-width: 359.98px) {
+  @media (max-width: 575.98px) {
     grid-template-columns: 1fr;
   }
 }
 
-.filter-input-col {
+// Single Unified Filter Field Box
+.filter-field-box {
+  height: 31px;
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding: 0 6px 0 7px;
   position: relative;
-  width: 100%;
+  transition: all 0.15s ease-in-out;
+  box-sizing: border-box;
 
-  @media (max-width: 767.98px) {
-    &.full-width-mobile {
-      grid-column: 1 / -1;
+  &:hover {
+    background-color: #ffffff;
+    border-color: #94a3b8;
+  }
+
+  &:focus-within {
+    background-color: #ffffff;
+    border-color: var(--app-primary-color, #059669);
+    box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.12);
+  }
+
+  &.search-field {
+    flex: 1 1 240px;
+    max-width: 380px;
+    min-width: 180px;
+  }
+
+  &.docno-field {
+    flex: 0 0 120px;
+    min-width: 100px;
+  }
+
+  &.dropdown-field {
+    width: 100%;
+    min-width: 0;
+  }
+
+  &.meta-text-field {
+    flex: 0 1 180px;
+  }
+
+  &.date-range-field {
+    flex: 0 1 240px;
+
+    .date-control {
+      width: 75px;
+    }
+
+    .date-sep {
+      color: #94a3b8;
+      font-size: 11px;
+      margin: 0 2px;
+    }
+
+    .calendar-btn {
+      background: transparent;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      padding: 0;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 3px;
+
+      &:hover {
+        color: var(--app-primary-color, #059669);
+      }
+
+      mat-icon {
+        font-size: 13px;
+        width: 13px;
+        height: 13px;
+      }
     }
   }
 }
 
-.date-range-col {
-  grid-column: 1 / -1;
+.filter-field-icon {
+  font-size: 15px !important;
+  width: 15px !important;
+  height: 15px !important;
+  line-height: 15px !important;
+  margin-right: 4px;
+  flex-shrink: 0;
 
-  @media (min-width: 992px) {
-    grid-column: span 2;
+  &.search-icon {
+    color: var(--app-primary-color, #059669);
+  }
+  &.tag-icon {
+    color: #64748b;
+  }
+  &.folder-icon {
+    color: #f59e0b;
+  }
+  &.status-icon {
+    color: #3b82f6;
+  }
+  &.client-icon {
+    color: #8b5cf6;
+  }
+  &.storage-icon {
+    color: #0ea5e9;
+  }
+  &.meta-icon {
+    color: #10b981;
   }
 }
 
-.input-with-icon {
-  position: relative;
-  width: 100%;
+// EXACT MATCH Typography for Inputs AND Selects (Font-size: 12px, 400 weight, uniform muted color)
+.filter-input-control {
+  flex: 1;
+  min-width: 0;
+  height: 100% !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 2px !important;
+  margin: 0 !important;
+  font-size: 12px !important;
+  font-family: inherit !important;
+  font-weight: 400 !important;
+  line-height: 1.2 !important;
+  color: #1e293b !important;
 
-  .field-icon {
-    position: absolute;
-    left: 8px;
-    top: 50%;
-    transform: translateY(-50%);
+  &::placeholder,
+  &::-webkit-input-placeholder,
+  &:-moz-placeholder,
+  &::-moz-placeholder,
+  &:-ms-input-placeholder {
+    color: #64748b !important;
+    font-size: 12px !important;
+    font-family: inherit !important;
+    font-weight: 400 !important;
+    line-height: 1.2 !important;
+    opacity: 1 !important;
+  }
+}
+
+.filter-select-control {
+  flex: 1;
+  min-width: 0;
+  height: 100% !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  font-size: 12px !important;
+  font-family: inherit !important;
+  color: #1e293b !important;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+// Clear Button inside inputs
+.btn-clear-icon {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0;
+  margin-right: 2px;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background-color: #f1f5f9;
+    color: #475569;
+  }
+
+  mat-icon {
+    font-size: 13px;
+    width: 13px;
+    height: 13px;
+    line-height: 13px;
+  }
+}
+
+// Reset / Clear Filters Action Pill
+.btn-reset-filters-pill {
+  height: 29px;
+  padding: 0 8px;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  color: #dc2626;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background-color: #fee2e2;
+    border-color: #f87171;
+  }
+
+  mat-icon {
     font-size: 14px;
     width: 14px;
     height: 14px;
-    color: #94a3b8;
-    pointer-events: none;
-  }
-
-  .doc-form-input {
-    padding-left: 26px !important;
+    line-height: 14px;
   }
 }
 
-.doc-form-input {
-  height: 31px !important;
-  font-size: 0.75rem !important;
-  border-radius: 6px !important;
-  border: 1px solid var(--app-border-color, #cbd5e1) !important;
-  background-color: var(--app-hover-bg, #f8fafc) !important;
-  color: var(--app-text-color, #1e293b) !important;
-  padding: 2px 8px !important;
-  transition: all 0.15s ease !important;
-
-  &:focus {
-    background-color: #ffffff !important;
-    border-color: var(--app-primary-color, #059669) !important;
-    box-shadow: 0 0 0 2px var(--app-primary-light, rgba(5, 150, 105, 0.15)) !important;
-    outline: none !important;
+// Mat-Select Deep Typography & Styling
+::ng-deep .doc-main-card,
+::ng-deep .doc-filter-card {
+  .mat-mdc-select-trigger {
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    font-size: 12px !important;
+    font-family: inherit !important;
   }
 
-  &::placeholder {
-    color: #94a3b8 !important;
-    font-size: 0.73rem !important;
+  .mat-mdc-select-placeholder {
+    font-size: 12px !important;
+    font-family: inherit !important;
+    font-weight: 400 !important;
+    color: #64748b !important;
+    line-height: 1.2 !important;
+  }
+
+  .mat-mdc-select-value {
+    font-size: 12px !important;
+    font-family: inherit !important;
+    font-weight: 400 !important;
+    color: #1e293b !important;
+    line-height: 1.2 !important;
+  }
+
+  .mat-mdc-select-value-text {
+    font-size: 12px !important;
+    font-family: inherit !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .mat-mdc-select-arrow svg {
+    fill: #64748b !important;
+    width: 15px !important;
+    height: 15px !important;
   }
 }
 
 .select-trigger-text {
-  font-size: 0.75rem !important;
+  font-size: 12px !important;
+  font-family: inherit !important;
   color: var(--app-text-color, #1e293b);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -268,53 +472,45 @@
 }
 
 .category-tree-option {
-  font-size: 0.75rem;
+  font-size: 12px;
+  font-family: inherit;
   display: flex;
   align-items: center;
 
   .folder-option-icon {
-    font-size: 15px;
-    width: 15px;
-    height: 15px;
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
     color: #f59e0b;
   }
 }
 
 .status-option-badge {
-  font-size: 0.75rem;
+  font-size: 12px;
   font-weight: 500;
 }
 
-.calendar-trigger-btn {
-  height: 31px !important;
-  padding: 0 7px !important;
-  border: 1px solid var(--app-border-color, #cbd5e1) !important;
-  border-left: none !important;
-  border-radius: 0 6px 6px 0 !important;
-  background-color: var(--app-hover-bg, #f8fafc) !important;
-  color: #64748b !important;
+::ng-deep .doc-select-panel {
+  .mat-mdc-option {
+    font-size: 12px !important;
+    font-family: inherit !important;
+    min-height: 32px !important;
 
-  .calendar-icon {
-    font-size: 15px;
-    width: 15px;
-    height: 15px;
-    line-height: 15px;
-  }
-
-  &:hover {
-    background-color: #ffffff !important;
-    color: var(--app-primary-color, #059669) !important;
+    .mdc-list-item__primary-text {
+      font-size: 12px !important;
+      font-family: inherit !important;
+    }
   }
 }
 
 // -------------------------------------------------------------
-// 3. Modern Data Table Card
+// 3. High-Density Compact Data Table Card
 // -------------------------------------------------------------
 .doc-table-card {
   background: var(--app-card-bg, #ffffff) !important;
   border: 1px solid var(--app-border-color, #e2e8f0) !important;
-  border-radius: 10px !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
   overflow: hidden !important;
 }
 
@@ -329,47 +525,60 @@
   border-collapse: separate;
   border-spacing: 0;
 
-  // Header Row
+  // Header Row (Compact: 33px)
   .doc-table-header-row {
-    background-color: #f8fafc !important;
-    height: 42px !important;
+    background-color: #f1f5f9 !important;
+    height: 33px !important;
     border-bottom: 1px solid #e2e8f0 !important;
 
     th.mat-mdc-header-cell {
-      background-color: #f8fafc !important;
-      color: #475569 !important;
-      font-size: 11.5px !important;
+      background-color: #f1f5f9 !important;
+      color: #334155 !important;
+      font-size: 11px !important;
       font-weight: 700 !important;
       text-transform: uppercase !important;
       letter-spacing: 0.03em !important;
       border-bottom: 1px solid #e2e8f0 !important;
-      padding: 8px 12px !important;
+      padding: 4px 8px !important;
       white-space: nowrap !important;
     }
   }
 
-  // Data Rows
+  // Data Rows (Compact High-Density: 34px Zebra Striped)
   .doc-table-row {
-    height: 44px !important;
-    transition: background-color 0.15s ease-in-out;
+    height: 34px !important;
+    transition: background-color 0.12s ease-in-out;
+    border-bottom: 1px solid #eef2f6 !important;
 
     &.odd-row {
-      background-color: #ffffff;
+      background-color: #ffffff !important;
+
+      td.mat-mdc-cell {
+        background-color: #ffffff !important;
+      }
     }
 
     &.even-row {
-      background-color: #fafbfc;
+      background-color: #f4f6f8 !important;
+
+      td.mat-mdc-cell {
+        background-color: #f4f6f8 !important;
+      }
     }
 
     &:hover {
-      background-color: var(--app-hover-bg, #f1f5f9) !important;
+      background-color: #e8eef5 !important;
+
+      td.mat-mdc-cell {
+        background-color: #e8eef5 !important;
+      }
     }
 
     td.mat-mdc-cell {
-      padding: 8px 12px !important;
-      font-size: 12.5px !important;
+      padding: 3px 8px !important;
+      font-size: 12px !important;
       color: var(--app-text-color, #1e293b) !important;
-      border-bottom: 1px solid #f1f5f9 !important;
+      border-bottom: 1px solid #eef2f6 !important;
       vertical-align: middle !important;
     }
   }
@@ -377,17 +586,17 @@
 
 // Checkbox Column
 .col-select-cell {
-  width: 48px;
-  min-width: 48px;
-  padding-left: 12px !important;
-  padding-right: 6px !important;
+  width: 40px;
+  min-width: 40px;
+  padding-left: 8px !important;
+  padding-right: 4px !important;
 }
 
 .btn-share-selected {
-  width: 28px !important;
-  height: 28px !important;
+  width: 24px !important;
+  height: 24px !important;
   padding: 0 !important;
-  border-radius: 6px !important;
+  border-radius: 4px !important;
   background-color: var(--app-primary-color, #059669) !important;
   color: #ffffff !important;
   display: inline-flex !important;
@@ -395,35 +604,35 @@
   justify-content: center !important;
 
   mat-icon {
-    font-size: 15px;
-    width: 15px;
-    height: 15px;
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
   }
 }
 
 // Action Column
 .col-action-cell {
-  padding-left: 8px !important;
-  padding-right: 8px !important;
+  padding-left: 6px !important;
+  padding-right: 6px !important;
 }
 
 .btn-row-action {
-  width: 28px !important;
-  height: 28px !important;
+  width: 24px !important;
+  height: 24px !important;
   padding: 0 !important;
-  border-radius: 6px !important;
+  border-radius: 4px !important;
   color: #64748b !important;
   background: transparent !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  transition: all 0.15s ease;
+  transition: all 0.12s ease;
 
   mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    line-height: 18px;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
   }
 
   &:hover {
@@ -472,24 +681,36 @@
   }
 }
 
-// Workflow Chip
+// Workflow Chip (Compact, single-line)
 .workflow-chip {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 2px 7px;
+  gap: 3px;
+  padding: 1px 6px;
   border-radius: 4px;
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 500;
   cursor: pointer;
   text-decoration: none;
   transition: all 0.15s ease;
+  white-space: nowrap;
+  height: 20px;
+  line-height: 18px;
+  max-width: 140px;
 
   .wf-icon {
-    font-size: 13px;
-    width: 13px;
-    height: 13px;
-    line-height: 13px;
+    font-size: 12px;
+    width: 12px;
+    height: 12px;
+    line-height: 12px;
+    flex-shrink: 0;
+  }
+
+  .wf-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
   }
 
   &.wf-success {
@@ -667,6 +888,30 @@
   background-color: #ffffff;
 }
 
+::ng-deep .custom-mat-paginator {
+  min-height: 34px !important;
+
+  .mat-mdc-paginator-container {
+    min-height: 34px !important;
+    padding: 0 8px !important;
+    font-size: 11.5px !important;
+  }
+
+  .mat-mdc-paginator-range-label {
+    margin: 0 10px 0 14px !important;
+    font-size: 11.5px !important;
+  }
+
+  .mat-mdc-paginator-page-size-label {
+    font-size: 11.5px !important;
+  }
+
+  .mat-mdc-icon-button.mat-mdc-button-base {
+    width: 28px !important;
+    height: 28px !important;
+    padding: 2px !important;
+  }
+}
 
 // Empty State
 .empty-state-box {

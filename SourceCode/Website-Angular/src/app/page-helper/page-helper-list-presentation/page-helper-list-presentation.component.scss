@@ -1,0 +1,290 @@
+.page-helper-page {
+  padding-bottom: 2rem;
+}
+
+// -------------------------------------------------------------
+// 1. Page Header & Filter Search
+// -------------------------------------------------------------
+.page-title {
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  color: var(--app-text-color, #0f172a) !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.25 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.page-title-icon {
+  color: var(--app-primary-color, #059669) !important;
+  font-size: 21px !important;
+  width: 21px !important;
+  height: 21px !important;
+  line-height: 21px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-right: 4px !important;
+  flex-shrink: 0 !important;
+}
+
+.filter-field-box {
+  height: 32px;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  position: relative;
+  transition: all 0.15s ease-in-out;
+  box-sizing: border-box;
+
+  &:hover {
+    border-color: #94a3b8;
+  }
+
+  &:focus-within {
+    border-color: var(--app-primary-color, #059669);
+    box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.12);
+  }
+
+  &.search-field {
+    width: 260px;
+
+    @media (max-width: 576px) {
+      width: 100%;
+    }
+  }
+
+  .filter-field-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    color: var(--app-primary-color, #059669);
+    margin-right: 6px;
+    flex-shrink: 0;
+  }
+
+  .filter-input-control {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 12px;
+    color: #1e293b;
+    padding: 0;
+
+    &::placeholder {
+      color: #94a3b8;
+      font-size: 12px;
+    }
+  }
+
+  .btn-clear-icon {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 0;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background-color: #f1f5f9;
+      color: #475569;
+    }
+
+    mat-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+      line-height: 14px;
+    }
+  }
+}
+
+// -------------------------------------------------------------
+// 2. High-Density Unified Table (.doc-modern-table)
+// -------------------------------------------------------------
+.doc-table-card {
+  background: #ffffff !important;
+  border: 1px solid var(--app-border-color, #e2e8f0) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  overflow: hidden !important;
+}
+
+.doc-modern-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  // Header Row (Compact: 33px)
+  .doc-table-header-row {
+    background-color: #f1f5f9 !important;
+    height: 33px !important;
+    min-height: 33px !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+
+    th.mat-mdc-header-cell {
+      background-color: #f1f5f9 !important;
+      color: #334155 !important;
+      font-size: 11px !important;
+      font-weight: 700 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.03em !important;
+      border-bottom: 1px solid #e2e8f0 !important;
+      padding: 4px 10px !important;
+      white-space: nowrap !important;
+      line-height: 1.2 !important;
+    }
+  }
+
+  // Data Rows (Compact High-Density: 34px Zebra Striped)
+  .doc-table-row {
+    height: 34px !important;
+    min-height: 34px !important;
+    transition: background-color 0.12s ease-in-out;
+    border-bottom: 1px solid #eef2f6 !important;
+
+    &.odd-row {
+      background-color: #ffffff !important;
+
+      td.mat-mdc-cell {
+        background-color: #ffffff !important;
+      }
+    }
+
+    &.even-row {
+      background-color: #f4f6f8 !important;
+
+      td.mat-mdc-cell {
+        background-color: #f4f6f8 !important;
+      }
+    }
+
+    &:hover {
+      background-color: #e8eef5 !important;
+
+      td.mat-mdc-cell {
+        background-color: #e8eef5 !important;
+      }
+    }
+
+    td.mat-mdc-cell {
+      padding: 3px 10px !important;
+      font-size: 12px !important;
+      color: var(--app-text-color, #1e293b) !important;
+      border-bottom: 1px solid #eef2f6 !important;
+      vertical-align: middle !important;
+      line-height: 1.3 !important;
+    }
+  }
+}
+
+// -------------------------------------------------------------
+// 3. Compact Action Buttons & Elements
+// -------------------------------------------------------------
+.btn-action-edit,
+.btn-action-view {
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  padding: 0 !important;
+  border-radius: 5px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.15s ease !important;
+  cursor: pointer;
+
+  .action-icon {
+    font-size: 15px !important;
+    width: 15px !important;
+    height: 15px !important;
+    line-height: 15px !important;
+  }
+}
+
+.btn-action-edit {
+  color: #2563eb !important;
+  background-color: #eff6ff !important;
+  border: 1px solid #bfdbfe !important;
+
+  &:hover {
+    background-color: #dbeafe !important;
+    color: #1d4ed8 !important;
+  }
+}
+
+.btn-action-view {
+  color: #059669 !important;
+  background-color: #ecfdf5 !important;
+  border: 1px solid #a7f3d0 !important;
+
+  &:hover {
+    background-color: #d1fae5 !important;
+    color: #047857 !important;
+  }
+}
+
+.item-icon-box {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  border-radius: 4px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  .item-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    color: #2563eb;
+  }
+}
+
+.helper-name-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: #0f172a;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--app-primary-color, #059669);
+    text-decoration: underline;
+  }
+}
+
+.badge-code {
+  display: inline-block;
+  padding: 2px 8px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #475569;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  letter-spacing: 0.02em;
+}
+
+.fs-xs {
+  font-size: 0.72rem !important;
+}

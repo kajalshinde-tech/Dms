@@ -1,34 +1,46 @@
-<div class="xintra-modal-card">
+<div class="saas-dialog-container position-relative">
   <!-- Modal Header -->
-  <div class="modal-header">
-    <h6 class="modal-title">Confirmation</h6>
-    <button type="button" class="btn-close-modal" (click)="clickHandler(false)" aria-label="Close">
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge warning-badge">
+        <mat-icon>help_outline</mat-icon>
+      </div>
+      <div>
+        <h5 class="dialog-title mb-0">Confirmation</h5>
+        <p class="dialog-subtitle mb-0">Please enter your comment or reason to proceed</p>
+      </div>
+    </div>
+    <button type="button" class="dialog-close-btn" (click)="clickHandler(false)" aria-label="Close">
       <mat-icon>close</mat-icon>
     </button>
   </div>
 
   <!-- Modal Body -->
-  <mat-dialog-content class="modal-body">
-    <p class="modal-text mb-2">{{ primaryMessage }}</p>
-    @if(note) {
-      <div class="alert alert-warning mt-2 mb-2 py-2 px-3 fs-12">
-        <mat-icon class="align-middle me-1 fs-6">warning</mat-icon>
-        <span>{{ note }}</span>
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <div class="py-1">
+      <p class="modal-text mb-2 text-dark fs-14" style="line-height: 1.5;">{{ primaryMessage }}</p>
+      @if(note) {
+        <div class="alert alert-warning d-flex align-items-center gap-2 mt-2 mb-3 py-2 px-3">
+          <mat-icon class="fs-5 text-warning">warning</mat-icon>
+          <span class="small">{{ note }}</span>
+        </div>
+      }
+      <div class="mt-2">
+        <label class="form-label-custom">{{ "COMMENT" | translate }}</label>
+        <textarea class="form-control doc-form-input" [(ngModel)]="comment" rows="3" placeholder="Add a comment..."></textarea>
       </div>
-    }
-    <div class="mt-2">
-      <label class="form-label fs-12 fw-600 text-dark mb-1">{{ "COMMENT" | translate }}</label>
-      <textarea class="form-control fs-13" [(ngModel)]="comment" rows="3" placeholder="Add a comment..."></textarea>
     </div>
   </mat-dialog-content>
 
   <!-- Modal Footer -->
-  <div class="modal-footer">
-    <button type="button" class="btn btn-cancel-xintra" (click)="clickHandler(false)">
-      {{ 'CANCEL' | translate }}
+  <mat-dialog-actions class="saas-dialog-footer">
+    <button type="button" class="btn btn-saas-cancel" (click)="clickHandler(false)">
+      <mat-icon>close</mat-icon>
+      <span>{{ 'CANCEL' | translate }}</span>
     </button>
-    <button type="button" class="btn btn-primary-xintra" (click)="clickHandler(true)" cdkFocusInitial>
-      {{ 'YES' | translate }}
+    <button type="button" class="btn btn-primary-custom" (click)="clickHandler(true)" cdkFocusInitial>
+      <mat-icon>check</mat-icon>
+      <span>{{ 'YES' | translate }}</span>
     </button>
-  </div>
+  </mat-dialog-actions>
 </div>

@@ -3,23 +3,22 @@ import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Va
 import { TableSetting } from '../../core/domain-classes/table-setting';
 import { MatTableSetting } from '../../core/domain-classes/mat-table-setting';
 import { TranslationService } from '../../core/services/translation.service';
-
 import { ToastrService } from '@core/services/toastr-service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { toObservable } from '@angular/core/rxjs-interop';
 import { Router, RouterModule } from '@angular/router';
 import { DocumentLibraryTableSettingsStore } from '../document-library-list/document-library-table-settings-store';
-import { PageHelpTextComponent } from '@shared/page-help-text/page-help-text.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-table-settings',
+  standalone: true,
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     MatIconModule,
     MatCheckboxModule,
@@ -38,75 +37,65 @@ export class TableSettingsComponent implements OnInit {
   documentLibraryTableSettingsStore = inject(DocumentLibraryTableSettingsStore);
   matTableSetting: MatTableSetting | null = this.documentLibraryTableSettingsStore.matTableSetting();
   fb = inject(FormBuilder);
-  router = inject(Router);
-  translationService = inject(TranslationService);
   toastrService = inject(ToastrService);
-  typeOptions = [
-    { key: 'text', value: this.translationService.getValue('TEXT') },
-    { key: 'datetime', value: this.translationService.getValue('DATETIME') },
-    { key: 'bool', value: this.translationService.getValue('BOOL') }
-  ];
-  /**
-   *
-   */
-  constructor() {
-    this.updateTableSettings();
-  }
-
-  get settingsArray(): FormArray {
-    return <FormArray>this.tableSettingsForm.get('settingsArray');
-  }
+  translationService = inject(TranslationService);
+  router = inject(Router);
 
   ngOnInit(): void {
     this.createTableSettingsForm();
+    if (this.matTableSetting) {
+      this.tableSettingsForm.patchValue({
+        id: this.matTableSetting.id,
+        screenName: this.matTableSetting.screenName
+      });
+      this.matTableSetting.settings.forEach(setting => {
+        this.settingsArray.push(this.createSettingGroup(setting));
+      });
+    }
   }
 
-  updateTableSettings() {
-    toObservable(this.documentLibraryTableSettingsStore.isTableSettingAdded).subscribe((flag) => {
-      if (flag) {
-        this.documentLibraryTableSettingsStore.updateTableSettingAdded();
-        this.router.navigate(['/assign/list-view']);
-      }
+  createTableSettingsForm() {
+    this.tableSettingsForm = this.fb.group({
+      id: [0],
+      screenName: [this.screenName],
+      settingsArray: this.fb.array([])
     });
+  }
+
+  get settingsArray(): FormArray {
+    return this.tableSettingsForm.get('settingsArray') as FormArray;
+  }
+
+  createSettingGroup(setting?: TableSetting): FormGroup {
+    return this.fb.group({
+      key: [setting ? setting.key : ''],
+      header: [setting ? setting.header : ''],
+      width: [setting ? setting.width : 100, Validators.required],
+      type: [setting ? setting.type : 'text'],
+      isVisible: [setting ? setting.isVisible : true],
+      orderNumber: [setting ? setting.orderNumber : 0, Validators.required],
+      allowSort: [setting ? setting.allowSort : true]
+    });
+  }
+
+  saveTableSettings() {
+    if (this.tableSettingsForm.invalid) {
+      this.tableSettingsForm.markAllAsTouched();
+      return;
+    }
+
+    const formValue = this.tableSettingsForm.value;
+    const matTableSetting: MatTableSetting = {
+      id: formValue.id,
+      screenName: formValue.screenName,
+      settings: formValue.settingsArray
+    };
+
+    this.documentLibraryTableSettingsStore.saveTableSettings(matTableSetting);
+    this.router.navigate(['/assign/list-view']);
   }
 
   onSeetingsClose() {
     this.router.navigate(['/assign/list-view']);
   }
-  createTableSettingsForm() {
-    this.tableSettingsForm = new FormGroup({
-      screenName: new FormControl({ value: 'documents_library', disabled: true }, [Validators.required]),
-      settingsArray: new FormArray([])
-    });
-    this.matTableSetting?.settings.forEach((tableSeting: TableSetting) => {
-      this.addTableSetting(tableSeting);
-    });
-  }
-
-  addTableSetting(tableSeting: TableSetting) {
-    this.settingsArray.push(this.fb.group({
-      key: [tableSeting.key],
-      header: [tableSeting.header],
-      width: [tableSeting.width, [Validators.required]],
-      type: [tableSeting.type],
-      isVisible: [tableSeting.isVisible],
-      orderNumber: [tableSeting.orderNumber, [Validators.required]]
-    }));
-  }
-  buidlTableSetting() {
-    const settings: MatTableSetting = {
-      id: this.matTableSetting?.id ?? 0,
-      screenName: this.screenName,
-      settings: this.settingsArray.value
-    }
-    return settings;
-  }
-  saveTableSettings() {
-    if (this.tableSettingsForm.valid) {
-      this.documentLibraryTableSettingsStore.saveTableSettings(this.buidlTableSetting());
-    } else {
-      this.tableSettingsForm.markAllAsTouched();
-    }
-  }
-
 }

@@ -68,8 +68,8 @@ export class StorageSettingListComponent implements OnInit {
 
   onCreateStorageSetting(): void {
     const dialogRef = this.dialog.open(ManageStorageSettingComponent, {
-      width: '100%',
-      maxWidth: '640px',
+      width: '580px',
+      maxWidth: '92vw',
       autoFocus: false
     });
     dialogRef.afterClosed()

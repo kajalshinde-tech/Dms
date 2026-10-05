@@ -1,7 +1,7 @@
 <section class="content document-view-page">
   <div class="container-fluid">
     <!-- 1. Page Header & Action Buttons -->
-    <div class="page-header-row mb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <div class="page-header-row mb-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
       <div class="d-flex align-items-center gap-2">
         <mat-icon class="page-title-icon align-middle">description</mat-icon>
         <span class="mb-0 page-title">
@@ -68,33 +68,87 @@
       </div>
     </div>
 
-    <!-- 2. Compact Direct Filter Toolbar -->
-    <mat-card appearance="outlined" class="doc-filter-card mb-3">
-      <mat-card-content class="doc-filter-body">
-        <div class="doc-filter-grid">
+    <!-- 2. Unified Main Card: Filters Toolbar + Data Table -->
+    <mat-card appearance="outlined" class="doc-main-card">
+      <!-- Filter Toolbar Header Section -->
+      <div class="doc-filter-wrapper">
+        <!-- Row 1: Search, Doc No, Conditional Inputs, Reset -->
+        <div class="filter-row-top">
+          <!-- Search Document Name / Description -->
+          <div class="filter-field-box search-field">
+            <mat-icon class="filter-field-icon search-icon">search</mat-icon>
+            <input class="filter-input-control"
+              placeholder="{{ 'SEARCH_DOCUMENT_BY_NAME_OR_DESCRIPTION' | translate }}"
+              #input />
+            @if (input.value) {
+            <button type="button" class="btn-clear-icon" (click)="clearSearchInput()" matTooltip="Clear search">
+              <mat-icon>close</mat-icon>
+            </button>
+            }
+          </div>
+
           <!-- Doc No -->
-          <div class="filter-input-col">
-            <div class="input-with-icon">
-              <mat-icon class="field-icon">tag</mat-icon>
-              <input class="form-control doc-form-input" [(ngModel)]="docNo" placeholder="{{ 'DOCUMENT_NO' | translate }}"
-                type="text" #docNoInput />
-            </div>
+          <div class="filter-field-box docno-field">
+            <mat-icon class="filter-field-icon tag-icon">tag</mat-icon>
+            <input class="filter-input-control" [(ngModel)]="docNo"
+              placeholder="{{ 'DOCUMENT_NO' | translate }}" type="text" #docNoInput />
+            @if (docNo) {
+            <button type="button" class="btn-clear-icon" (click)="clearDocNoInput()" matTooltip="Clear Doc No">
+              <mat-icon>close</mat-icon>
+            </button>
+            }
           </div>
 
-          <!-- Search by Name / Description -->
-          <div class="filter-input-col full-width-mobile">
-            <div class="input-with-icon">
-              <mat-icon class="field-icon">search</mat-icon>
-              <input class="form-control doc-form-input" placeholder="{{
-                  'SEARCH_DOCUMENT_BY_NAME_OR_DESCRIPTION' | translate
-                }}" #input />
-            </div>
+          <!-- Meta Tag Text Search (Conditional) -->
+          @if(selectedType !== null && selectedType === 0) {
+          <div class="filter-field-box meta-text-field">
+            <mat-icon class="filter-field-icon">search</mat-icon>
+            <input class="filter-input-control" [(ngModel)]="metatagText"
+              placeholder="{{ 'SEARCH_DOCUMENT_BY_META_TAGS' | translate }}" #metatag />
           </div>
+          }
 
-          <!-- Category -->
-          <div class="filter-input-col">
-            <mat-select panelClass="mat-select-control doc-select-panel" class="form-control doc-form-input" [(value)]="selectedCategory"
-              placeholder="{{ 'SELECT_CATEGORY' | translate }}" (selectionChange)="onCategoryChange($event)">
+          <!-- Date Range Picker (Conditional) -->
+          @if(selectedType !== null && selectedType === 1) {
+          <div class="filter-field-box date-range-field">
+            <form [formGroup]="filterForm" class="d-flex align-items-center gap-1">
+              <input #startDateInput formControlName="startDate" class="filter-input-control date-control"
+                [matDatepicker]="startPicker" placeholder="{{ 'START_DATE' | translate }}" />
+              <button class="calendar-btn" type="button" (click)="startPicker.open()">
+                <mat-icon>calendar_today</mat-icon>
+              </button>
+              <mat-datepicker #startPicker></mat-datepicker>
+
+              <span class="date-sep">-</span>
+
+              <input #endDateInput formControlName="endDate" class="filter-input-control date-control" [matDatepicker]="endPicker"
+                (dateInput)="onDateFilterChange(startDateInput.value, endDateInput.value)"
+                placeholder="{{ 'END_DATE' | translate }}" />
+              <button class="calendar-btn" type="button" (click)="endPicker.open()">
+                <mat-icon>calendar_today</mat-icon>
+              </button>
+              <mat-datepicker #endPicker></mat-datepicker>
+            </form>
+          </div>
+          }
+
+          <!-- Reset Action Button -->
+          @if (hasActiveFilters()) {
+          <button type="button" class="btn-reset-filters-pill ms-auto" (click)="resetFilters()" [matTooltip]="'RESET' | translate">
+            <mat-icon>restart_alt</mat-icon>
+            <span>{{ 'RESET' | translate }}</span>
+          </button>
+          }
+        </div>
+
+        <!-- Row 2: 5 Symmetrical Filter Dropdowns -->
+        <div class="filter-row-bottom">
+          <!-- 1. Folder / Category Dropdown -->
+          <div class="filter-field-box dropdown-field">
+            <mat-icon class="filter-field-icon folder-icon">folder_open</mat-icon>
+            <mat-select panelClass="mat-select-control doc-select-panel" class="filter-select-control"
+              [(value)]="selectedCategory" placeholder="{{ 'SELECT_CATEGORY' | translate }}"
+              (selectionChange)="onCategoryChange($event)">
               <mat-select-trigger>
                 <span [matTooltip]="selectedCategory?.displayName" class="select-trigger-text">
                   {{ selectedCategory?.displayName || ("NONE" | translate) }}
@@ -123,9 +177,11 @@
             </mat-select>
           </div>
 
-          <!-- Status -->
-          <div class="filter-input-col">
-            <mat-select panelClass="mat-select-control doc-select-panel" class="form-control doc-form-input"
+          <!-- 2. Document Status Dropdown -->
+          <div class="filter-field-box dropdown-field">
+            <mat-icon class="filter-field-icon status-icon">flag</mat-icon>
+            <mat-select panelClass="mat-select-control doc-select-panel" class="filter-select-control"
+              [(value)]="selectedStatus"
               placeholder="{{ 'SELECT_DOCUMENT_STATUS' | translate }}" (selectionChange)="onStatusChange($event)">
               <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
               @for(status of documentStatuses; track status) {
@@ -138,9 +194,11 @@
             </mat-select>
           </div>
 
-          <!-- Client -->
-          <div class="filter-input-col">
-            <mat-select panelClass="mat-select-control doc-select-panel" class="form-control doc-form-input"
+          <!-- 3. Client Dropdown -->
+          <div class="filter-field-box dropdown-field">
+            <mat-icon class="filter-field-icon client-icon">business</mat-icon>
+            <mat-select panelClass="mat-select-control doc-select-panel" class="filter-select-control"
+              [(value)]="selectedClient"
               placeholder="{{ 'SELECT_CLIENT' | translate }}" (selectionChange)="onClientChange($event)">
               <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
               @for(client of clientStore.clients(); track client) {
@@ -151,9 +209,11 @@
             </mat-select>
           </div>
 
-          <!-- Storage -->
-          <div class="filter-input-col">
-            <mat-select panelClass="mat-select-control doc-select-panel" class="form-control doc-form-input"
+          <!-- 4. Storage Dropdown -->
+          <div class="filter-field-box dropdown-field">
+            <mat-icon class="filter-field-icon storage-icon">cloud</mat-icon>
+            <mat-select panelClass="mat-select-control doc-select-panel" class="filter-select-control"
+              [(value)]="selectedStorage"
               placeholder="{{ 'SELECT_STORAGE' | translate }}" (selectionChange)="onStorageChange($event)">
               <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
               @for(storage of storageSettinges; track storage) {
@@ -164,11 +224,13 @@
             </mat-select>
           </div>
 
-          <!-- Meta Tag -->
-          <div class="filter-input-col">
-            <mat-select panelClass="mat-select-control doc-select-panel" placeholder="{{ 'SELECT_META_TAG' | translate }}"
-              class="form-control doc-form-input" (selectionChange)="onMetaTagChange($event)">
-              <mat-option>-- {{ "NONE" | translate }} --</mat-option>
+          <!-- 5. Meta Tag Dropdown -->
+          <div class="filter-field-box dropdown-field">
+            <mat-icon class="filter-field-icon meta-icon">sell</mat-icon>
+            <mat-select panelClass="mat-select-control doc-select-panel" class="filter-select-control"
+              [(value)]="selectedMetaTag"
+              placeholder="{{ 'SELECT_META_TAG' | translate }}" (selectionChange)="onMetaTagChange($event)">
+              <mat-option [value]="">-- {{ "NONE" | translate }} --</mat-option>
               @for(documentMetaTag of documentMetaTagStore.documentMetaTags(); track documentMetaTag) {
               <mat-option [value]="documentMetaTag">
                 <span>{{ documentMetaTag.name }}</span>
@@ -176,63 +238,10 @@
               }
             </mat-select>
           </div>
-
-          <!-- Meta Tag Text Search -->
-          <div class="filter-input-col" [ngStyle]="{
-              display:
-                selectedType !== null && selectedType === 0
-                  ? 'block'
-                  : 'none'
-            }">
-            <input class="form-control doc-form-input" [(ngModel)]="metatagText"
-              placeholder="{{ 'SEARCH_DOCUMENT_BY_META_TAGS' | translate }}" #metatag />
-          </div>
-
-          <!-- Date Range Picker (Visible only for 'dateTime' type) -->
-          <div class="filter-input-col date-range-col" [ngStyle]="{
-              display:
-                selectedType !== null && selectedType === 1
-                  ? 'block'
-                  : 'none'
-            }">
-            <form [formGroup]="filterForm" class="d-flex flex-wrap gap-2">
-              <!-- Start Date -->
-              <div class="input-group input-group-sm flex-fill">
-                <input #startDateInput formControlName="startDate" class="form-control doc-form-input"
-                  [matDatepicker]="startPicker" placeholder="{{ 'START_DATE' | translate }}" />
-                <button class="btn btn-outline-secondary calendar-trigger-btn" type="button" (click)="startPicker.open()">
-                  <mat-icon class="calendar-icon">calendar_today</mat-icon>
-                </button>
-                <mat-datepicker #startPicker></mat-datepicker>
-              </div>
-
-              <!-- End Date -->
-              <div class="input-group input-group-sm flex-fill">
-                <input #endDateInput formControlName="endDate" class="form-control doc-form-input" [matDatepicker]="endPicker"
-                  (dateInput)="
-                    onDateFilterChange(
-                      startDateInput.value,
-                      endDateInput.value
-                    )
-                  " placeholder="{{ 'END_DATE' | translate }}" />
-                <button class="btn btn-outline-secondary calendar-trigger-btn" type="button" (click)="endPicker.open()">
-                  <mat-icon class="calendar-icon">calendar_today</mat-icon>
-                </button>
-                <mat-datepicker #endPicker></mat-datepicker>
-              </div>
-              @if( filterForm.get('endDate')?.hasError('required') && filterForm.get('startDate')?.value ) {
-              <div class="text-danger small w-100">
-                {{ "END_DATE_IS_REQUIRED_WHEN_START_DATE_IS_SELECTED" | translate }}
-              </div>
-              }
-            </form>
-          </div>
         </div>
-      </mat-card-content>
-    </mat-card>
+      </div>
 
-    <!-- 3. Modern Data Table Card -->
-    <mat-card appearance="outlined" class="doc-table-card">
+      <!-- Data Table Section Inside Main Card -->
       <mat-card-content class="p-0">
         <div class="table-responsive doc-table-wrapper">
           <table mat-table [dataSource]="dataSource" matSort matSortDisableClear matSortActive="createdDate"
@@ -381,15 +390,15 @@
               </th>
               <td [ngStyle]="{ 'min-width.px': column.width || 120 }" mat-cell *matCellDef="let document">
                 @if(document.workflowsDetail && document.workflowsDetail.length > 0) {
-                <div class="d-flex flex-wrap gap-1">
+                <div class="d-flex align-items-center flex-nowrap gap-1">
                   @for (workflow of document.workflowsDetail; track workflow; let i = $index) {
-                  <span class="workflow-chip" [ngClass]="{
+                  <span class="workflow-chip" [matTooltip]="workflow.workflowName" [ngClass]="{
                       'wf-success': workflow.workflowInstaceStatus == 2,
                       'wf-danger': workflow.workflowInstaceStatus == 3,
                       'wf-pending': workflow.workflowInstaceStatus != 2 && workflow.workflowInstaceStatus != 3
                     }" (click)="viewVisualWorkflow(workflow)">
                     <mat-icon class="wf-icon">account_tree</mat-icon>
-                    {{ workflow.workflowName }}
+                    <span class="wf-name">{{ workflow.workflowName }}</span>
                   </span>
                   }
                 </div>
@@ -522,7 +531,7 @@
             <ng-container matColumnDef="footer">
               <td mat-footer-cell [attr.colspan]="visibleTableKeys.length" *matFooterCellDef class="table-paginator-footer p-0">
                 <mat-paginator [length]="documentResource.totalCount" [pageSize]="documentResource.pageSize"
-                  [pageSizeOptions]="[10, 20, 30, 50]" [showFirstLastButtons]="true" class="custom-mat-paginator">
+                  [pageSizeOptions]="[10, 15, 25, 50, 100]" [showFirstLastButtons]="true" class="custom-mat-paginator">
                 </mat-paginator>
               </td>
             </ng-container>

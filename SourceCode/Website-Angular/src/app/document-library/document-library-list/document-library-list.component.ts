@@ -137,6 +137,10 @@ export class DocumentLibraryListComponent
   documents: DocumentInfo[] = [];
   allCategories: Category[] = [];
   selectedCategory: Category | null = null;
+  selectedStatus: DocumentStatus | null = null;
+  selectedClient: Client | null = null;
+  selectedStorage: StorageSetting<any> | null = null;
+  selectedMetaTag: any | null = null;
   displayedColumns: string[] = [
     'select',
     'action',
@@ -356,8 +360,10 @@ export class DocumentLibraryListComponent
 
   onCategoryChange(filtervalue: any) {
     if (filtervalue && filtervalue.value) {
+      this.selectedCategory = filtervalue.value;
       this.documentResource.categoryId = filtervalue.value.id;
     } else {
+      this.selectedCategory = null;
       this.documentResource.categoryId = '';
     }
     this.paginator.pageIndex = 0;
@@ -368,8 +374,10 @@ export class DocumentLibraryListComponent
   onStatusChange(filterValue: MatSelectChange) {
     const documentStatus: DocumentStatus = filterValue.value;
     if (documentStatus) {
+      this.selectedStatus = documentStatus;
       this.documentResource.documentStatusId = documentStatus.id;
     } else {
+      this.selectedStatus = null;
       this.documentResource.documentStatusId = '';
     }
     this.documentResource.skip = 0;
@@ -380,8 +388,10 @@ export class DocumentLibraryListComponent
   onStorageChange(filterValue: MatSelectChange) {
     const storage: StorageSetting<any> = filterValue.value;
     if (storage) {
+      this.selectedStorage = storage;
       this.documentResource.storageSettingId = storage.id;
     } else {
+      this.selectedStorage = null;
       this.documentResource.storageSettingId = '';
     }
     this.documentResource.skip = 0;
@@ -392,8 +402,10 @@ export class DocumentLibraryListComponent
   onClientChange(filterValue: MatSelectChange) {
     const client: Client = filterValue.value;
     if (client) {
+      this.selectedClient = client;
       this.documentResource.clientId = client.id;
     } else {
+      this.selectedClient = null;
       this.documentResource.clientId = '';
     }
     this.documentResource.skip = 0;
@@ -1106,6 +1118,7 @@ export class DocumentLibraryListComponent
 
   onMetaTagChange(filterValue: any) {
     if (filterValue && filterValue.value) {
+      this.selectedMetaTag = filterValue.value;
       this.selectedType = Number(filterValue.value.type);
       if (Number(this.selectedType) === 0) {
         this.filterForm.get('metaTag')?.setValue('');
@@ -1116,6 +1129,7 @@ export class DocumentLibraryListComponent
       }
       this.documentResource.metaTagsTypeId = filterValue.value.id;
     } else {
+      this.selectedMetaTag = null;
       this.documentResource.metaTags = '';
       this.selectedType = null;
       this.documentResource.metaTagsTypeId = undefined;
@@ -1126,6 +1140,76 @@ export class DocumentLibraryListComponent
       this.paginator.pageIndex = 0;
       this.dataSource.loadDocuments(this.documentResource);
     }
+  }
+
+  hasActiveFilters(): boolean {
+    return !!(
+      this.docNo ||
+      (this.input?.nativeElement && this.input.nativeElement.value) ||
+      this.selectedCategory ||
+      this.selectedStatus ||
+      this.selectedClient ||
+      this.selectedStorage ||
+      this.selectedMetaTag ||
+      this.metatagText ||
+      this.filterForm?.get('startDate')?.value
+    );
+  }
+
+  clearSearchInput() {
+    if (this.input?.nativeElement) {
+      this.input.nativeElement.value = '';
+    }
+    this.documentResource.name = '';
+    this.documentResource.skip = 0;
+    this.paginator.pageIndex = 0;
+    this.dataSource.loadDocuments(this.documentResource);
+  }
+
+  clearDocNoInput() {
+    this.docNo = '';
+    if (this.docNoInput?.nativeElement) {
+      this.docNoInput.nativeElement.value = '';
+    }
+    this.documentResource.documentNumber = '';
+    this.documentResource.skip = 0;
+    this.paginator.pageIndex = 0;
+    this.dataSource.loadDocuments(this.documentResource);
+  }
+
+  resetFilters() {
+    this.docNo = '';
+    if (this.docNoInput?.nativeElement) {
+      this.docNoInput.nativeElement.value = '';
+    }
+    if (this.input?.nativeElement) {
+      this.input.nativeElement.value = '';
+    }
+    if (this.metatag?.nativeElement) {
+      this.metatag.nativeElement.value = '';
+    }
+    this.selectedCategory = null;
+    this.selectedStatus = null;
+    this.selectedClient = null;
+    this.selectedStorage = null;
+    this.selectedMetaTag = null;
+    this.selectedType = null;
+    this.metatagText = '';
+    this.filterForm.reset();
+
+    this.documentResource.documentNumber = '';
+    this.documentResource.name = '';
+    this.documentResource.categoryId = '';
+    this.documentResource.documentStatusId = '';
+    this.documentResource.clientId = '';
+    this.documentResource.storageSettingId = '';
+    this.documentResource.metaTags = '';
+    this.documentResource.metaTagsTypeId = undefined;
+    this.documentResource.startDate = undefined;
+    this.documentResource.endDate = undefined;
+    this.documentResource.skip = 0;
+    this.paginator.pageIndex = 0;
+    this.dataSource.loadDocuments(this.documentResource);
   }
 
   onDateFilterChange(filterStartValue: any, filterEndValue: any) {

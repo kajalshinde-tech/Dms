@@ -1,109 +1,106 @@
-<mat-dialog-content class="comment-modal-container">
+<div class="saas-dialog-container position-relative">
   <!-- 1. Modal Header -->
-  <div class="modal-header d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
-    <div class="d-flex align-items-center gap-2">
-      <div class="modal-header-icon">
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge primary-badge">
         <mat-icon>chat_bubble</mat-icon>
       </div>
       <div>
-        <h6 class="modal-title mb-0">
-          {{ "COMMENT" | translate }}
-        </h6>
-        <span class="text-muted fs-11">
+        <h5 class="dialog-title mb-0">{{ "COMMENT" | translate }}</h5>
+        <p class="dialog-subtitle mb-0">
           @if (data?.name) {
             <b>{{ data.name }}</b> &bull;
           }
           Manage document notes and activity comments
-        </span>
+        </p>
       </div>
     </div>
-    <button mat-icon-button (click)="closeDialog()" class="modal-close-btn" type="button" aria-label="Close" [matTooltip]="'CLOSE' | translate">
+    <button type="button" class="dialog-close-btn" (click)="closeDialog()" aria-label="Close">
       <mat-icon>close</mat-icon>
     </button>
   </div>
 
-  <!-- 2. Comments Feed Section (Scrollable) -->
-  <div class="comments-feed-scrollable mb-3">
-    @if (documentComments && documentComments.length > 0) {
-      <div class="comments-list">
-        @for (documentComment of documentComments; track documentComment.id) {
-          <div class="comment-item-card">
-            <!-- User Initials Avatar -->
-            <div class="comment-avatar">
-              {{ getInitials(documentComment?.createdBy || '') }}
-            </div>
-
-            <!-- Comment Body -->
-            <div class="comment-body-wrapper">
-              <div class="comment-header-row d-flex align-items-center justify-content-between gap-2 mb-1">
-                <div class="d-flex align-items-center gap-2 flex-wrap">
-                  <span class="comment-author-name">
-                    {{ documentComment?.createdBy }}
-                  </span>
-                  <span class="comment-time-badge d-flex align-items-center gap-1">
-                    <mat-icon class="time-icon">schedule</mat-icon>
-                    <span>{{ documentComment.createdDate | utcToLocalTime: 'shortDate' }}</span>
-                  </span>
-                </div>
-
-                <!-- Delete Action Button -->
-                <ng-container *hasClaim="['ALL_DELETE_COMMENT', 'ASSIGNED_DELETE_COMMENT']">
-                  <button type="button" class="btn-comment-delete" (click)="onDelete(documentComment.id ?? '')" [matTooltip]="'DELETE' | translate">
-                    <mat-icon>delete_outline</mat-icon>
-                  </button>
-                </ng-container>
+  <!-- 2. Scrollable Comments Body -->
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <!-- Comments Feed Section -->
+    <div class="comments-feed-scrollable mb-3">
+      @if (documentComments && documentComments.length > 0) {
+        <div class="comments-list">
+          @for (documentComment of documentComments; track documentComment.id) {
+            <div class="comment-item-card">
+              <!-- User Initials Avatar -->
+              <div class="comment-avatar">
+                {{ getInitials(documentComment?.createdBy || '') }}
               </div>
 
-              <!-- Comment Text -->
-              <p class="comment-text-content mb-0">
-                {{ documentComment.comment }}
-              </p>
+              <!-- Comment Body -->
+              <div class="comment-body-wrapper">
+                <div class="comment-header-row d-flex align-items-center justify-content-between gap-2 mb-1">
+                  <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <span class="comment-author-name">
+                      {{ documentComment?.createdBy }}
+                    </span>
+                    <span class="comment-time-badge d-flex align-items-center gap-1">
+                      <mat-icon class="time-icon">schedule</mat-icon>
+                      <span>{{ documentComment.createdDate | utcToLocalTime: 'shortDate' }}</span>
+                    </span>
+                  </div>
+
+                  <!-- Delete Action Button -->
+                  <ng-container *hasClaim="['ALL_DELETE_COMMENT', 'ASSIGNED_DELETE_COMMENT']">
+                    <button type="button" class="btn-comment-delete" (click)="onDelete(documentComment.id ?? '')" [matTooltip]="'DELETE' | translate">
+                      <mat-icon>delete_outline</mat-icon>
+                    </button>
+                  </ng-container>
+                </div>
+
+                <!-- Comment Text -->
+                <p class="comment-text-content mb-0">
+                  {{ documentComment.comment }}
+                </p>
+              </div>
             </div>
-          </div>
-        }
-      </div>
-    } @else {
-      <!-- Empty State -->
-      <div class="empty-comments-box text-center py-4">
-        <div class="empty-icon-circle mb-2">
-          <mat-icon>chat_bubble_outline</mat-icon>
+          }
         </div>
-        <h6 class="empty-title mb-1">No comments found</h6>
-        <p class="text-muted fs-11 mb-0">Be the first to add a note or comment for this document.</p>
-      </div>
-    }
-  </div>
-
-  <!-- 3. Add Comment Input Box -->
-  <div class="add-comment-section pt-2 border-top">
-    <form [formGroup]="commentForm">
-      <div class="comment-input-box">
-        <textarea class="form-control comment-textarea" formControlName="comment" rows="2"
-          placeholder="{{ 'TYPE_YOUR_COMMENT' | translate }}"></textarea>
-
-        @if (commentForm.get('comment')?.touched && commentForm.get('comment')?.errors?.['required']) {
-          <div class="text-danger fs-11 mt-1 d-flex align-items-center gap-1">
-            <mat-icon class="error-icon">error_outline</mat-icon>
-            <span>{{ 'COMMENT_IS_REQUIRED' | translate }}</span>
+      } @else {
+        <!-- Empty State -->
+        <div class="empty-comments-box text-center py-4">
+          <div class="empty-icon-circle mb-2">
+            <mat-icon>chat_bubble_outline</mat-icon>
           </div>
-        }
-      </div>
-
-      <!-- Action Footer -->
-      <div class="modal-footer-actions d-flex align-items-center justify-content-between gap-2 mt-2">
-        <span class="text-muted fs-11 d-none d-sm-inline">
-          Press add to save your comment
-        </span>
-        <div class="d-flex align-items-center gap-2 ms-auto">
-          <button type="button" class="btn-modal-cancel" (click)="closeDialog()">
-            {{ "CLOSE" | translate }}
-          </button>
-          <button *hasClaim="['ALL_ADD_COMMENT', 'ASSIGNED_ADD_COMMENT']" (click)="addComment()" type="submit" class="btn-modal-submit">
-            <mat-icon class="btn-icon-send">send</mat-icon>
-            <span>{{ "ADD_COMMENT" | translate }}</span>
-          </button>
+          <h6 class="empty-title mb-1">No comments found</h6>
+          <p class="text-muted fs-11 mb-0">Be the first to add a note or comment for this document.</p>
         </div>
-      </div>
-    </form>
-  </div>
-</mat-dialog-content>
+      }
+    </div>
+
+    <!-- 3. Add Comment Input Box -->
+    <div class="add-comment-section pt-2 border-top">
+      <form [formGroup]="commentForm">
+        <div class="comment-input-box">
+          <label class="form-label-custom">{{ 'ADD_COMMENT' | translate }}</label>
+          <textarea class="form-control doc-form-input comment-textarea" formControlName="comment" rows="2"
+            placeholder="{{ 'TYPE_YOUR_COMMENT' | translate }}"></textarea>
+
+          @if (commentForm.get('comment')?.touched && commentForm.get('comment')?.errors?.['required']) {
+            <div class="field-error-text">
+              {{ 'COMMENT_IS_REQUIRED' | translate }}
+            </div>
+          }
+        </div>
+      </form>
+    </div>
+  </mat-dialog-content>
+
+  <!-- 3. Modal Actions Footer -->
+  <mat-dialog-actions class="saas-dialog-footer">
+    <button type="button" class="btn btn-saas-cancel" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+      <span>{{ "CLOSE" | translate }}</span>
+    </button>
+    <button *hasClaim="['ALL_ADD_COMMENT', 'ASSIGNED_ADD_COMMENT']" (click)="addComment()" type="button" class="btn btn-primary-custom">
+      <mat-icon>send</mat-icon>
+      <span>{{ "ADD_COMMENT" | translate }}</span>
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -1,53 +1,68 @@
-<mat-dialog-content>
-  <div class="d-flex">
-    <div class="me-auto p-2">
-      <span class="mb-3 page-title">
-        {{ "ADD_SIGNATURE" | translate }}
-        <app-page-help-text [code]="'ADD_SIGNATURE'"></app-page-help-text>
-      </span>
+<div class="saas-dialog-container position-relative">
+  <!-- Header -->
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge primary-badge">
+        <mat-icon>draw</mat-icon>
+      </div>
+      <div>
+        <h5 class="dialog-title mb-0">{{ "ADD_SIGNATURE" | translate }}</h5>
+        <p class="dialog-subtitle mb-0">Draw digital signature or upload an image file</p>
+      </div>
     </div>
-    <div class="d-flex justify-content-end mb-2">
-      <mat-icon class="close-icon text-danger cursor-pointer " (click)="closeDialog()">cancel</mat-icon>
-    </div>
+    <button type="button" class="dialog-close-btn" (click)="closeDialog()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
   </div>
 
-  <div class="row">
-    <label for="signature"> {{ "ADD_YOUR_SIGNATURE" | translate }}</label>
-    <div class="col-md-12">
-      <div class="signature-container">
-        <canvas width="600" height="200" style="border:1px solid #ccc; width:100%; max-width:600px; height:auto;"
+  <!-- Body -->
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <div class="doc-card-section mb-0">
+      <div class="doc-section-header">
+        <div class="doc-section-title">
+          <mat-icon>gesture</mat-icon>
+          <span>{{ "ADD_YOUR_SIGNATURE" | translate }}</span>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-danger d-inline-flex align-items-center gap-1" (click)="clearSignature()">
+          <mat-icon class="fs-6">refresh</mat-icon>
+          <span>{{ "CLEAR" | translate }}</span>
+        </button>
+      </div>
+
+      <!-- Signature Canvas Pad -->
+      <div class="signature-container bg-white border rounded-2 p-1 mb-2 text-center" style="background-color: #fafafa;">
+        <canvas width="600" height="180" style="border:1px dashed #cbd5e1; width:100%; max-width:100%; height:180px; touch-action: none; cursor: crosshair;"
           #canvas>
         </canvas>
       </div>
-    </div>
-    <label for="or" class="text-danger d-flex justify-content-center align-items-center m-2 w-100"> {{ "OR" |
-      translate
-      }}
-    </label>
-    <div class="col-sm-12">
-      <div class="form-group">
-        <label for="signature"> {{"UPLOAD_YOUR_SIGNATURE" | translate}}</label>
+
+      <div class="text-center text-muted small my-2 fw-semibold">── {{ "OR" | translate }} ──</div>
+
+      <!-- Upload Signature -->
+      <div class="form-group mb-0">
+        <label class="form-label-custom">{{ "UPLOAD_YOUR_SIGNATURE" | translate }}</label>
         <input type="file" accept="image/png, image/jpeg" (change)="onFileSelected($event)"
-          class="form-control signature-upload">
+          class="form-control doc-form-input doc-file-input">
       </div>
     </div>
-    <div class="mt-2 col-md-12">
-      <div class="d-flex gap-2">
-        <button type="button" class="success me-2" matButton="filled" (click)="saveSignature()" cdkFocusInitial>
-          <mat-icon class="medium-icon">save</mat-icon>
-          {{ "SAVE" | translate }}
-        </button>
-        <button type="button" class="error" matButton="filled" (click)="clearSignature()">
-          <mat-icon class="medium-icon">cancel</mat-icon>
-          {{ "CLEAR" | translate }}
-        </button>
-      </div>
-    </div>
-  </div>
+  </mat-dialog-content>
+
+  <!-- Footer Actions -->
+  <mat-dialog-actions class="saas-dialog-footer">
+    <button type="button" class="btn btn-saas-cancel" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+      <span>{{ "CANCEL" | translate }}</span>
+    </button>
+    <button type="button" class="btn btn-primary-custom" (click)="saveSignature()" cdkFocusInitial [disabled]="isLoading">
+      <mat-icon>save</mat-icon>
+      <span>{{ "SAVE" | translate }}</span>
+    </button>
+  </mat-dialog-actions>
+
   @if(isLoading) {
-  <div class="spinner-container">
-    <mat-progress-spinner mode="indeterminate" diameter="60" strokeWidth="5">
-    </mat-progress-spinner>
-  </div>
+    <div class="dialog-loading-overlay">
+      <mat-progress-spinner mode="indeterminate" diameter="42" strokeWidth="4"></mat-progress-spinner>
+      <span class="loading-text">Saving signature...</span>
+    </div>
   }
-</mat-dialog-content>
+</div>

@@ -1,145 +1,142 @@
-<mat-dialog-content class="manage-category-modal">
+<div class="saas-dialog-container position-relative">
   <!-- Modal Header -->
-  <div class="modal-header d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
-    <div class="d-flex align-items-center gap-2">
-      <div class="modal-header-icon">
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge primary-badge">
         <mat-icon>folder</mat-icon>
       </div>
       <div>
-        <h6 class="modal-title mb-0">
+        <h5 class="dialog-title mb-0">
           {{ (isEdit ? "EDIT_CATEGORY" : "MANAGE_CATEGORY") | translate }}
-        </h6>
-        <span class="text-muted fs-11">
-          {{ isEdit ? 'Update folder details and location' : 'Configure a new folder or subfolder' }}
-        </span>
+        </h5>
+        <p class="dialog-subtitle mb-0">
+          {{ isEdit ? 'Update folder details, parent location, and metadata' : 'Configure a new document folder or subfolder' }}
+        </p>
       </div>
     </div>
-    <button mat-icon-button (click)="onCancel()" class="modal-close-btn" type="button" aria-label="Close">
+    <button type="button" class="dialog-close-btn" (click)="onCancel()" aria-label="Close">
       <mat-icon>close</mat-icon>
     </button>
   </div>
 
-  <form
-    name="form"
-    (ngSubmit)="saveCategory()"
-    [formGroup]="categoryForm"
-    novalidate
-  >
-    <div class="row gy-3">
-      <!-- Parent Category Selection -->
-      <div class="col-12">
-        <label class="form-label" for="category">
-          {{ "PARENT_CATEGORY" | translate }}
-        </label>
+  <!-- Scrollable Form Body -->
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <form name="form" (ngSubmit)="saveCategory()" [formGroup]="categoryForm" novalidate id="categoryForm">
+      <div class="row g-3">
+        <!-- Parent Category Selection -->
+        <div class="col-12">
+          <div class="form-group mb-0">
+            <label class="form-label-custom" for="category">
+              {{ "PARENT_CATEGORY" | translate }}
+            </label>
 
-        <mat-select
-          panelClass="mat-select-control"
-          class="form-control"
-          formControlName="parentId"
-          placeholder="{{ 'SELECT_CATEGORY' | translate }}"
-        >
-          <!-- Trigger (shows selected item icon + name) -->
-          <mat-select-trigger>
-            <div class="d-flex align-items-center">
-              <mat-icon class="folder-select-icon me-1">folder</mat-icon>
-              <span>
-                {{
-                  getCategoryNameById(categoryForm.get("parentId")?.value) ||
-                    ("NONE" | translate)
-                }}
-              </span>
-            </div>
-          </mat-select-trigger>
-          <!-- None option -->
-          <mat-option [value]=""> -- {{ "NONE" | translate }} -- </mat-option>
-          <!-- Category list -->
-          @for(category of allCategories; track $index; let i= $index){
-          <mat-option [value]="category.id">
-            <div
-              class="country-item"
-              [ngStyle]="{
-                'margin-left.px': (category.deafLevel ?? 0) * 16
-              }"
+            <mat-select
+              panelClass="mat-select-control"
+              class="form-control doc-form-input"
+              formControlName="parentId"
+              placeholder="{{ 'SELECT_CATEGORY' | translate }}"
             >
-              @if(category.deafLevel == 0) {
-              <div class="d-flex align-items-center">
-                <mat-icon class="folder-select-icon me-1">folder</mat-icon>
-                <b>{{ category.name }}</b>
-              </div>
-              } @else {
-              <div
-                [matTooltip]="category.name"
-                class="d-flex align-items-center"
-              >
-                <mat-icon class="folder-select-icon me-1">folder</mat-icon>
-                {{ category.name }}
-              </div>
+              <mat-select-trigger>
+                <div class="d-flex align-items-center">
+                  <mat-icon class="folder-select-icon me-1 text-warning">folder</mat-icon>
+                  <span>
+                    {{
+                      getCategoryNameById(categoryForm.get("parentId")?.value) ||
+                        ("NONE" | translate)
+                    }}
+                  </span>
+                </div>
+              </mat-select-trigger>
+              <mat-option [value]=""> -- {{ "NONE" | translate }} -- </mat-option>
+              @for(category of allCategories; track $index; let i= $index){
+              <mat-option [value]="category.id">
+                <div
+                  class="country-item"
+                  [ngStyle]="{
+                    'margin-left.px': (category.deafLevel ?? 0) * 16
+                  }"
+                >
+                  @if(category.deafLevel == 0) {
+                  <div class="d-flex align-items-center">
+                    <mat-icon class="folder-select-icon me-1 text-warning">folder</mat-icon>
+                    <b>{{ category.name }}</b>
+                  </div>
+                  } @else {
+                  <div
+                    [matTooltip]="category.name"
+                    class="d-flex align-items-center"
+                  >
+                    <mat-icon class="folder-select-icon me-1 text-warning">folder_open</mat-icon>
+                    {{ category.name }}
+                  </div>
+                  }
+                </div>
+              </mat-option>
               }
-            </div>
-          </mat-option>
-          }
-        </mat-select>
-      </div>
-
-      <!-- Folder Name Input -->
-      <div class="col-12">
-        <label class="form-label" for="categoryName">
-          {{ "NAME" | translate }} <span class="text-danger">*</span>
-        </label>
-        <input
-          required
-          formControlName="name"
-          type="text"
-          name="name"
-          class="form-control"
-          id="categoryName"
-          placeholder="e.g. Finance & Accounting"
-        />
-        @if(categoryForm.get('name')?.touched &&
-        categoryForm.get('name')?.errors &&
-        categoryForm.get('name')?.hasError('required')){
-        <div class="text-danger fs-12 mt-1">
-          {{ "CATEGORY_NAME_IS_REQUIRED" | translate }}
+            </mat-select>
+          </div>
         </div>
-        }
-      </div>
 
-      <!-- Description Textarea -->
-      <div class="col-12">
-        <label class="form-label" for="description">
-          {{ "DESCRIPTION" | translate }}
-        </label>
-        <textarea
-          formControlName="description"
-          name="description"
-          rows="3"
-          class="form-control"
-          placeholder="Optional folder description or notes..."
-        ></textarea>
-      </div>
+        <!-- Folder Name Input -->
+        <div class="col-12">
+          <div class="form-group mb-0">
+            <label class="form-label-custom" for="categoryName">
+              {{ "NAME" | translate }} <span class="required-star">*</span>
+            </label>
+            <input
+              required
+              formControlName="name"
+              type="text"
+              name="name"
+              class="form-control doc-form-input"
+              id="categoryName"
+              placeholder="e.g. Finance & Accounting"
+            />
+            @if(categoryForm.get('name')?.touched &&
+            categoryForm.get('name')?.errors &&
+            categoryForm.get('name')?.hasError('required')){
+            <div class="field-error-text">
+              {{ "CATEGORY_NAME_IS_REQUIRED" | translate }}
+            </div>
+            }
+          </div>
+        </div>
 
-      <!-- Modal Action Buttons -->
-      <div class="col-12 pt-2 border-top d-flex justify-content-end align-items-center gap-2 mt-2">
-        <button
-          type="button"
-          class="btn-modal-cancel"
-          mat-stroked-button
-          (click)="onCancel()"
-        >
-          {{ "CANCEL" | translate }}
-        </button>
-        <button
-          type="submit"
-          *hasClaim="'CREATE_CATEGORY'"
-          class="primary"
-          matButton="filled"
-          cdkFocusInitial
-          [disabled]="categoryForm.invalid"
-        >
-          <mat-icon class="medium-icon fs-5 align-middle">check</mat-icon>
-          <span class="ms-1">{{ isEdit ? ("UPDATE" | translate) : ("CREATE" | translate) }}</span>
-        </button>
+        <!-- Description Textarea -->
+        <div class="col-12">
+          <div class="form-group mb-0">
+            <label class="form-label-custom" for="description">
+              {{ "DESCRIPTION" | translate }}
+            </label>
+            <textarea
+              formControlName="description"
+              name="description"
+              rows="3"
+              class="form-control doc-form-input"
+              placeholder="Optional folder description or notes..."
+            ></textarea>
+          </div>
+        </div>
       </div>
-    </div>
-  </form>
-</mat-dialog-content>
+    </form>
+  </mat-dialog-content>
+
+  <!-- Modal Footer -->
+  <mat-dialog-actions class="saas-dialog-footer">
+    <button type="button" class="btn btn-saas-cancel" (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+      <span>{{ "CANCEL" | translate }}</span>
+    </button>
+    <button
+      type="button"
+      (click)="saveCategory()"
+      *hasClaim="'CREATE_CATEGORY'"
+      class="btn btn-primary-custom"
+      cdkFocusInitial
+      [disabled]="categoryForm.invalid"
+    >
+      <mat-icon>save</mat-icon>
+      <span>{{ isEdit ? ("UPDATE" | translate) : ("CREATE" | translate) }}</span>
+    </button>
+  </mat-dialog-actions>
+</div>

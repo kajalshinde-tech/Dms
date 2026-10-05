@@ -7,10 +7,11 @@
   display: flex !important;
   flex-direction: column !important;
   background-color: #ffffff !important;
-  border-radius: 12px !important;
+  border-radius: 14px !important;
   overflow: hidden !important;
   max-height: 90vh !important;
   width: 100% !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Header */
@@ -19,8 +20,8 @@
   flex-direction: row !important;
   align-items: center !important;
   justify-content: space-between !important;
-  padding: 16px 22px !important;
-  background: #ffffff !important;
+  padding: 16px 24px !important;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
   border-bottom: 1px solid #e2e8f0 !important;
   flex-shrink: 0 !important;
   width: 100% !important;
@@ -29,19 +30,20 @@
   .header-info-box {
     display: flex !important;
     align-items: center !important;
-    gap: 12px !important;
+    gap: 14px !important;
     min-width: 0 !important;
     flex: 1 1 auto !important;
   }
 
   .dialog-icon-badge {
-    width: 40px !important;
-    height: 40px !important;
+    width: 42px !important;
+    height: 42px !important;
     border-radius: 10px !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     flex-shrink: 0 !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04) !important;
 
     mat-icon {
       font-size: 22px !important;
@@ -50,47 +52,55 @@
     }
 
     &.primary-badge {
-      background: rgba(5, 150, 105, 0.1) !important;
+      background: linear-gradient(135deg, rgba(5, 150, 105, 0.12), rgba(16, 185, 129, 0.22)) !important;
       color: var(--app-primary-color, #059669) !important;
+      border: 1px solid rgba(5, 150, 105, 0.2) !important;
     }
 
     &.success-badge {
       background: #dcfce7 !important;
       color: #16a34a !important;
+      border: 1px solid #bbf7d0 !important;
     }
 
     &.info-badge {
       background: #e0f2fe !important;
       color: #0284c7 !important;
+      border: 1px solid #bae6fd !important;
     }
 
     &.warning-badge {
       background: #fef3c7 !important;
       color: #d97706 !important;
+      border: 1px solid #fde68a !important;
     }
 
     &.purple-badge {
       background: #f3e8ff !important;
       color: #7e22ce !important;
+      border: 1px solid #e9d5ff !important;
     }
 
     &.dark-badge {
       background: #f1f5f9 !important;
       color: #334155 !important;
+      border: 1px solid #e2e8f0 !important;
     }
   }
 
   .dialog-title {
     font-size: 16px !important;
     font-weight: 700 !important;
-    color: #1e293b !important;
+    color: #0f172a !important;
     line-height: 1.3 !important;
+    letter-spacing: -0.01em;
   }
 
   .dialog-subtitle {
     font-size: 12px !important;
     color: #64748b !important;
     line-height: 1.3 !important;
+    margin-top: 2px;
   }
 
   .dialog-close-btn {
@@ -100,7 +110,7 @@
     align-items: center !important;
     justify-content: center !important;
     border-radius: 8px !important;
-    color: #64748b !important;
+    color: #94a3b8 !important;
     background: transparent !important;
     border: none !important;
     transition: all 0.15s ease !important;
@@ -124,12 +134,81 @@
 
 /* Body */
 .saas-dialog-body {
-  padding: 20px 22px !important;
+  padding: 20px 24px !important;
   margin: 0 !important;
   max-height: calc(88vh - 135px) !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
   flex: 1 1 auto !important;
+  background-color: #ffffff !important;
+}
+
+/* Custom Scrollbar */
+.custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 6px;
+
+    &:hover {
+      background-color: #94a3b8;
+    }
+  }
+}
+
+/* Card Sections Inside Dialog */
+.doc-card-section {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  padding: 16px 18px !important;
+  margin-bottom: 16px !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+
+  &:hover {
+    border-color: #cbd5e1 !important;
+  }
+
+  &.subtle-bg {
+    background: #f8fafc !important;
+  }
+
+  .doc-section-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-bottom: 14px !important;
+    padding-bottom: 8px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+
+    .doc-section-title {
+      font-size: 13px !important;
+      font-weight: 700 !important;
+      color: #1e293b !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      margin: 0 !important;
+
+      mat-icon {
+        font-size: 18px !important;
+        width: 18px !important;
+        height: 18px !important;
+        color: var(--app-primary-color, #059669) !important;
+      }
+    }
+  }
 }
 
 /* Form Controls */
@@ -137,7 +216,7 @@
   font-size: 12.5px !important;
   font-weight: 600 !important;
   color: #334155 !important;
-  margin-bottom: 5px !important;
+  margin-bottom: 6px !important;
   display: block !important;
 
   .required-star {
@@ -162,15 +241,49 @@
   &:focus,
   &.mat-mdc-select-focused {
     border-color: var(--app-primary-color, #059669) !important;
-    box-shadow: 0 0 0 2px var(--app-primary-light, rgba(5, 150, 105, 0.15)) !important;
+    box-shadow: 0 0 0 3px var(--app-primary-light, rgba(5, 150, 105, 0.15)) !important;
     outline: none !important;
+  }
+
+  &::placeholder {
+    color: #94a3b8 !important;
+    font-size: 12.5px !important;
   }
 }
 
 textarea.doc-form-input {
-  min-height: 70px !important;
+  min-height: 72px !important;
   height: auto !important;
   resize: vertical !important;
+}
+
+/* File Input Custom Styling */
+.doc-file-input {
+  height: 38px !important;
+  padding: 4px 8px !important;
+  font-size: 12.5px !important;
+  display: flex !important;
+  align-items: center !important;
+
+  &::file-selector-button {
+    height: 28px;
+    padding: 0 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    background-color: #f1f5f9;
+    color: #334155;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background-color: #e2e8f0;
+      color: var(--app-primary-color, #059669);
+      border-color: var(--app-primary-color, #059669);
+    }
+  }
 }
 
 .field-error-text {
@@ -212,19 +325,53 @@ textarea.doc-form-input {
   }
 }
 
-.input-group {
+/* Input Addon Wrapper */
+.input-group-addon-wrapper {
   position: relative !important;
   display: flex !important;
   flex-wrap: nowrap !important;
   align-items: stretch !important;
   width: 100% !important;
 
-  .doc-form-input {
+  .doc-form-input,
+  .form-control,
+  mat-select {
     flex: 1 1 auto !important;
     width: 1% !important;
     min-width: 0 !important;
     border-top-right-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
+    border-right: none !important;
+  }
+
+  .btn-addon-primary {
+    height: 38px !important;
+    width: 38px !important;
+    min-width: 38px !important;
+    padding: 0 !important;
+    border-radius: 0 8px 8px 0 !important;
+    background-color: var(--app-primary-color, #059669) !important;
+    color: #ffffff !important;
+    border: 1px solid var(--app-primary-color, #059669) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: background-color 0.15s ease !important;
+    flex-shrink: 0 !important;
+
+    &:hover {
+      background-color: var(--app-primary-hover, #047857) !important;
+      border-color: var(--app-primary-hover, #047857) !important;
+    }
+
+    mat-icon,
+    .addon-icon {
+      font-size: 18px !important;
+      width: 18px !important;
+      height: 18px !important;
+      line-height: 18px !important;
+    }
   }
 
   .calendar-trigger-btn {
@@ -255,7 +402,98 @@ textarea.doc-form-input {
   }
 }
 
-/* Button Styles (Globally accessible across all modals) */
+/* Category & Select Styling */
+.select-text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.category-tree-option {
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+
+  .folder-option-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: #f59e0b;
+  }
+}
+
+/* Tag Buttons */
+.btn-tag-add {
+  width: 36px !important;
+  height: 36px !important;
+  padding: 0 !important;
+  border-radius: 8px !important;
+  border: 1px solid #a7f3d0 !important;
+  background-color: #ecfdf5 !important;
+  color: #059669 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+
+  &:hover {
+    background-color: #d1fae5 !important;
+    border-color: #6ee7b7 !important;
+  }
+
+  mat-icon {
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+
+.btn-tag-delete {
+  width: 36px !important;
+  height: 36px !important;
+  padding: 0 !important;
+  border-radius: 8px !important;
+  border: 1px solid #fecaca !important;
+  background-color: #fef2f2 !important;
+  color: #ef4444 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+
+  &:hover {
+    background-color: #fee2e2 !important;
+    border-color: #fca5a5 !important;
+  }
+
+  mat-icon {
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+
+/* Meta Tags Container */
+.meta-tags-section {
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  padding: 14px 16px !important;
+
+  .meta-tag-row {
+    background: #ffffff !important;
+    padding: 10px 12px !important;
+    border-radius: 8px !important;
+    border: 1px solid #e2e8f0 !important;
+    margin-bottom: 8px !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+  }
+}
+
+/* Button Styles */
 .btn-saas-cancel {
   height: 36px !important;
   padding: 0 16px !important;
@@ -298,19 +536,20 @@ textarea.doc-form-input {
   font-size: 13px !important;
   font-weight: 600 !important;
   border: none !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 1px 3px rgba(5, 150, 105, 0.3) !important;
   cursor: pointer !important;
   transition: all 0.15s ease !important;
 
   &:hover:not([disabled]) {
-    opacity: 0.92 !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+    opacity: 0.94 !important;
+    box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.3) !important;
     transform: translateY(-1px) !important;
   }
 
   &:disabled {
     opacity: 0.6 !important;
     cursor: not-allowed !important;
+    transform: none !important;
   }
 
   mat-icon {
@@ -326,9 +565,48 @@ textarea.doc-form-input {
   align-items: center !important;
   justify-content: flex-end !important;
   gap: 10px !important;
-  padding: 14px 22px !important;
-  background: #f8fafc !important;
+  padding: 14px 24px !important;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
   border-top: 1px solid #e2e8f0 !important;
   margin: 0 !important;
   flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Loading Overlay */
+.dialog-loading-overlay {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(3px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 1000 !important;
+  border-radius: 14px !important;
+
+  .loading-text {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #475569 !important;
+    margin-top: 10px !important;
+  }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .saas-dialog-header {
+    padding: 12px 16px !important;
+  }
+  .saas-dialog-body {
+    padding: 14px 16px !important;
+    max-height: calc(85vh - 120px) !important;
+  }
+  .saas-dialog-footer {
+    padding: 10px 16px !important;
+  }
 }

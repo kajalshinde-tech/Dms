@@ -40,7 +40,7 @@
             ],
             "allowedCommonJsDependencies": [
               "clone",
-              "SubSink",
+              "subsink",
               "clone-deep",
               "rfdc",
               "dayjs",

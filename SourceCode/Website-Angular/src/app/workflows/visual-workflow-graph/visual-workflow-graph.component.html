@@ -1,265 +1,88 @@
-<mat-dialog-content class="visual-workflow-modal">
+<div class="saas-dialog-container position-relative">
   <!-- 1. Header -->
-  <div class="modal-header d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
-    <div class="d-flex align-items-center gap-2">
-      <div class="modal-header-icon">
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge primary-badge">
         <mat-icon>account_tree</mat-icon>
       </div>
       <div>
         <div class="d-flex align-items-center gap-2 flex-wrap">
-          <h6 class="modal-title mb-0">
+          <h5 class="dialog-title mb-0">
             {{ data.workflowName | limitTo: "100" }}
-          </h6>
+          </h5>
+          @if(data.workflowInstanceStatus !== undefined && data.workflowInstanceStatus !== null) {
           <span class="wf-status-badge" [ngClass]="getStatusClass(data.workflowInstanceStatus)">
             {{ data.workflowInstanceStatus | workflowInstanceStatus }}
           </span>
+          }
         </div>
-        <span class="text-muted fs-11">
-          Visual representation and transition execution history of this workflow
-        </span>
+        <p class="dialog-subtitle mb-0">
+          Visual workflow progress diagram & node states
+        </p>
       </div>
     </div>
-    <button mat-icon-button (click)="onDocumentCancel()" class="modal-close-btn" type="button" aria-label="Close" [matTooltip]="'CLOSE' | translate">
+    <button type="button" (click)="onDocumentCancel()" class="dialog-close-btn" aria-label="Close" [matTooltip]="'CLOSE' | translate">
       <mat-icon>close</mat-icon>
     </button>
   </div>
 
-  <!-- 2. Main Content Grid (Responsive Split) -->
-  <div class="modal-body-scrollable">
-    <div class="row g-3">
-      <!-- Left Column: Visual Graph Diagram -->
-      <div class="col-12 col-lg-5 col-xl-4">
-        <div class="graph-card h-100">
-          <div class="graph-card-header d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
-            <div class="d-flex align-items-center gap-2">
-              <mat-icon class="sec-icon">timeline</mat-icon>
-              <span class="sec-title">Workflow Map</span>
-            </div>
-            <span class="text-muted fs-11">Zoom & pan enabled</span>
-          </div>
-          <div class="graph-canvas-wrapper">
-            <ngx-graph #graph class="chart-container" [layoutSettings]="{ orientation: 'TB' }" [links]="links"
-              [nodes]="nodes" [layout]="'dagre'" [curve]="curve" [panOnZoom]="true" [autoCenter]="true" [autoZoom]="true">
-              <ng-template #defsTemplate>
-                <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">
-                  <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
-                </svg:marker>
-              </ng-template>
-
-              <ng-template #nodeTemplate let-node>
-                <svg:g class="node">
-                  <svg:rect rx="6" ry="6" [attr.width]="node.dimension?.width || 110" [attr.height]="node.dimension?.height || 42"
-                    [attr.fill]="node.data?.color || '#059669'" class="node-rect">
-                  </svg:rect>
-                  <svg:text alignment-baseline="central" [attr.fill]="'#ffffff'" [attr.x]="10"
-                    [attr.y]="(node.dimension?.height || 42) / 2" class="node-label">
-                    {{ node.label }}
-                  </svg:text>
-                </svg:g>
-              </ng-template>
-
-              <ng-template #linkTemplate let-link>
-                @if (link.source && link.target) {
-                  <svg:g class="edge">
-                    <svg:path class="line" stroke-width="2" marker-end="url(#arrow)"></svg:path>
-                    <svg:text class="edge-label" text-anchor="middle">
-                      <textPath [attr.fill]="link.status === 1 ? '#059669' : '#64748b'" class="text-path"
-                        [attr.href]="'#' + link.id" [style.dominant-baseline]="link.dominantBaseline" startOffset="50%">
-                        {{ link.label }}
-                      </textPath>
-                    </svg:text>
-                  </svg:g>
-                }
-              </ng-template>
-            </ngx-graph>
-          </div>
+  <!-- 2. Main Content Graph -->
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <div class="graph-card border rounded-3 overflow-hidden bg-white shadow-sm">
+      <div class="graph-card-header d-flex align-items-center justify-content-between px-3 py-2 border-bottom bg-light">
+        <div class="d-flex align-items-center gap-2">
+          <mat-icon class="sec-icon text-primary">timeline</mat-icon>
+          <span class="sec-title fw-bold small text-dark">Workflow Execution Graph</span>
         </div>
+        @if(data.documentId) {
+        <button type="button" class="btn btn-sm btn-outline-primary" (click)="onDocumentView()">
+          <mat-icon class="sm-icon">visibility</mat-icon>
+          <span>View Document</span>
+        </button>
+        }
       </div>
+      <div class="graph-canvas-wrapper" style="min-height: 440px; position: relative;">
+        <ngx-graph #graph class="chart-container" [layoutSettings]="{ orientation: 'TB' }" [links]="links"
+          [nodes]="nodes" [layout]="'dagre'" [curve]="curve" [panOnZoom]="true" [autoCenter]="true" [autoZoom]="true">
+          <ng-template #defsTemplate>
+            <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">
+              <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
+            </svg:marker>
+          </ng-template>
 
-      <!-- Right Column: Workflow Details & Transitions Timeline -->
-      <div class="col-12 col-lg-7 col-xl-8">
-        <!-- 2.1 Workflow Overview Card -->
-        <div class="overview-info-card mb-3">
-          <div class="overview-card-header d-flex align-items-center gap-2 px-3 py-2 border-bottom">
-            <mat-icon class="sec-icon">info</mat-icon>
-            <span class="sec-title">{{ "WORKFLOW_DETAILS" | translate }}</span>
-          </div>
-          <div class="overview-card-body p-3">
-            <div class="row g-2">
-              <div class="col-12 col-md-6">
-                <div class="detail-item mb-2">
-                  <span class="detail-label">{{ "NAME" | translate }}:</span>
-                  <span class="detail-value fw-semibold text-dark ms-1">{{ data.workflowName }}</span>
-                </div>
-                @if (data.workflowDescription) {
-                  <div class="detail-item mb-2">
-                    <span class="detail-label">{{ "DESCRIPTION" | translate }}:</span>
-                    <span class="detail-value text-muted ms-1">{{ data.workflowDescription }}</span>
-                  </div>
-                }
-                <div class="detail-item mb-2">
-                  <span class="detail-label">{{ "STATUS" | translate }}:</span>
-                  <span class="detail-value ms-1">
-                    <span class="wf-status-badge sm" [ngClass]="getStatusClass(data.workflowInstanceStatus)">
-                      {{ data.workflowInstanceStatus | workflowInstanceStatus }}
-                    </span>
-                  </span>
-                </div>
-              </div>
+          <ng-template #nodeTemplate let-node>
+            <svg:g class="node">
+              <svg:rect rx="6" ry="6" [attr.width]="node.dimension?.width || 120" [attr.height]="node.dimension?.height || 45"
+                [attr.fill]="node.data?.color || '#059669'" class="node-rect">
+              </svg:rect>
+              <svg:text alignment-baseline="central" [attr.fill]="'#ffffff'" [attr.x]="12"
+                [attr.y]="(node.dimension?.height || 45) / 2" class="node-label" font-size="12" font-weight="bold">
+                {{ node.label }}
+              </svg:text>
+            </svg:g>
+          </ng-template>
 
-              <div class="col-12 col-md-6">
-                @if (data.documentName) {
-                  <div class="detail-item mb-2">
-                    <span class="detail-label">{{ "DOCUMENT" | translate }}:</span>
-                    <a class="doc-link ms-1 d-inline-flex align-items-center gap-1" (click)="onDocumentView()" [matTooltip]="'CLICK_TO_VIEW' | translate">
-                      <mat-icon class="doc-icon">description</mat-icon>
-                      <span>{{ data.documentNumber }}-{{ data.documentName }}</span>
-                    </a>
-                  </div>
-                }
-                <div class="detail-item mb-2">
-                  <span class="detail-label">{{ "INITIATED_BY" | translate }}:</span>
-                  <span class="detail-value ms-1">{{ data.initiatedBy }}</span>
-                </div>
-                <div class="detail-item mb-1">
-                  <span class="detail-label">{{ "CREATED_DATE" | translate }}:</span>
-                  <span class="detail-value text-muted ms-1">{{ data.createdAt | utcToLocalTime: "short" }}</span>
-                </div>
-                <div class="detail-item">
-                  <span class="detail-label">{{ "UPDATED_DATE" | translate }}:</span>
-                  <span class="detail-value text-muted ms-1">{{ data.updatedAt | utcToLocalTime: "short" }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 2.2 Transitions History Section -->
-        <div class="row g-2">
-          <!-- Pending Transitions -->
-          @if (data && data.pendingWorkflowTransitions && data.pendingWorkflowTransitions.length > 0) {
-            <div class="col-12" [ngClass]="{'col-md-6': data.completedWorkflowTransitionInstances && data.completedWorkflowTransitionInstances.length > 0}">
-              <div class="section-badge-header pending-header mb-2 d-flex align-items-center gap-1">
-                <mat-icon class="sec-badge-icon">pending_actions</mat-icon>
-                <span>{{ "PENDING_TRANSITIONS" | translate }}</span>
-                <span class="count-pill">{{ data.pendingWorkflowTransitions.length }}</span>
-              </div>
-
-              <div class="transitions-list">
-                @for (transition of data.pendingWorkflowTransitions; track $index) {
-                  <div class="transition-item-card card-pending">
-                    <div class="transition-header d-flex align-items-center justify-content-between gap-2 mb-2 pb-1 border-bottom">
-                      <div class="d-flex align-items-center gap-1">
-                        <mat-icon class="status-indicator-icon text-warning">schedule</mat-icon>
-                        <span class="transition-name">{{ transition.name }}</span>
-                      </div>
-                      <span class="badge-tag tag-pending">{{ "PENDING" | translate }}</span>
-                    </div>
-
-                    <!-- Flow Step indicator -->
-                    <div class="step-flow-box mb-2">
-                      <span class="flow-step from-step">{{ transition.fromStepName }}</span>
-                      <div class="flow-arrow text-warning">
-                        <mat-icon>trending_flat</mat-icon>
-                      </div>
-                      <span class="flow-step to-step">{{ transition.toStepName }}</span>
-                    </div>
-
-                    <!-- Assignment Roles & Users -->
-                    <div class="transition-meta-details">
-                      @if (transition?.assignRoles) {
-                        <div class="meta-row">
-                          <span class="meta-key">Assigned Roles:</span>
-                          <span class="meta-badge badge-role">{{ transition.assignRoles }}</span>
-                        </div>
-                      }
-                      @if (transition?.assignUsers) {
-                        <div class="meta-row">
-                          <span class="meta-key">Assigned Users:</span>
-                          <span class="meta-badge badge-user">{{ transition.assignUsers }}</span>
-                        </div>
-                      }
-                    </div>
-                  </div>
-                }
-              </div>
-            </div>
-          }
-
-          <!-- Completed Transitions -->
-          @if (data && data.completedWorkflowTransitionInstances && data.completedWorkflowTransitionInstances.length > 0) {
-            <div class="col-12" [ngClass]="{'col-md-6': data.pendingWorkflowTransitions && data.pendingWorkflowTransitions.length > 0}">
-              <div class="section-badge-header completed-header mb-2 d-flex align-items-center gap-1">
-                <mat-icon class="sec-badge-icon">task_alt</mat-icon>
-                <span>{{ "COMPLETED_TRANSTIONS" | translate }}</span>
-                <span class="count-pill success">{{ data.completedWorkflowTransitionInstances.length }}</span>
-              </div>
-
-              <div class="transitions-list">
-                @for (transition of data.completedWorkflowTransitionInstances; track $index) {
-                  <div class="transition-item-card card-completed">
-                    <div class="transition-header d-flex align-items-center justify-content-between gap-2 mb-2 pb-1 border-bottom">
-                      <div class="d-flex align-items-center gap-1">
-                        <mat-icon class="status-indicator-icon" [ngClass]="transition.status == 1 ? 'text-success' : 'text-danger'">
-                          {{ transition.status == 1 ? 'check_circle' : 'schedule' }}
-                        </mat-icon>
-                        <span class="transition-name">{{ transition.name }}</span>
-                      </div>
-                      <span class="badge-tag" [ngClass]="transition.status == 1 ? 'tag-completed' : 'tag-initiated'">
-                        {{ transition.status == 1 ? 'Completed' : 'Initiated' }}
-                      </span>
-                    </div>
-
-                    <!-- Flow Step indicator -->
-                    <div class="step-flow-box mb-2">
-                      <span class="flow-step from-step">{{ transition.fromStepName }}</span>
-                      <div class="flow-arrow" [ngClass]="transition.status == 1 ? 'text-success' : 'text-danger'">
-                        <mat-icon>trending_flat</mat-icon>
-                      </div>
-                      <span class="flow-step to-step">{{ transition.toStepName }}</span>
-                    </div>
-
-                    <!-- Meta Details -->
-                    <div class="transition-meta-details">
-                      @if (transition.createdAt) {
-                        <div class="meta-row">
-                          <span class="meta-key">Created Date:</span>
-                          <span class="meta-val">{{ transition.createdAt | utcToLocalTime: "short" }}</span>
-                        </div>
-                      }
-                      @if (transition.completedAt && transition.status == 1) {
-                        <div class="meta-row">
-                          <span class="meta-key">Completed Date:</span>
-                          <span class="meta-val">{{ transition.completedAt | utcToLocalTime: "short" }}</span>
-                        </div>
-                      }
-                      @if (transition?.user) {
-                        <div class="meta-row">
-                          <span class="meta-key">Performed By:</span>
-                          <span class="meta-val fw-semibold text-dark">{{ transition?.user?.firstName }} {{ transition?.user?.lastName }}</span>
-                        </div>
-                      }
-                      @if (transition?.comment) {
-                        <div class="meta-row comment-row">
-                          <span class="meta-key">Comment:</span>
-                          <span class="meta-comment-box">{{ transition.comment }}</span>
-                        </div>
-                      }
-                    </div>
-                  </div>
-                }
-              </div>
-            </div>
-          }
-        </div>
+          <ng-template #linkTemplate let-link>
+            <svg:g class="edge">
+              <svg:path class="line" stroke-width="2" marker-end="url(#arrow)" [attr.stroke]="link.data?.color || '#94a3b8'"></svg:path>
+              <svg:text class="edge-label" text-anchor="middle" font-size="11" fill="#334155">
+                <textPath class="text-path" [attr.href]="'#' + link.id" [style.dominant-baseline]="link.dominantBaseline"
+                  startOffset="50%">
+                  {{ link.label }}
+                </textPath>
+              </svg:text>
+            </svg:g>
+          </ng-template>
+        </ngx-graph>
       </div>
     </div>
-  </div>
+  </mat-dialog-content>
 
   <!-- 3. Modal Footer -->
-  <div class="modal-footer-actions d-flex align-items-center justify-content-end gap-2 mt-3 pt-2 border-top">
-    <button type="button" class="btn-modal-cancel" (click)="onDocumentCancel()">
-      {{ "CLOSE" | translate }}
+  <mat-dialog-actions class="saas-dialog-footer">
+    <button type="button" class="btn btn-saas-cancel ms-auto" (click)="onDocumentCancel()">
+      <mat-icon>close</mat-icon>
+      <span>{{ "CLOSE" | translate }}</span>
     </button>
-  </div>
-</mat-dialog-content>
+  </mat-dialog-actions>
+</div>

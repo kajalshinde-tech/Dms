@@ -1906,39 +1906,320 @@ mat-card {
 }
 
 // -------------------------------------------------------------
-// 4. Tables & Grids (Xintra Compact Table Style)
+// 4. Tables & Grids (Unified High-Density SaaS Table Design System)
+// Matches assign/list-view standard across whole project
 // -------------------------------------------------------------
-.mat-mdc-table,
-.table {
-  font-size: 0.8125rem !important;
+.doc-table-card,
+.doc-main-card,
+.table-card,
+mat-card.doc-main-card,
+mat-card.doc-table-card {
+  background: var(--app-card-bg, #ffffff) !important;
+  border: 1px solid var(--app-border-color, #e2e8f0) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  overflow: hidden !important;
+}
 
+.table-responsive,
+.doc-table-wrapper {
+  overflow-x: auto !important;
+  position: relative !important;
+  width: 100% !important;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 4px;
+  }
+}
+
+.mat-mdc-table,
+.modern-doc-table,
+.doc-modern-table,
+table.mat-table,
+.table {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  font-size: 12px !important;
+  background-color: #ffffff !important;
+
+  // Header Row (Compact: 33px)
   .mat-mdc-header-row,
-  thead th {
+  .doc-table-header-row,
+  .grid-header-row,
+  tr[mat-header-row],
+  thead tr {
     background-color: #f8fafc !important;
-    color: #64748b !important;
-    font-size: 0.72rem !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
-    padding: 10px 14px !important;
-    border-bottom: 1px solid #e9edf4 !important;
+    height: 33px !important;
+    min-height: 33px !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+
+    th,
+    th.mat-mdc-header-cell,
+    th[mat-header-cell] {
+      background-color: #f8fafc !important;
+      color: #475569 !important;
+      font-size: 11px !important;
+      font-weight: 700 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.03em !important;
+      border-bottom: 1px solid #e2e8f0 !important;
+      padding: 4px 8px !important;
+      white-space: nowrap !important;
+      vertical-align: middle !important;
+      line-height: 1.2 !important;
+
+      .mat-sort-header-container {
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        color: #475569 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.03em !important;
+      }
+    }
   }
 
+  // Data Rows (Compact High-Density: 34px Zebra Striped)
   .mat-mdc-row,
+  .doc-table-row,
+  .grid-body-row,
+  tr[mat-row],
   tbody tr {
-    transition: background-color 0.15s ease;
+    height: 34px !important;
+    min-height: 34px !important;
+    transition: background-color 0.12s ease-in-out !important;
+
+    &:nth-child(odd),
+    &.odd-row {
+      background-color: #ffffff !important;
+
+      td,
+      td.mat-mdc-cell,
+      td[mat-cell] {
+        background-color: #ffffff !important;
+      }
+    }
+
+    &:nth-child(even),
+    &.even-row {
+      background-color: #f4f6f8 !important;
+
+      td,
+      td.mat-mdc-cell,
+      td[mat-cell] {
+        background-color: #f4f6f8 !important;
+      }
+    }
 
     &:hover {
-      background-color: #f8fafc !important;
+      background-color: #e8eef5 !important;
+
+      td,
+      td.mat-mdc-cell,
+      td[mat-cell] {
+        background-color: #e8eef5 !important;
+      }
     }
 
-    .mat-mdc-cell,
-    td {
-      font-size: 0.8125rem !important;
-      padding: 10px 14px !important;
-      color: #334155 !important;
-      border-bottom: 1px solid #f1f5f9 !important;
+    td,
+    td.mat-mdc-cell,
+    td[mat-cell] {
+      padding: 3px 8px !important;
+      font-size: 12px !important;
+      color: var(--app-text-color, #1e293b) !important;
+      border-bottom: 1px solid #eef2f6 !important;
+      vertical-align: middle !important;
+      line-height: 1.3 !important;
     }
+  }
+}
+
+// Checkboxes in Table
+.custom-table-checkbox {
+  .mdc-checkbox {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+
+// Action Buttons in Table
+.btn-row-action,
+.btn-action-more,
+.btn-action-edit,
+.btn-action-delete,
+.btn-action-icon,
+.action-btn {
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  padding: 0 !important;
+  border-radius: 5px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.15s ease !important;
+  cursor: pointer !important;
+  border: 1px solid transparent !important;
+  text-decoration: none !important;
+
+  mat-icon,
+  .action-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+    line-height: 16px !important;
+  }
+}
+
+.btn-action-edit {
+  background-color: #eff6ff !important;
+  color: #2563eb !important;
+  border-color: #dbeafe !important;
+
+  &:hover {
+    background-color: #dbeafe !important;
+    color: #1d4ed8 !important;
+  }
+}
+
+.btn-action-delete {
+  background-color: #fef2f2 !important;
+  color: #ef4444 !important;
+  border-color: #fee2e2 !important;
+
+  &:hover {
+    background-color: #fee2e2 !important;
+    color: #dc2626 !important;
+  }
+}
+
+.btn-row-action,
+.btn-action-more {
+  color: #64748b !important;
+  background: transparent !important;
+
+  &:hover {
+    background-color: var(--app-primary-light, rgba(5, 150, 105, 0.12)) !important;
+    color: var(--app-primary-color, #059669) !important;
+  }
+}
+
+// Table Status Badges & Chips
+.status-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+  padding: 2px 8px !important;
+  border-radius: 12px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+
+  mat-icon,
+  .pill-icon {
+    font-size: 13px !important;
+    width: 13px !important;
+    height: 13px !important;
+    line-height: 13px !important;
+  }
+
+  &.status-active,
+  &.status-success,
+  &.status-allowed {
+    background-color: #ecfdf5 !important;
+    color: #059669 !important;
+    border: 1px solid #a7f3d0 !important;
+  }
+
+  &.status-inactive,
+  &.status-danger,
+  &.status-restricted {
+    background-color: #fef2f2 !important;
+    color: #dc2626 !important;
+    border: 1px solid #fecaca !important;
+  }
+
+  &.status-pending,
+  &.status-info {
+    background-color: #eff6ff !important;
+    color: #2563eb !important;
+    border: 1px solid #bfdbfe !important;
+  }
+}
+
+// Table Paginator Standard
+.mat-mdc-paginator,
+.custom-mat-paginator,
+.custom-paginator,
+.table-paginator-footer {
+  background-color: #f8fafc !important;
+  border-top: 1px solid #e2e8f0 !important;
+  font-size: 12px !important;
+  color: #475569 !important;
+  min-height: 38px !important;
+  height: 38px !important;
+
+  .mat-mdc-paginator-container {
+    min-height: 38px !important;
+    padding: 0 8px !important;
+  }
+
+  .mat-mdc-paginator-page-size-label,
+  .mat-mdc-paginator-range-label {
+    font-size: 11.5px !important;
+    color: #64748b !important;
+    margin: 0 4px !important;
+  }
+
+  .mat-mdc-paginator-page-size-select {
+    margin: 0 4px !important;
+  }
+}
+
+// Empty State in Tables
+.empty-state,
+.empty-state-wrap,
+.empty-state-box {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 24px 16px !important;
+  text-align: center !important;
+
+  mat-icon,
+  .empty-icon {
+    font-size: 28px !important;
+    width: 28px !important;
+    height: 28px !important;
+    color: #94a3b8 !important;
+    margin-bottom: 6px !important;
+  }
+
+  .empty-title,
+  h5,
+  h6 {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #334155 !important;
+    margin: 0 0 2px !important;
+  }
+
+  p,
+  .empty-desc {
+    font-size: 12px !important;
+    color: #94a3b8 !important;
+    margin: 0 !important;
   }
 }
 
@@ -3453,4 +3734,155 @@ mat-select.form-control {
       vertical-align: middle !important;
     }
   }
+}
+
+// =========================================================================
+// GLOBAL HIGH-DENSITY COMPACT TABLE SYSTEM (Matching /assign/list-view)
+// =========================================================================
+.mat-mdc-table,
+.doc-modern-table,
+.modern-saas-table,
+.modern-doc-table,
+table.mat-table,
+table.table {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  background-color: #ffffff !important;
+  font-family: inherit !important;
+
+  // Header Row Standard (33px height, #f1f5f9 bg, bold uppercase 11px)
+  thead tr,
+  tr.mat-mdc-header-row,
+  .table-header-row,
+  .doc-table-header-row {
+    background-color: #f1f5f9 !important;
+    height: 33px !important;
+    min-height: 33px !important;
+    max-height: 33px !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+
+    th,
+    th.mat-mdc-header-cell,
+    .mat-mdc-header-cell {
+      background-color: #f1f5f9 !important;
+      color: #334155 !important;
+      font-size: 11px !important;
+      font-weight: 700 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.03em !important;
+      padding: 4px 8px !important;
+      border-bottom: 1px solid #e2e8f0 !important;
+      border-top: none !important;
+      white-space: nowrap !important;
+      line-height: 1.2 !important;
+      vertical-align: middle !important;
+    }
+  }
+
+  // Data Rows Standard (34px height, zebra striping, hover highlight)
+  tbody tr,
+  tr.mat-mdc-row,
+  .doc-table-row {
+    height: 34px !important;
+    min-height: 34px !important;
+    transition: background-color 0.12s ease-in-out !important;
+    border-bottom: 1px solid #eef2f6 !important;
+
+    &:nth-child(odd),
+    &.odd-row {
+      background-color: #ffffff !important;
+
+      td,
+      td.mat-mdc-cell,
+      .mat-mdc-cell {
+        background-color: #ffffff !important;
+      }
+    }
+
+    &:nth-child(even),
+    &.even-row {
+      background-color: #f4f6f8 !important;
+
+      td,
+      td.mat-mdc-cell,
+      .mat-mdc-cell {
+        background-color: #f4f6f8 !important;
+      }
+    }
+
+    &:hover {
+      background-color: #e8eef5 !important;
+
+      td,
+      td.mat-mdc-cell,
+      .mat-mdc-cell {
+        background-color: #e8eef5 !important;
+      }
+    }
+
+    td,
+    td.mat-mdc-cell,
+    .mat-mdc-cell {
+      padding: 3px 8px !important;
+      font-size: 12px !important;
+      color: #1e293b !important;
+      border-bottom: 1px solid #eef2f6 !important;
+      border-top: none !important;
+      vertical-align: middle !important;
+      line-height: 1.3 !important;
+    }
+  }
+}
+
+// Global Compact Action & Status Badges inside Tables
+.btn-action-edit,
+.btn-action-delete,
+.btn-row-action {
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  padding: 0 !important;
+  border-radius: 4px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.12s ease !important;
+
+  mat-icon {
+    font-size: 15px !important;
+    width: 15px !important;
+    height: 15px !important;
+    line-height: 15px !important;
+  }
+}
+
+.btn-action-edit {
+  color: #2563eb !important;
+  background-color: #eff6ff !important;
+  border: 1px solid #bfdbfe !important;
+
+  &:hover {
+    background-color: #dbeafe !important;
+  }
+}
+
+.btn-action-delete {
+  color: #dc2626 !important;
+  background-color: #fef2f2 !important;
+  border: 1px solid #fecaca !important;
+
+  &:hover {
+    background-color: #fee2e2 !important;
+  }
+}
+
+.table-card-container,
+.doc-table-card,
+.folder-view-card {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  background-color: #ffffff !important;
+  overflow: hidden !important;
 }

@@ -1,193 +1,168 @@
-<div class="share-modal-header">
-  <div class="header-title-box">
-    <div class="header-icon-badge">
-      <mat-icon>share</mat-icon>
-    </div>
-    <div>
-      <h2 class="modal-title mb-0">{{ "SHARE_DOCUMENT" | translate }}</h2>
-      <span class="modal-subtitle">Grant user and role access for selected documents</span>
-    </div>
-  </div>
-  <button type="button" class="modal-close-btn" (click)="closeDialog()" aria-label="Close">
-    <mat-icon>close</mat-icon>
-  </button>
-</div>
-
-<mat-dialog-content class="share-modal-content">
-  <!-- Selected Documents Section -->
-  <div class="selected-docs-card">
-    <div class="docs-section-header">
-      <div class="d-flex align-items-center gap-2">
-        <mat-icon class="section-icon">folder_shared</mat-icon>
-        <span class="section-label">{{ "SELECTED_DOCUMENTS" | translate }}</span>
+<div class="saas-dialog-container position-relative">
+  <!-- Header -->
+  <div class="saas-dialog-header">
+    <div class="header-info-box">
+      <div class="dialog-icon-badge primary-badge">
+        <mat-icon>share</mat-icon>
       </div>
-      <span class="docs-count-badge">{{ documents.length }} selected</span>
+      <div>
+        <h5 class="dialog-title mb-0">{{ "SHARE_DOCUMENT" | translate }}</h5>
+        <p class="dialog-subtitle mb-0">Grant user and role access for selected documents</p>
+      </div>
     </div>
-    <div class="docs-chips-container">
-      @for (document of documents; track document) {
-        <div class="doc-chip-item" [title]="document.name">
-          <mat-icon class="chip-file-icon">description</mat-icon>
-          <span class="chip-text">{{ document.name }}</span>
-        </div>
-      }
-    </div>
+    <button type="button" class="dialog-close-btn" (click)="closeDialog()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
   </div>
 
-  <!-- Form Body -->
-  <form [formGroup]="permissionForm" class="share-form-body mt-3">
-    <div class="row g-3">
-      <!-- Users Field -->
-      <div class="col-md-6 col-12">
-        <div class="form-group-custom">
-          <label class="form-label-custom">
-            <mat-icon class="label-icon">group</mat-icon>
-            {{ "USERS" | translate }}
-          </label>
-          <mat-select panelClass="mat-select-control custom-select-panel" placeholder="{{ 'SELECT_USERS' | translate }}"
-            [(value)]="selectedUsers" multiple class="form-control form-control-custom" formControlName="users">
-            <mat-select-trigger>
-              @if (selectedUsers.length > 0) {
-                <span class="trigger-primary-text">
-                  {{ selectedUsers[0].firstName }} {{ selectedUsers[0].lastName }} ({{ selectedUsers[0].userName }})
-                </span>
-              }
-              @if (selectedUsers.length > 1) {
-                <span class="trigger-extra-badge">
-                  +{{ selectedUsers.length - 1 }} {{ selectedUsers.length === 2 ? "other" : "others" }}
-                </span>
-              }
-            </mat-select-trigger>
-            <div class="select-search-box">
-              <mat-icon class="search-box-icon">search</mat-icon>
-              <input class="form-control form-control-sm select-search-input" (keyup)="filterUsers($event)"
+  <mat-dialog-content class="saas-dialog-body custom-scroll">
+    <!-- Selected Documents Section -->
+    <div class="doc-card-section subtle-bg mb-3">
+      <div class="doc-section-header">
+        <div class="doc-section-title">
+          <mat-icon>folder_shared</mat-icon>
+          <span>{{ "SELECTED_DOCUMENTS" | translate }} ({{ documents.length }})</span>
+        </div>
+      </div>
+      <div class="d-flex flex-wrap gap-2">
+        @for (document of documents; track document) {
+          <span class="badge bg-white text-dark border p-2 rounded-2 d-inline-flex align-items-center gap-1 shadow-sm" [title]="document.name">
+            <mat-icon class="text-primary fs-6">description</mat-icon>
+            <b class="text-truncate" style="max-width: 220px;">{{ document.name }}</b>
+          </span>
+        }
+      </div>
+    </div>
+
+    <!-- Form Body -->
+    <form [formGroup]="permissionForm" id="docMultiPermForm">
+      <div class="row g-3">
+        <!-- Users Field -->
+        <div class="col-12 col-md-6">
+          <div class="form-group mb-0">
+            <label class="form-label-custom">{{ "USERS" | translate }}</label>
+            <mat-select panelClass="mat-select-control custom-select-panel" placeholder="{{ 'SELECT_USERS' | translate }}"
+              [(value)]="selectedUsers" multiple class="form-control doc-form-input" formControlName="users">
+              <mat-select-trigger>
+                @if (selectedUsers.length > 0) {
+                  <span>
+                    {{ selectedUsers[0].firstName }} {{ selectedUsers[0].lastName }} ({{ selectedUsers[0].userName }})
+                  </span>
+                }
+                @if (selectedUsers.length > 1) {
+                  <span class="text-muted ms-1">
+                    +{{ selectedUsers.length - 1 }} others
+                  </span>
+                }
+              </mat-select-trigger>
+              <input class="form-control doc-form-input mb-1" (keyup)="filterUsers($event)"
                 placeholder="{{ 'SEARCH_BY_USER_ROLE_NAME_AND_EMAIL' | translate }}" #input1 />
-            </div>
-            @for (user of filteredUsers; track user) {
-              <mat-option color="primary" [value]="user">
-                {{ user.firstName }} {{ user.lastName }} ({{ user.userName }})
-              </mat-option>
-            }
-          </mat-select>
+              @for (user of filteredUsers; track user) {
+                <mat-option color="primary" [value]="user">
+                  {{ user.firstName }} {{ user.lastName }} ({{ user.userName }})
+                </mat-option>
+              }
+            </mat-select>
+          </div>
         </div>
-      </div>
 
-      <!-- Roles Field -->
-      <div class="col-md-6 col-12">
-        <div class="form-group-custom">
-          <label class="form-label-custom">
-            <mat-icon class="label-icon">shield</mat-icon>
-            {{ "ROLES" | translate }}
-          </label>
-          <mat-select panelClass="mat-select-control custom-select-panel" placeholder="{{ 'SELECT_ROLES' | translate }}"
-            class="form-control form-control-custom" color="primary" formControlName="roles" multiple>
-            @for (role of roles; track role) {
-              <mat-option [value]="role.id">
-                {{ role.name }}
-              </mat-option>
-            }
-          </mat-select>
+        <!-- Roles Field -->
+        <div class="col-12 col-md-6">
+          <div class="form-group mb-0">
+            <label class="form-label-custom">{{ "ROLES" | translate }}</label>
+            <mat-select panelClass="mat-select-control custom-select-panel" placeholder="{{ 'SELECT_ROLES' | translate }}"
+              class="form-control doc-form-input" color="primary" formControlName="roles" multiple>
+              @for (role of roles; track role) {
+                <mat-option [value]="role.id">
+                  {{ role.name }}
+                </mat-option>
+              }
+            </mat-select>
+          </div>
         </div>
-      </div>
 
-      <!-- Period Checkbox -->
-      <div class="col-12">
-        <div class="settings-checkbox-card">
-          <mat-checkbox (change)="timeBoundChange($event)" color="primary" formControlName="isTimeBound" class="custom-checkbox">
-            <span class="checkbox-label-text">{{ "SPACIFY_THE_PERIOD" | translate }}</span>
+        <!-- Period Checkbox -->
+        <div class="col-12">
+          <mat-checkbox (change)="timeBoundChange($event)" color="primary" formControlName="isTimeBound">
+            <span class="fs-13 fw-semibold text-dark">{{ "SPACIFY_THE_PERIOD" | translate }}</span>
           </mat-checkbox>
         </div>
-      </div>
 
-      <!-- Time-bound Dates -->
-      @if (permissionForm.get('isTimeBound')?.value) {
-        <div class="col-12">
-          <div class="date-range-box row g-3">
-            <!-- Start Date -->
-            <div class="col-md-6 col-12">
-              <label class="form-label-custom">
-                <mat-icon class="label-icon">event</mat-icon>
-                {{ "CHOOSE_A_START_DATE" | translate }}
-              </label>
-              <div class="input-group custom-date-group">
+        <!-- Time-bound Dates -->
+        @if (permissionForm.get('isTimeBound')?.value) {
+          <div class="col-12 col-md-6">
+            <div class="form-group mb-0">
+              <label class="form-label-custom">{{ "CHOOSE_A_START_DATE" | translate }}</label>
+              <div class="input-group-addon-wrapper">
                 <input formControlName="startDate" placeholder="{{ 'START_DATE' | translate }}"
-                  class="form-control form-control-custom date-input" [min]="minDate" [matDatepicker]="startDatePicker" />
-                <button class="btn date-picker-btn" type="button" (click)="startDatePicker.open()">
-                  <mat-icon>calendar_today</mat-icon>
+                  class="form-control doc-form-input" [min]="minDate" [matDatepicker]="startDatePicker" />
+                <button class="calendar-trigger-btn" type="button" (click)="startDatePicker.open()">
+                  <mat-icon class="calendar-icon">calendar_today</mat-icon>
                 </button>
                 <mat-datepicker #startDatePicker></mat-datepicker>
               </div>
               @if (permissionForm.get('startDate')?.touched && permissionForm.get('startDate')?.errors?.['required']) {
-                <div class="custom-form-error">
-                  <mat-icon class="error-icon">error_outline</mat-icon>
+                <div class="field-error-text">
                   {{ "START_DATE_IS_REQURED" | translate }}
                 </div>
               }
             </div>
+          </div>
 
-            <!-- End Date -->
-            <div class="col-md-6 col-12">
-              <label class="form-label-custom">
-                <mat-icon class="label-icon">event_available</mat-icon>
-                {{ "CHOOSE_A_END_DATE" | translate }}
-              </label>
-              <div class="input-group custom-date-group">
+          <div class="col-12 col-md-6">
+            <div class="form-group mb-0">
+              <label class="form-label-custom">{{ "CHOOSE_A_END_DATE" | translate }}</label>
+              <div class="input-group-addon-wrapper">
                 <input formControlName="endDate" placeholder="{{ 'END_DATE' | translate }}"
-                  class="form-control form-control-custom date-input"
+                  class="form-control doc-form-input"
                   [min]="permissionForm.get('startDate')?.value" [matDatepicker]="endDatePicker" />
-                <button class="btn date-picker-btn" type="button" (click)="endDatePicker.open()">
-                  <mat-icon>calendar_today</mat-icon>
+                <button class="calendar-trigger-btn" type="button" (click)="endDatePicker.open()">
+                  <mat-icon class="calendar-icon">calendar_today</mat-icon>
                 </button>
                 <mat-datepicker #endDatePicker></mat-datepicker>
               </div>
               @if (permissionForm.get('startDate')?.touched && permissionForm.get('endDate')?.errors?.['required']) {
-                <div class="custom-form-error">
-                  <mat-icon class="error-icon">error_outline</mat-icon>
+                <div class="field-error-text">
                   {{ "END_DATE_IS_REQURED" | translate }}
                 </div>
               }
             </div>
           </div>
-        </div>
-      }
+        }
 
-      <!-- Other Options -->
-      <div class="col-md-6 col-12">
-        <div class="settings-checkbox-card">
-          <mat-checkbox color="primary" formControlName="isAllowDownload" class="custom-checkbox">
-            <span class="checkbox-label-text">{{ "ALLOW_DOWNLOAD" | translate }}</span>
-          </mat-checkbox>
-        </div>
-      </div>
-
-      <div class="col-md-6 col-12">
-        <div class="settings-checkbox-card">
-          <mat-checkbox color="primary" formControlName="isAllowEmailNotification" class="custom-checkbox">
-            <span class="checkbox-label-text">{{ "IS_ALLOW_NOTIFICATION" | translate }}</span>
-          </mat-checkbox>
-        </div>
-      </div>
-
-      @if (permissionForm.get('isAllowEmailNotification')?.value && !smtpConfigured) {
+        <!-- Other Options -->
         <div class="col-12">
-          <div class="alert alert-warning custom-smtp-alert mb-0">
-            <mat-icon class="alert-icon">warning_amber</mat-icon>
-            <span>{{ "PLEASE_CONFIGURE_EMAIL_SMTP_SETTINGS" | translate }}</span>
+          <div class="d-flex flex-column gap-2 p-3 bg-light rounded-3 border">
+            <mat-checkbox color="primary" formControlName="isAllowDownload">
+              <span class="fs-13 fw-semibold text-dark">{{ "ALLOW_DOWNLOAD" | translate }}</span>
+            </mat-checkbox>
+            <mat-checkbox color="primary" formControlName="isAllowEmailNotification">
+              <span class="fs-13 fw-semibold text-dark">{{ "IS_ALLOW_NOTIFICATION" | translate }}</span>
+            </mat-checkbox>
           </div>
         </div>
-      }
-    </div>
-  </form>
-</mat-dialog-content>
 
-<!-- Modal Footer Actions -->
-<div class="share-modal-footer">
-  <button type="button" class="btn-cancel-custom" (click)="closeDialog()">
-    <mat-icon>close</mat-icon>
-    <span>{{ "CANCEL" | translate }}</span>
-  </button>
-  <button type="button" class="btn-save-custom" (click)="saveDocumentUserPermission()" cdkFocusInitial>
-    <mat-icon>check_circle</mat-icon>
-    <span>{{ "SAVE" | translate }}</span>
-  </button>
+        @if (permissionForm.get('isAllowEmailNotification')?.value && !smtpConfigured) {
+          <div class="col-12">
+            <div class="alert alert-warning py-2 px-3 mb-0 d-flex align-items-center gap-2 small">
+              <mat-icon class="text-warning fs-5">warning</mat-icon>
+              <span>{{ "PLEASE_CONFIGURE_EMAIL_SMTP_SETTINGS" | translate }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <!-- Modal Footer Actions -->
+  <mat-dialog-actions class="saas-dialog-footer">
+    <button type="button" class="btn btn-saas-cancel" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+      <span>{{ "CANCEL" | translate }}</span>
+    </button>
+    <button type="button" class="btn btn-primary-custom" (click)="saveDocumentUserPermission()" cdkFocusInitial>
+      <mat-icon>save</mat-icon>
+      <span>{{ "SAVE" | translate }}</span>
+    </button>
+  </mat-dialog-actions>
 </div>
-
