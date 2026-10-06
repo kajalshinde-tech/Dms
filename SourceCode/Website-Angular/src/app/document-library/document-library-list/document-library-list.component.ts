@@ -286,61 +286,70 @@ export class DocumentLibraryListComponent
   }
 
   ngAfterViewInit() {
-    this.sub$.sink = this.sort.sortChange.subscribe(
-      () => (this.paginator.pageIndex = 0)
-    );
+    if (this.sort && this.paginator) {
+      this.sub$.sink = this.sort.sortChange.subscribe(
+        () => (this.paginator.pageIndex = 0)
+      );
 
-    this.sub$.sink = merge(this.sort.sortChange, this.paginator.page)
-      .pipe(
-        tap(() => {
-          this.documentResource.skip =
-            this.paginator.pageIndex * this.paginator.pageSize;
-          this.documentResource.pageSize = this.paginator.pageSize;
-          this.documentResource.orderBy =
-            this.sort.active + ' ' + this.sort.direction;
-          this.dataSource.loadDocuments(this.documentResource);
-        })
-      )
-      .subscribe();
+      this.sub$.sink = merge(this.sort.sortChange, this.paginator.page)
+        .pipe(
+          tap(() => {
+            this.documentResource.skip =
+              this.paginator.pageIndex * this.paginator.pageSize;
+            this.documentResource.pageSize = this.paginator.pageSize;
+            this.documentResource.orderBy =
+              this.sort.active + ' ' + this.sort.direction;
+            this.dataSource.loadDocuments(this.documentResource);
+          })
+        )
+        .subscribe();
+    }
 
-    this.sub$.sink = fromEvent(this.input.nativeElement, 'keyup')
-      .pipe(
-        debounceTime(1000),
-        distinctUntilChanged(),
-        tap(() => {
-          this.paginator.pageIndex = 0;
-          this.documentResource.skip = 0;
-          this.documentResource.name = this.input.nativeElement.value;
-          this.dataSource.loadDocuments(this.documentResource);
-        })
-      )
-      .subscribe();
+    if (this.input?.nativeElement) {
+      this.sub$.sink = fromEvent(this.input.nativeElement, 'keyup')
+        .pipe(
+          debounceTime(1000),
+          distinctUntilChanged(),
+          tap(() => {
+            if (this.paginator) this.paginator.pageIndex = 0;
+            this.documentResource.skip = 0;
+            this.documentResource.name = this.input.nativeElement.value;
+            this.dataSource.loadDocuments(this.documentResource);
+          })
+        )
+        .subscribe();
+    }
 
-    this.sub$.sink = fromEvent(this.metatag.nativeElement, 'keyup')
-      .pipe(
-        debounceTime(1000),
-        distinctUntilChanged(),
-        tap(() => {
-          this.paginator.pageIndex = 0;
-          this.documentResource.skip = 0;
-          this.documentResource.metaTags = this.metatag.nativeElement.value;
-          this.dataSource.loadDocuments(this.documentResource);
-        })
-      )
-      .subscribe();
-    this.sub$.sink = fromEvent(this.docNoInput.nativeElement, 'keyup')
-      .pipe(
-        debounceTime(1000),
-        distinctUntilChanged(),
-        tap(() => {
-          this.paginator.pageIndex = 0;
-          this.documentResource.skip = 0;
-          this.documentResource.documentNumber =
-            this.docNoInput.nativeElement.value;
-          this.dataSource.loadDocuments(this.documentResource);
-        })
-      )
-      .subscribe();
+    if (this.metatag?.nativeElement) {
+      this.sub$.sink = fromEvent(this.metatag.nativeElement, 'keyup')
+        .pipe(
+          debounceTime(1000),
+          distinctUntilChanged(),
+          tap(() => {
+            if (this.paginator) this.paginator.pageIndex = 0;
+            this.documentResource.skip = 0;
+            this.documentResource.metaTags = this.metatag.nativeElement.value;
+            this.dataSource.loadDocuments(this.documentResource);
+          })
+        )
+        .subscribe();
+    }
+
+    if (this.docNoInput?.nativeElement) {
+      this.sub$.sink = fromEvent(this.docNoInput.nativeElement, 'keyup')
+        .pipe(
+          debounceTime(1000),
+          distinctUntilChanged(),
+          tap(() => {
+            if (this.paginator) this.paginator.pageIndex = 0;
+            this.documentResource.skip = 0;
+            this.documentResource.documentNumber =
+              this.docNoInput.nativeElement.value;
+            this.dataSource.loadDocuments(this.documentResource);
+          })
+        )
+        .subscribe();
+    }
   }
 
   /** Whether the number of selected elements matches the total number of rows. */

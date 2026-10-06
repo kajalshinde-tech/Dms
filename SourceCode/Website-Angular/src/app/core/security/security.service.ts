@@ -36,13 +36,34 @@ export class SecurityService {
       return this.parseSecurityObj();
     }
   }
+  private normalizeUrl(url?: string | null): string | undefined {
+    if (!url) return undefined;
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      const idx = url.indexOf('/images/');
+      if (idx !== -1) {
+        return url.substring(idx);
+      }
+    }
+    return url;
+  }
+
+  private sanitizeCompanyProfile(profile: CompanyProfile): CompanyProfile {
+    if (!profile) return profile;
+    const cloned = { ...profile };
+    if (cloned.logoUrl) cloned.logoUrl = this.normalizeUrl(cloned.logoUrl);
+    if (cloned.logoIconUrl) cloned.logoIconUrl = this.normalizeUrl(cloned.logoIconUrl);
+    if (cloned.bannerUrl) cloned.bannerUrl = this.normalizeUrl(cloned.bannerUrl);
+    return cloned;
+  }
+
   setCompany(companyProfile?: CompanyProfile) {
     if (companyProfile) {
+      const sanitized = this.sanitizeCompanyProfile(companyProfile);
       sessionStorage.setItem(
         this.licenseValidatorService.keyValues.COMPANY_PROFILE,
-        JSON.stringify(companyProfile)
+        JSON.stringify(sanitized)
       );
-      this.companyProfile$.next(JSON.parse(JSON.stringify(companyProfile)));
+      this.companyProfile$.next(JSON.parse(JSON.stringify(sanitized)));
     } else {
       const companyProfileJson = sessionStorage.getItem(
         this.licenseValidatorService.keyValues.COMPANY_PROFILE
@@ -52,7 +73,8 @@ export class SecurityService {
         companyProfileJson !== 'null' &&
         companyProfileJson !== 'undefined'
       ) {
-        this.companyProfile$.next(JSON.parse(companyProfileJson));
+        const parsed = JSON.parse(companyProfileJson);
+        this.companyProfile$.next(this.sanitizeCompanyProfile(parsed));
       }
     }
   }

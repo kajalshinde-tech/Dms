@@ -214,11 +214,16 @@ export class CompanyProfileComponent implements OnInit {
     }
   }
 
+  isLoading = false;
+
   onSave() {
+    if (this.isLoading) return;
     if (this.companyProfileForm.invalid) {
       this.companyProfileForm.markAllAsTouched();
       return;
     }
+
+    this.isLoading = true;
 
     const companyProfile: CompanyProfile = {
       id: this.companyId,
@@ -233,6 +238,7 @@ export class CompanyProfileComponent implements OnInit {
       .updateCompanyProfile(companyProfile, logoFile, bannerFile, logoIconFile)
       .subscribe({
         next: (c: CompanyProfile) => {
+          this.isLoading = false;
           this.securityService.setCompany(c);
           this.logoFile = undefined;
           this.logoIconFile = undefined;
@@ -253,6 +259,7 @@ export class CompanyProfileComponent implements OnInit {
           );
         },
         error: () => {
+          this.isLoading = false;
           this.toastrService.error(
             this.translationService.getValue('FAILED_TO_SAVE_COMPANY_PROFILE')
           );

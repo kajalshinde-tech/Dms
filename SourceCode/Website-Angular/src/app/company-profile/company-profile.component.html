@@ -184,11 +184,16 @@
 
           <!-- Form Action Row -->
           <div class="form-action-row mt-4 pt-3 border-top d-flex align-items-center gap-2">
-            <button type="button" class="btn-save-action" [disabled]="companyProfileForm.invalid" (click)="onSave()">
-              <mat-icon class="btn-icon">save</mat-icon>
-              <span>{{ "SAVE" | translate }}</span>
+            <button type="button" class="btn-save-action" [disabled]="companyProfileForm.invalid || isLoading" (click)="onSave()">
+              @if (isLoading) {
+                <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                <span>Saving...</span>
+              } @else {
+                <mat-icon class="btn-icon">save</mat-icon>
+                <span>{{ "SAVE" | translate }}</span>
+              }
             </button>
-            <button type="button" class="btn-cancel-action" [routerLink]="['/dashboard']">
+            <button type="button" class="btn-cancel-action" [routerLink]="['/dashboard']" [disabled]="isLoading">
               <mat-icon class="btn-icon">close</mat-icon>
               <span>{{ "CANCEL" | translate }}</span>
             </button>

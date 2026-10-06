@@ -215,7 +215,9 @@ export class DocumentByCategoryChartComponent
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+    if (this.paginator && this.dataSource) {
+      this.dataSource.paginator = this.paginator;
+    }
   }
 
   getDocumentCategoryChartData() {

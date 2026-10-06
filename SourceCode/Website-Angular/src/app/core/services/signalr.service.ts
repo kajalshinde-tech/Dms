@@ -53,21 +53,27 @@ export class SignalrService {
     private securityService: SecurityService) { }
 
   public startConnection(): Promise<boolean> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const host = location.host;
       const protocal = location.protocol;
       const url = environment.apiUrl === '/' ? `${protocal}//${host}/` : environment.apiUrl;
 
       this.hubConnection = new signalR.HubConnectionBuilder()
-        .withUrl(`${url}userHub`)
+        .withUrl(`${url}userHub`, {
+          transport:
+            signalR.HttpTransportType.WebSockets |
+            signalR.HttpTransportType.ServerSentEvents |
+            signalR.HttpTransportType.LongPolling,
+        })
+        .withAutomaticReconnect()
         .build();
       this.hubConnection
         .start()
         .then(() => {
           this.securityService.parseSecurityObj();
-          resolve(true)
+          resolve(true);
         })
-        .catch(err => {
+        .catch(() => {
           resolve(false);
         });
     });

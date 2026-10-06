@@ -7,6 +7,10 @@
       "destination": "http://103.224.247.35:8015/api/:match*"
     },
     {
+      "source": "/images/:match*",
+      "destination": "http://103.224.247.35:8015/images/:match*"
+    },
+    {
       "source": "/userHub/:match*",
       "destination": "http://103.224.247.35:8015/userHub/:match*"
     },

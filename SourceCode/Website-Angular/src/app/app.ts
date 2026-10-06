@@ -85,7 +85,19 @@ export class App implements OnInit {
     });
   }
 
+  private normalizeUrl(url?: string | null): string | undefined {
+    if (!url) return undefined;
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      const idx = url.indexOf('/images/');
+      if (idx !== -1) {
+        return url.substring(idx);
+      }
+    }
+    return url;
+  }
+
   setFavicon(iconUrl: string): void {
+    const safeUrl = this.normalizeUrl(iconUrl) || iconUrl;
     let link = document.querySelector('#appFavicon') as HTMLLinkElement | null;
 
     if (!link) {
@@ -95,8 +107,8 @@ export class App implements OnInit {
       this.renderer.appendChild(document.head, link);
     }
 
-    if (link) {
-      this.renderer.setAttribute(link, 'href', iconUrl);
+    if (link && safeUrl) {
+      this.renderer.setAttribute(link, 'href', safeUrl);
       this.renderer.setAttribute(link, 'type', 'image/x-icon');
     }
   }
