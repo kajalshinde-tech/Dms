@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:5000/',
+  apiUrl: 'http://103.224.247.35:8015/',
   allowExtesions: [
     {
       type: 'office',
