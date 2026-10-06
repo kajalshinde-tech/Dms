@@ -14,9 +14,16 @@ import { SecurityService } from '@core/security/security.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { provideServiceWorker } from '@angular/service-worker';
 import { ToastrService } from '@core/services/toastr-service';
-import { LicenseInitializerService } from '@mlglobtech/license-validator-docnet';
+import {
+  LicenseInitializerService,
+  LicenseValidatorService,
+} from '@mlglobtech/license-validator-docnet';
+import {
+  CustomLicenseInitializerService,
+  CustomLicenseValidatorService,
+} from '@core/security/custom-license.service';
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
-import { environment } from '@environments/environment'
+import { environment } from '@environments/environment';
 import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { MatPaginatorIntl } from '@angular/material/paginator';
@@ -42,6 +49,8 @@ export const appConfig: ApplicationConfig = {
       withInterceptorsFromDi()                    // <-- also load DI interceptors
     ),
     JwtHelperService,
+    { provide: LicenseValidatorService, useClass: CustomLicenseValidatorService },
+    { provide: LicenseInitializerService, useClass: CustomLicenseInitializerService },
     provideAppInitializer(() =>
       initializeApp(inject(LicenseInitializerService), inject(ToastrService), inject(SecurityService))()
     ),
