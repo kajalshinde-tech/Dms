@@ -332,6 +332,7 @@ export class AddDocumentComponent extends BaseComponent implements OnInit {
   }
 
   saveDocument() {
+    if (this.isLoading) return;
     if (this.documentForm.valid) {
       this.isLoading = true; // ✅ Ensure spinner ON
       this.cd.detectChanges();
