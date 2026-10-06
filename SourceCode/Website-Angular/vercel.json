@@ -3,6 +3,14 @@
   "outputDirectory": "dist/document-management/browser",
   "rewrites": [
     {
+      "source": "/api/:match*",
+      "destination": "http://103.224.247.35:8015/api/:match*"
+    },
+    {
+      "source": "/userHub/:match*",
+      "destination": "http://103.224.247.35:8015/userHub/:match*"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
