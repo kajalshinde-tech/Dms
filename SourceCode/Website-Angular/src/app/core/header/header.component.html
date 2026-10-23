@@ -15,7 +15,8 @@
       <!-- Brand Logo -->
       <a class="navbar-brand" routerLink="/">
         <img
-          [src]="logoUrl || '/images/logo.png'"
+          [src]="logoUrl || '/images/logo-small.png'"
+          (error)="onLogoError($event)"
           alt="Logo"
           class="logo-img"
         />

@@ -441,4 +441,11 @@ export class HeaderComponent extends BaseComponent implements OnInit {
       }
     });
   }
+
+  onLogoError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    if (target && !target.src.endsWith('/images/logo-small.png')) {
+      target.src = '/images/logo-small.png';
+    }
+  }
 }

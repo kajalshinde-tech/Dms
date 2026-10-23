@@ -10,6 +10,53 @@ import { User } from '@core/domain-classes/user';
 import { Router } from '@angular/router';
 import { CompanyProfile } from '../../company-profile/company-profile';
 import { LicenseValidatorService } from '@mlglobtech/license-validator-docnet';
+import { environment } from '@environments/environment';
+
+export function normalizeImageUrl(url?: string | null): string | undefined {
+  if (!url) return undefined;
+  if (url.startsWith('data:') || url.startsWith('blob:')) return url;
+
+  const localStatic = [
+    'logo-small.png',
+    'logo-icon.png',
+    'logo.png',
+    'file-preview.png',
+    'folder-users.svg',
+    'image.png',
+    'share-icon.svg',
+    'user.jpg',
+    'flags/',
+    'thumbnails/'
+  ];
+  if (localStatic.some((s) => url.includes(s))) {
+    return url.startsWith('/') ? url : '/' + url;
+  }
+
+  let relativePath = url;
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    const idx = url.indexOf('/images/');
+    if (idx !== -1) {
+      relativePath = url.substring(idx);
+    }
+  }
+
+  if (!relativePath.startsWith('/images/')) {
+    if (relativePath.startsWith('images/')) {
+      relativePath = '/' + relativePath;
+    } else if (!relativePath.startsWith('/')) {
+      relativePath = '/images/' + relativePath;
+    }
+  }
+
+  if (environment.apiUrl === '/' || !environment.apiUrl) {
+    return relativePath;
+  }
+
+  const base = environment.apiUrl.endsWith('/')
+    ? environment.apiUrl.slice(0, -1)
+    : environment.apiUrl;
+  return `${base}${relativePath}`;
+}
 
 @Injectable({ providedIn: 'root' })
 export class SecurityService {
@@ -36,15 +83,8 @@ export class SecurityService {
       return this.parseSecurityObj();
     }
   }
-  private normalizeUrl(url?: string | null): string | undefined {
-    if (!url) return undefined;
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      const idx = url.indexOf('/images/');
-      if (idx !== -1) {
-        return url.substring(idx);
-      }
-    }
-    return url;
+  public normalizeUrl(url?: string | null): string | undefined {
+    return normalizeImageUrl(url);
   }
 
   private sanitizeCompanyProfile(profile: CompanyProfile): CompanyProfile {

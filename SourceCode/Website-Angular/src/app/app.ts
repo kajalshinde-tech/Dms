@@ -8,7 +8,7 @@ import {
   Router,
   RouterOutlet,
 } from '@angular/router';
-import { SecurityService } from '@core/security/security.service';
+import { SecurityService, normalizeImageUrl } from '@core/security/security.service';
 import { CommonService } from '@core/services/common.service';
 import { SignalrService } from '@core/services/signalr.service';
 import { LoadingIndicatorComponent } from '@shared/loading-indicator/loading-indicator.component';
@@ -86,18 +86,11 @@ export class App implements OnInit {
   }
 
   private normalizeUrl(url?: string | null): string | undefined {
-    if (!url) return undefined;
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      const idx = url.indexOf('/images/');
-      if (idx !== -1) {
-        return url.substring(idx);
-      }
-    }
-    return url;
+    return normalizeImageUrl(url);
   }
 
   setFavicon(iconUrl: string): void {
-    const safeUrl = this.normalizeUrl(iconUrl) || iconUrl;
+    const safeUrl = normalizeImageUrl(iconUrl) || '/favicon.png';
     let link = document.querySelector('#appFavicon') as HTMLLinkElement | null;
 
     if (!link) {

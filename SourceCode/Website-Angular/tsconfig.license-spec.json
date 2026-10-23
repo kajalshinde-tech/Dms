@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/license-spec",
+    "types": ["jasmine"]
+  },
+  "files": [],
+  "include": ["src/app/core/security/custom-license.service.spec.ts"],
+  "exclude": []
+}

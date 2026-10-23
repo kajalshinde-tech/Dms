@@ -350,10 +350,16 @@ export class AddDocumentComponent extends BaseComponent implements OnInit {
   saveDocumentChunk() {
     this.documentService
       .addChunkDocument(this.buildDocumentObject())
-      .subscribe((c: DocumentInfo) => {
-        this.documentId = c.id ?? '';
-        this.document = c;
-        this.uploadFileInChunks(c.documentVersionId ?? '');
+        .subscribe({
+          next: (c: DocumentInfo) => {
+            this.documentId = c.id ?? '';
+            this.document = c;
+            this.uploadFileInChunks(c.documentVersionId ?? '');
+          },
+          error: () => {
+            this.isLoading = false;
+            this.cd.markForCheck();
+          }
       });
   }
 

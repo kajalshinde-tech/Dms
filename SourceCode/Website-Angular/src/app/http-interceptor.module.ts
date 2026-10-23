@@ -60,10 +60,22 @@ export const HttpRequestInterceptor: HttpInterceptorFn = (
               toastrService.error(
                 translationService.getValue('ACCESS_FORBIDDEN')
               );
-            } else if (err.error && err.error.length >= 0) {
+            } else if (typeof err.error === 'string' && err.error.trim() && !err.error.trim().startsWith('<')) {
+              toastrService.error(err.error);
+            } else if (Array.isArray(err.error) && err.error.length > 0) {
               toastrService.error(err.error[0]);
             } else if (err.error && err.error?.messages?.length > 0) {
               toastrService.error(err?.error?.messages[0]);
+            } else if (err.error?.message || err.error?.detail || err.error?.title) {
+              toastrService.error(err.error.message || err.error.detail || err.error.title);
+            } else if (err.status === 423) {
+              toastrService.error('The server has locked this operation. Ask your administrator to check the server response and access or license settings.');
+            } else if (err.status === 504) {
+              toastrService.error('The backend took too long to respond. Check whether the document was saved before trying again.');
+            } else {
+              toastrService.error(err.status === 0
+                ? 'Cannot reach the backend. Check your connection and the API server.'
+                : `The request failed (HTTP ${err.status}). Please try again or contact your administrator.`);
             }
           })
         }

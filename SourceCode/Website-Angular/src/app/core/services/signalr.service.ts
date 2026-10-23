@@ -60,10 +60,13 @@ export class SignalrService {
 
       this.hubConnection = new signalR.HubConnectionBuilder()
         .withUrl(`${url}userHub`, {
-          transport:
-            signalR.HttpTransportType.WebSockets |
-            signalR.HttpTransportType.ServerSentEvents |
-            signalR.HttpTransportType.LongPolling,
+          // The same-origin production proxy does not upgrade this hub to WebSockets.
+          // SSE is supported by the backend and avoids the failed upgrade attempt.
+          transport: environment.apiUrl === '/'
+            ? signalR.HttpTransportType.ServerSentEvents | signalR.HttpTransportType.LongPolling
+            : signalR.HttpTransportType.WebSockets |
+              signalR.HttpTransportType.ServerSentEvents |
+              signalR.HttpTransportType.LongPolling,
         })
         .withAutomaticReconnect()
         .build();
